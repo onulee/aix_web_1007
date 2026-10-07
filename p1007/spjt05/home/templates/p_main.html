@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FOREST RESOM</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                "Noto Sans KR",
+                Arial,
+                sans-serif;
+
+            color: #333;
+            background: #fff;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 90px;
+
+            z-index: 100;
+
+            color: #fff;
+
+            border-bottom: 1px solid
+                        rgba(255,255,255,.3);
+        }
+
+
+        .header-inner {
+
+            width: 1280px;
+            height: 90px;
+
+            margin: 0 auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        .logo {
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+            letter-spacing: 3px;
+        }
+
+
+        .main-menu {
+
+            display: flex;
+
+            gap: 38px;
+        }
+
+
+        .main-menu > li {
+
+            position: relative;
+
+            font-size: 15px;
+        }
+
+
+        .main-menu > li:hover {
+
+            color: #d8e6d5;
+        }
+
+
+        .header-right {
+
+            display: flex;
+
+            gap: 15px;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+
+            width: 100%;
+            height: 820px;
+
+            position: relative;
+
+            background:
+                linear-gradient(
+                    rgba(0,0,0,.15),
+                    rgba(0,0,0,.15)
+                ),
+
+                url(
+                    "https://images.unsplash.com/photo-1448375240586-882707db888b"
+                )
+
+                center / cover no-repeat;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            text-align: center;
+        }
+
+
+        .hero-content {
+
+            margin-top: 80px;
+        }
+
+
+        .hero-content .small-title {
+
+            font-size: 18px;
+
+            letter-spacing: 5px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .hero-content h1 {
+
+            font-size: 64px;
+
+            font-weight: 300;
+
+            letter-spacing: 5px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .hero-content p {
+
+            font-size: 17px;
+
+            line-height: 1.8;
+        }
+
+
+        .hero-button {
+
+            display: inline-flex;
+
+            margin-top: 35px;
+
+            width: 150px;
+            height: 48px;
+
+            border: 1px solid #fff;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 13px;
+
+            transition: .3s;
+        }
+
+
+        .hero-button:hover {
+
+            background: #fff;
+
+            color: #333;
+        }
+
+
+        /* =========================
+           SECTION COMMON
+        ========================= */
+
+        section {
+
+            width: 100%;
+        }
+
+
+        .section-inner {
+
+            width: 1200px;
+
+            margin: 0 auto;
+        }
+
+
+        .section-title {
+
+            text-align: center;
+
+            padding-top: 100px;
+
+            margin-bottom: 55px;
+        }
+
+
+        .section-title span {
+
+            display: block;
+
+            margin-bottom: 12px;
+
+            color: #777;
+
+            font-size: 12px;
+
+            letter-spacing: 3px;
+        }
+
+
+        .section-title h2 {
+
+            font-size: 36px;
+
+            font-weight: 400;
+
+            letter-spacing: -1px;
+        }
+
+
+        .section-title p {
+
+            margin-top: 15px;
+
+            color: #888;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+        }
+
+
+        /* =========================
+           FEATURE
+        ========================= */
+
+        .feature {
+
+            padding-bottom: 110px;
+        }
+
+
+        .feature-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+
+        .feature-card {
+
+            position: relative;
+
+            height: 500px;
+
+            overflow: hidden;
+
+            color: #fff;
+        }
+
+
+        .feature-card img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+            transition: transform .6s;
+        }
+
+
+        .feature-card:hover img {
+
+            transform: scale(1.08);
+        }
+
+
+        .feature-card::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            bottom: 0;
+
+            width: 100%;
+            height: 60%;
+
+            background:
+                linear-gradient(
+                    transparent,
+                    rgba(0,0,0,.65)
+                );
+        }
+
+
+        .feature-text {
+
+            position: absolute;
+
+            left: 35px;
+            bottom: 35px;
+
+            z-index: 2;
+        }
+
+
+        .feature-text span {
+
+            font-size: 11px;
+
+            letter-spacing: 2px;
+        }
+
+
+        .feature-text h3 {
+
+            margin-top: 12px;
+
+            font-size: 25px;
+
+            font-weight: 400;
+        }
+
+
+        .feature-text p {
+
+            margin-top: 12px;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+
+            color: #eee;
+        }
+
+
+        .more {
+
+            display: inline-block;
+
+            margin-top: 18px;
+
+            font-size: 12px;
+
+            border-bottom: 1px solid #fff;
+
+            padding-bottom: 5px;
+        }
+
+
+        /* =========================
+           EVENT
+        ========================= */
+
+        .event {
+
+            background: #f4f2ec;
+
+            padding-bottom: 100px;
+        }
+
+
+        .event-list {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+
+        .event-card {
+
+            background: #fff;
+
+            overflow: hidden;
+        }
+
+
+        .event-image {
+
+            height: 230px;
+
+            overflow: hidden;
+        }
+
+
+        .event-image img {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            transition: .5s;
+        }
+
+
+        .event-card:hover img {
+
+            transform: scale(1.06);
+        }
+
+
+        .event-content {
+
+            padding: 25px;
+        }
+
+
+        .event-content span {
+
+            color: #999;
+
+            font-size: 11px;
+
+            letter-spacing: 1px;
+        }
+
+
+        .event-content h3 {
+
+            margin-top: 10px;
+
+            font-size: 18px;
+
+            font-weight: 500;
+        }
+
+
+        .event-content p {
+
+            margin-top: 10px;
+
+            color: #999;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           PACKAGE
+        ========================= */
+
+        .package {
+
+            padding-bottom: 110px;
+        }
+
+
+        .package-box {
+
+            height: 500px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            color: #fff;
+        }
+
+
+        .package-box img {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            transition: .6s;
+        }
+
+
+        .package-box:hover img {
+
+            transform: scale(1.04);
+        }
+
+
+        .package-text {
+
+            position: absolute;
+
+            left: 70px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            z-index: 2;
+        }
+
+
+        .package-text span {
+
+            font-size: 12px;
+
+            letter-spacing: 3px;
+        }
+
+
+        .package-text h2 {
+
+            margin-top: 18px;
+
+            font-size: 42px;
+
+            font-weight: 300;
+        }
+
+
+        .package-text p {
+
+            margin-top: 15px;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+        }
+
+
+        /* =========================
+           STORY
+        ========================= */
+
+        .story {
+
+            background: #f7f7f5;
+
+            padding-bottom: 110px;
+        }
+
+
+        .story-list {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+
+        .story-card img {
+
+            width: 100%;
+
+            height: 280px;
+
+            object-fit: cover;
+        }
+
+
+        .story-card h3 {
+
+            margin-top: 20px;
+
+            font-size: 17px;
+
+            font-weight: 500;
+        }
+
+
+        .story-card p {
+
+            margin-top: 10px;
+
+            color: #999;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           NEWS
+        ========================= */
+
+        .news {
+
+            padding-bottom: 110px;
+        }
+
+
+        .news-box {
+
+            border-top: 2px solid #333;
+        }
+
+
+        .news-item {
+
+            min-height: 65px;
+
+            display: flex;
+
+            align-items: center;
+
+            border-bottom: 1px solid #eee;
+        }
+
+
+        .news-category {
+
+            width: 100px;
+
+            text-align: center;
+
+            color: #777;
+
+            font-size: 12px;
+        }
+
+
+        .news-title {
+
+            flex: 1;
+
+            font-size: 14px;
+        }
+
+
+        .news-date {
+
+            width: 120px;
+
+            text-align: center;
+
+            color: #aaa;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           TOURIST
+        ========================= */
+
+        .tourist {
+
+            background: #f3f1eb;
+
+            padding-bottom: 110px;
+        }
+
+
+        .tourist-list {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+
+        .tourist-card {
+
+            background: #fff;
+
+            overflow: hidden;
+        }
+
+
+        .tourist-card img {
+
+            width: 100%;
+
+            height: 260px;
+
+            object-fit: cover;
+        }
+
+
+        .tourist-content {
+
+            padding: 25px;
+        }
+
+
+        .tourist-content h3 {
+
+            font-size: 20px;
+
+            font-weight: 500;
+        }
+
+
+        .tourist-content p {
+
+            margin-top: 12px;
+
+            color: #888;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+        }
+
+
+        .tourist-content small {
+
+            display: block;
+
+            margin-top: 15px;
+
+            color: #aaa;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           MEMBERSHIP
+        ========================= */
+
+        .membership {
+
+            height: 500px;
+
+            position: relative;
+
+            background:
+
+                linear-gradient(
+                    rgba(0,0,0,.4),
+                    rgba(0,0,0,.4)
+                ),
+
+                url(
+                    "https://images.unsplash.com/photo-1511497584788-876760111969"
+                )
+
+                center / cover no-repeat;
+
+            color: #fff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+        }
+
+
+        .membership h2 {
+
+            font-size: 40px;
+
+            font-weight: 300;
+        }
+
+
+        .membership p {
+
+            margin-top: 20px;
+
+            font-size: 14px;
+
+            line-height: 2;
+        }
+
+
+        .membership-button {
+
+            display: inline-flex;
+
+            width: 160px;
+
+            height: 48px;
+
+            margin-top: 30px;
+
+            border: 1px solid #fff;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+
+            background: #292929;
+
+            color: #999;
+        }
+
+
+        .footer-inner {
+
+            width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 55px 0;
+        }
+
+
+        .footer-logo {
+
+            color: #fff;
+
+            font-size: 22px;
+
+            letter-spacing: 3px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .footer-menu {
+
+            display: flex;
+
+            gap: 25px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .footer-menu a {
+
+            color: #ddd;
+
+            font-size: 12px;
+        }
+
+
+        .footer-info {
+
+            font-size: 12px;
+
+            line-height: 2;
+        }
+
+
+        .copyright {
+
+            margin-top: 25px;
+
+            color: #666;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media screen and
+               (max-width: 768px) {
+
+
+            .header-inner,
+            .section-inner,
+            .footer-inner {
+
+                width: 90%;
+            }
+
+
+            .main-menu {
+
+                display: none;
+            }
+
+
+            .header-right {
+
+                display: none;
+            }
+
+
+            .hero {
+
+                height: 650px;
+            }
+
+
+            .hero-content h1 {
+
+                font-size: 42px;
+            }
+
+
+            .hero-content p {
+
+                font-size: 14px;
+            }
+
+
+            .section-title {
+
+                padding-top: 70px;
+
+                margin-bottom: 35px;
+            }
+
+
+            .section-title h2 {
+
+                font-size: 28px;
+            }
+
+
+            .feature-grid,
+            .event-list,
+            .story-list,
+            .tourist-list {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .feature-card {
+
+                height: 420px;
+            }
+
+
+            .package-box {
+
+                height: 400px;
+            }
+
+
+            .package-text {
+
+                left: 30px;
+            }
+
+
+            .package-text h2 {
+
+                font-size: 32px;
+            }
+
+
+            .news-category {
+
+                width: 70px;
+            }
+
+
+            .news-title {
+
+                padding: 15px 0;
+
+                font-size: 13px;
+            }
+
+
+            .news-date {
+
+                width: 80px;
+
+                font-size: 10px;
+            }
+
+
+            .membership {
+
+                height: 430px;
+            }
+
+
+            .membership h2 {
+
+                font-size: 30px;
+            }
+
+
+            .footer-menu {
+
+                flex-wrap: wrap;
+
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     HEADER
+================================================== -->
+
+<header>
+
+    <div class="header-inner">
+
+
+        <div class="logo">
+            FOREST RESOM
+        </div>
+
+
+        <ul class="main-menu">
+
+            <li>
+                <a href="#">포레스트</a>
+            </li>
+
+            <li>
+                <a href="#">스파</a>
+            </li>
+
+            <li>
+                <a href="#">객실</a>
+            </li>
+
+            <li>
+                <a href="#">특별한 경험</a>
+            </li>
+
+            <li>
+                <a href="#">부대시설</a>
+            </li>
+
+            <li>
+                <a href="#">브랜드소개</a>
+            </li>
+
+            <li>
+                <a href="#">예약</a>
+            </li>
+
+        </ul>
+
+
+        <div class="header-right">
+
+            <a href="#">
+                로그인
+            </a>
+
+            <a href="#">
+                회원가입
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- ==================================================
+     HERO
+================================================== -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="small-title">
+            FOREST RESOM
+        </div>
+
+        <h1>
+            HEALING<br>
+            IN THE FOREST
+        </h1>
+
+        <p>
+            자연과 하나 되는 특별한 휴식<br>
+            포레스트 리솜에서 만나는 새로운 여행
+        </p>
+
+        <a
+            href="#"
+            class="hero-button"
+        >
+            자세히 보기
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     FEATURE
+================================================== -->
+
+<section class="feature">
+
+    <div class="section-inner">
+
+
+        <div class="section-title">
+
+            <span>
+                FOREST RESOM
+            </span>
+
+            <h2>
+                숲에서 만나는 특별한 경험
+            </h2>
+
+            <p>
+                자연과 함께하는 포레스트 리솜의
+                다양한 콘텐츠를 만나보세요.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+
+            <!-- CARD 1 -->
+
+            <a
+                href="#"
+                class="feature-card"
+            >
+
+                <img
+                    src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e"
+                    alt="숲속 카페"
+                >
+
+                <div class="feature-text">
+
+                    <span>
+                        FOREST RESOM
+                    </span>
+
+                    <h3>
+                        숲속에서 즐기는 카페
+                    </h3>
+
+                    <p>
+                        자연의 향기와 함께하는
+                        여유로운 커피 한 잔
+                    </p>
+
+                    <span class="more">
+                        자세히 보기
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <!-- CARD 2 -->
+
+            <a
+                href="#"
+                class="feature-card"
+            >
+
+                <img
+                    src="https://images.unsplash.com/photo-1500534623283-312aade485b7"
+                    alt="숲속 휴식"
+                >
+
+                <div class="feature-text">
+
+                    <span>
+                        FOREST EXPERIENCE
+                    </span>
+
+                    <h3>
+                        자연 속 특별한 쉼
+                    </h3>
+
+                    <p>
+                        숲이 만들어낸 공간에서
+                        자유로운 휴식을 경험하세요.
+                    </p>
+
+                    <span class="more">
+                        자세히 보기
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <!-- CARD 3 -->
+
+            <a
+                href="#"
+                class="feature-card"
+            >
+
+                <img
+                    src="https://images.unsplash.com/photo-1540555700478-4be289fbecef"
+                    alt="스파"
+                >
+
+                <div class="feature-text">
+
+                    <span>
+                        SPA & SAUNA
+                    </span>
+
+                    <h3>
+                        자연과 함께하는 스파
+                    </h3>
+
+                    <p>
+                        몸과 마음을 편안하게
+                        쉬어가는 힐링 타임
+                    </p>
+
+                    <span class="more">
+                        자세히 보기
+                    </span>
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     EVENT
+================================================== -->
+
+<section class="event">
+
+    <div class="section-inner">
+
+
+        <div class="section-title">
+
+            <span>
+                EVENT
+            </span>
+
+            <h2>
+                포레스트의 특별한 이벤트
+            </h2>
+
+        </div>
+
+
+        <div class="event-list">
+
+
+            <div class="event-card">
+
+                <div class="event-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d"
+                        alt="이벤트"
+                    >
+
+                </div>
+
+                <div class="event-content">
+
+                    <span>
+                        EVENT
+                    </span>
+
+                    <h3>
+                        가을 숲에서 즐기는 특별한 하루
+                    </h3>
+
+                    <p>
+                        2026.09.01 ~ 종료시까지
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="event-card">
+
+                <div class="event-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb"
+                        alt="카페 이벤트"
+                    >
+
+                </div>
+
+                <div class="event-content">
+
+                    <span>
+                        EVENT
+                    </span>
+
+                    <h3>
+                        숲속 카페 오픈 이벤트
+                    </h3>
+
+                    <p>
+                        2026.07.01 ~ 종료시까지
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="event-card">
+
+                <div class="event-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1540575467063-178a50c2df87"
+                        alt="공연"
+                    >
+
+                </div>
+
+                <div class="event-content">
+
+                    <span>
+                        EVENT
+                    </span>
+
+                    <h3>
+                        포레스트 특별 공연
+                    </h3>
+
+                    <p>
+                        2026.09.24
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     PACKAGE
+================================================== -->
+
+<section class="package">
+
+    <div class="section-inner">
+
+
+        <div class="section-title">
+
+            <span>
+                PACKAGE
+            </span>
+
+            <h2>
+                나에게 맞는 여행을 만나보세요
+            </h2>
+
+        </div>
+
+
+        <div class="package-box">
+
+
+            <img
+                src="https://images.unsplash.com/photo-1500534623283-312aade485b7"
+                alt="리조트 패키지"
+            >
+
+
+            <div class="package-text">
+
+                <span>
+                    FOREST SPECIAL PACKAGE
+                </span>
+
+                <h2>
+                    올인클루시브
+                </h2>
+
+                <p>
+                    숙박부터 다양한 즐길 거리까지<br>
+                    포레스트에서 완성하는 특별한 여행
+                </p>
+
+                <a
+                    href="#"
+                    class="more"
+                >
+                    자세히 보기
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     STORY
+================================================== -->
+
+<section class="story">
+
+    <div class="section-inner">
+
+
+        <div class="section-title">
+
+            <span>
+                STORY
+            </span>
+
+            <h2>
+                포레스트 이야기
+            </h2>
+
+        </div>
+
+
+        <div class="story-list">
+
+
+            <a
+                href="#"
+                class="story-card"
+            >
+
+                <img
+                    src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e"
+                    alt="숲 이야기"
+                >
+
+                <h3>
+                    숲에서 만나는 포근한 하루
+                </h3>
+
+                <p>
+                    자연 속에서 천천히 쉬어가는
+                    포레스트의 이야기를 만나보세요.
+                </p>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="story-card"
+            >
+
+                <img
+                    src="https://images.unsplash.com/photo-1511497584788-876760111969"
+                    alt="자연"
+                >
+
+                <h3>
+                    자연이 선물하는 힐링
+                </h3>
+
+                <p>
+                    계절마다 달라지는 숲의 풍경과
+                    특별한 순간을 소개합니다.
+                </p>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="story-card"
+            >
+
+                <img
+                    src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e"
+                    alt="여행"
+                >
+
+                <h3>
+                    새로운 여행의 발견
+                </h3>
+
+                <p>
+                    포레스트에서 경험할 수 있는
+                    다양한 여행 콘텐츠를 만나보세요.
+                </p>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     NEWS
+================================================== -->
+
+<section class="news">
+
+    <div class="section-inner">
+
+
+        <div class="section-title">
+
+            <span>
+                NEWS
+            </span>
+
+            <h2>
+                포레스트 소식
+            </h2>
+
+        </div>
+
+
+        <div class="news-box">
+
+
+            <a
+                href="#"
+                class="news-item"
+            >
+
+                <div class="news-category">
+                    NEWS
+                </div>
+
+                <div class="news-title">
+                    조식 메뉴 개편 및 이용요금 변경 안내
+                </div>
+
+                <div class="news-date">
+                    2026.09.08
+                </div>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="news-item"
+            >
+
+                <div class="news-category">
+                    NEWS
+                </div>
+
+                <div class="news-title">
+                    유아용 웨건 대여 서비스 안내
+                </div>
+
+                <div class="news-date">
+                    2026.08.10
+                </div>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="news-item"
+            >
+
+                <div class="news-category">
+                    NEWS
+                </div>
+
+                <div class="news-title">
+                    포레스트 신규 서비스 안내
+                </div>
+
+                <div class="news-date">
+                    2026.07.20
+                </div>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="news-item"
+            >
+
+                <div class="news-category">
+                    NEWS
+                </div>
+
+                <div class="news-title">
+                    2026 포레스트 사진공모전 안내
+                </div>
+
+                <div class="news-date">
+                    2026.07.05
+                </div>
+
+            </a>
+
+
+            <a
+                href="#"
+                class="news-item"
+            >
+
+                <div class="news-category">
+                    NOTICE
+                </div>
+
+                <div class="news-title">
+                    리솜리조트 이용 안내
+                </div>
+
+                <div class="news-date">
+                    2026.06.25
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     TOURIST
+================================================== -->
+
+<section class="tourist">
+
+    <div class="section-inner">
+
+
+        <div class="section-title">
+
+            <span>
+                TRAVEL
+            </span>
+
+            <h2>
+                주변 관광지
+            </h2>
+
+            <p>
+                포레스트 리솜과 함께 즐기는
+                제천의 특별한 여행
+            </p>
+
+        </div>
+
+
+        <div class="tourist-list">
+
+
+            <div class="tourist-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+                    alt="호수"
+                >
+
+                <div class="tourist-content">
+
+                    <h3>
+                        의림지
+                    </h3>
+
+                    <p>
+                        제천을 대표하는 아름다운 호수와
+                        자연 경관을 만나보세요.
+                    </p>
+
+                    <small>
+                        충북 제천시
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="tourist-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b"
+                    alt="산"
+                >
+
+                <div class="tourist-content">
+
+                    <h3>
+                        월악산
+                    </h3>
+
+                    <p>
+                        사계절 아름다운 자연을
+                        만날 수 있는 대표 명소입니다.
+                    </p>
+
+                    <small>
+                        충북 제천시
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="tourist-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e"
+                    alt="자연 풍경"
+                >
+
+                <div class="tourist-content">
+
+                    <h3>
+                        박달재
+                    </h3>
+
+                    <p>
+                        자연과 함께 드라이브와
+                        산책을 즐길 수 있습니다.
+                    </p>
+
+                    <small>
+                        충북 제천시
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     MEMBERSHIP
+================================================== -->
+
+<section class="membership">
+
+    <div>
+
+
+        <h2>
+            RESOM MEMBERSHIP
+        </h2>
+
+
+        <p>
+            숲과 바다, 온천과 액티비티까지<br>
+            리솜리조트 회원만의 특별한 혜택을 경험해보세요.
+        </p>
+
+
+        <a
+            href="#"
+            class="membership-button"
+        >
+            회원 혜택 자세히 보기
+        </a>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ==================================================
+     FOOTER
+================================================== -->
+
+<footer>
+
+    <div class="footer-inner">
+
+
+        <div class="footer-logo">
+            FOREST RESOM
+        </div>
+
+
+        <div class="footer-menu">
+
+            <a href="#">
+                회사소개
+            </a>
+
+            <a href="#">
+                오시는 길
+            </a>
+
+            <a href="#">
+                개인정보처리방침
+            </a>
+
+            <a href="#">
+                이용약관
+            </a>
+
+            <a href="#">
+                이메일무단수집거부
+            </a>
+
+        </div>
+
+
+        <div class="footer-info">
+
+            포레스트 리솜<br>
+
+            충청북도 제천시 백운면 금봉로 365<br>
+
+            대표번호 : 043-649-6000
+            &nbsp;&nbsp;
+            예약문의 : 1600-0060<br>
+
+            단체문의 : 02-6177-5999
+            &nbsp;&nbsp;
+            분양문의 : 02-567-5555
+
+        </div>
+
+
+        <div class="copyright">
+
+            COPYRIGHT © FOREST RESOM.
+            ALL RIGHTS RESERVED.
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+</body>
+</html>
+

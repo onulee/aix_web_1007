@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성적 입력</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Noto Sans KR", Arial, sans-serif;
+            color: #333;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* HEADER */
+        header {
+            border-bottom: 1px solid #eee;
+        }
+
+        .top {
+            width: 1200px;
+            height: 90px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .menu {
+            display: flex;
+            gap: 40px;
+        }
+
+        .menu li {
+            font-size: 15px;
+        }
+
+        /* TOP BANNER */
+        .visual {
+            height: 280px;
+            background:
+                linear-gradient(
+                    rgba(0,0,0,.28),
+                    rgba(0,0,0,.28)
+                ),
+                url("https://images.unsplash.com/photo-1506744038136-46273834b3fb")
+                center / cover no-repeat;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .visual h1 {
+            font-size: 42px;
+            font-weight: 400;
+        }
+
+        .visual p {
+            margin-top: 15px;
+        }
+
+        /* CONTENT */
+        .container {
+            width: 1200px;
+            margin: auto;
+            padding: 70px 0 100px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 40px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .breadcrumb span {
+            margin: 0 10px;
+        }
+
+        .title {
+            margin-bottom: 35px;
+        }
+
+        .title h2 {
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        .title p {
+            margin-top: 10px;
+            color: #999;
+        }
+
+        /* SCORE INPUT FORM */
+        .score-form {
+            width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 35px 40px;
+            background: #fafafa;
+        }
+
+        .score-form h2 {
+            margin-bottom: 30px;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 42px;
+            padding: 0 10px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        /* BUTTON */
+        .form-buttons {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .save-btn {
+            width: 120px;
+            height: 45px;
+            border: 0;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .save-btn:hover {
+            background: #555;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #333;
+            color: #aaa;
+        }
+
+        .footer-inner {
+            width: 1200px;
+            margin: auto;
+            padding: 45px 0;
+        }
+
+        .footer-menu {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .footer-menu a {
+            color: #ddd;
+            font-size: 13px;
+        }
+
+        .footer-info {
+            font-size: 12px;
+            line-height: 2;
+        }
+
+        /* MOBILE */
+        @media screen and (max-width: 768px) {
+
+            .top,
+            .container,
+            .footer-inner {
+                width: 90%;
+            }
+
+            .menu {
+                display: none;
+            }
+
+            .visual {
+                height: 220px;
+            }
+
+            .visual h1 {
+                font-size: 32px;
+            }
+
+            .container {
+                padding-top: 45px;
+            }
+
+            .score-form {
+                width: 100%;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="top">
+
+        <div class="logo">
+            FOREST
+        </div>
+
+        <ul class="menu">
+            <li><a href="#">소개</a></li>
+            <li><a href="#">뉴스</a></li>
+            <li><a href="#">성적관리</a></li>
+            <li><a href="#">객실</a></li>
+            <li><a href="#">예약</a></li>
+        </ul>
+
+    </div>
+</header>
+
+
+<!-- TOP BANNER -->
+<section class="visual">
+    <div>
+        <h1>SCORE</h1>
+        <p>학생들의 성적을 한눈에 확인하고 관리하세요.</p>
+    </div>
+</section>
+
+
+<!-- CONTENT -->
+<main>
+
+    <div class="container">
+
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb">
+            HOME
+            <span>></span>
+            성적관리
+            <span>></span>
+            성적입력
+        </div>
+
+
+        <!-- TITLE -->
+        <div class="title">
+            <h2>성적 입력</h2>
+            <p>학생의 성적 정보를 입력하세요.</p>
+        </div>
+
+
+        <!-- SCORE INPUT -->
+        <form class="score-form" id="scoreForm">
+
+            <h2>학생 성적 입력</h2>
+
+            <!-- 번호 -->
+            <div class="form-group">
+                <label for="no">번호</label>
+                <input
+                    type="text"
+                    id="no"
+                    name="no"
+                    placeholder="번호를 입력하세요."
+                >
+            </div>
+
+            <!-- 이름 -->
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="이름을 입력하세요."
+                >
+            </div>
+
+            <!-- 국어 -->
+            <div class="form-group">
+                <label for="kor">국어</label>
+                <input
+                    type="number"
+                    id="kor"
+                    name="kor"
+                    min="0"
+                    max="100"
+                    placeholder="국어 점수를 입력하세요."
+                >
+            </div>
+
+            <!-- 영어 -->
+            <div class="form-group">
+                <label for="eng">영어</label>
+                <input
+                    type="number"
+                    id="eng"
+                    name="eng"
+                    min="0"
+                    max="100"
+                    placeholder="영어 점수를 입력하세요."
+                >
+            </div>
+
+            <!-- 수학 -->
+            <div class="form-group">
+                <label for="math">수학</label>
+                <input
+                    type="number"
+                    id="math"
+                    name="math"
+                    min="0"
+                    max="100"
+                    placeholder="수학 점수를 입력하세요."
+                </div>
+
+            <!-- 저장 버튼 -->
+            <div class="form-buttons">
+                <button type="submit" class="save-btn">
+                    저장
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer>
+
+    <div class="footer-inner">
+
+        <div class="footer-menu">
+            <a href="#">회사소개</a>
+            <a href="#">오시는 길</a>
+            <a href="#">개인정보처리방침</a>
+            <a href="#">이용약관</a>
+        </div>
+
+        <div class="footer-info">
+            성적관리 시스템<br>
+            학생 성적 조회 및 관리 프로그램<br>
+            Copyright © 2026
+        </div>
+
+    </div>
+
+</footer>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 """
-URL configuration for spjt03 project.
+URL configuration for spjt05 project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.1/topics/http/urls/
@@ -20,4 +20,5 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('students/', include('students.urls')),
+    path('', include('home.urls')),
 ]
