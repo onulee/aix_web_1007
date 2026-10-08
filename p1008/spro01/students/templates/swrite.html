@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>학생성적입력</h1>
+    <form action="/students/swrite/" name="frm" method="post">
+        {% csrf_token %}
+        <label>이름</label>
+        <input type="text" name="name" id="name"><br>
+        <label>학과</label>
+        <input type="text" name="major" id="major"><br>
+        <label>학년</label>
+        <input type="text" name="grade" id="grade"><br>
+        <label>나이</label>
+        <input type="text" name="age" id="age"><br>
+        <label>성별</label><br>
+        <input type="radio" name="gender" id="man" value="남자">
+        <label for="man">남자</label>
+        <input type="radio" name="gender" id="woman" value="여자">
+        <label for="woman">남자</label>
+        <br>
+        <input type="submit" value="저장">
+        <br>
+        
+    </form>
+</body>
+</html>
