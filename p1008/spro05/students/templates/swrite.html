@@ -10,9 +10,9 @@
     <form action="/students/swrite/" name="frm" method="post">
         {% csrf_token %}
         <label>이름</label>
-        <input type="text" name="name" id="name" ><br>
+        <input type="text" name="name" id="name" required><br>
         <label>학과</label>
-        <input type="text" name="major" id="major"><br>
+        <input type="text" name="major" id="major" ><br>
         <label>학년</label>
         <input type="text" name="grade" id="grade"><br>
         <label>나이</label>
