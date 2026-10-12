@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>학생정보수정</h1>
-    <form action='/students/supdate/' name='frm' method='post'>
+    <form action='/students/supdate/{{stu.name}}/' name='frm' method='post'>
         {% csrf_token %}
         <label>이름</label>
         <input type='text' name='name' id='name' value='{{stu.name}}'><br>
@@ -18,9 +18,9 @@
         <label>학년</label>
         <input type='text' name='grade' id='grade' value='{{stu.grade}}'><br>
         <label>성별</label><br>
-        <input type='radio' name='gender' id='man' value='남자'>
+        <input type='radio' name='gender' id='man' value='남자' {%if '남자' in stu.gender %}checked{%endif%} >
         <label for='man'>남자</label>
-        <input type='radio' name='gender' id='woman' value='여자'>
+        <input type='radio' name='gender' id='woman' value='여자' {%if '여자' in stu.gender %}checked{%endif%}>
         <label for='woman'>여자</label>
         <br>
         <input type='submit' value='수정'>

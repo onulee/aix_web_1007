@@ -4,14 +4,25 @@ from students.models import Students
 # 학생정보수정
 def supdate(request,name):
     if request.method == 'GET':
-        print(f'name 데이터 : {name}')
+        print(f'name 수정페이지 : {name}')
         qs = Students.objects.get(name=name) #1개의 정보전송
         context = {'stu':qs}
         return render(request, 'supdate.html',context)
     elif request.method == 'POST':
-        print(f'name 데이터 : {name}')
-        qs = Students.objects.get(name=name) #1개의 정보전송
-        context = {'stu':qs}
+        print(f'name 수정완료 : {name}')
+        qs = Students.objects.get(name=name) # 이전정보 검색
+        if qs:
+            name = request.POST.get('name')
+            major = request.POST.get('major')
+            age = request.POST.get('age')
+            grade = request.POST.get('grade')
+            gender = request.POST.get('gender')
+            qs.name= name
+            qs.major = major
+            qs.age = age
+            qs.grade = grade
+            qs.gender = gender
+            qs.save()
         return redirect('/students/slist/')
 
 # 학생상세보기
