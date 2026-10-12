@@ -1,6 +1,27 @@
 from django.shortcuts import render,redirect
 from students.models import Students
 
+# 학생정보수정
+def supdate(request,name):
+    if request.method == 'GET':
+        print(f'name 데이터 : {name}')
+        qs = Students.objects.get(name=name) #1개의 정보전송
+        context = {'stu':qs}
+        return render(request, 'supdate.html',context)
+    elif request.method == 'POST':
+        print(f'name 데이터 : {name}')
+        qs = Students.objects.get(name=name) #1개의 정보전송
+        context = {'stu':qs}
+        return redirect('/students/slist/')
+
+# 학생상세보기
+def sview(request,name):
+    print(f'name 데이터 : {name}')
+    qs = Students.objects.get(name=name) #1개의 정보전송
+    context = {'stu':qs}
+    return render(request, 'sview.html',context)
+
+
 # 학생정보리스트
 def slist(request):
     # db에서 전체리스트 가져오기

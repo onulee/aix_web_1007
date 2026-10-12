@@ -20,7 +20,9 @@
         </tr>
         {% for s in list %}
         <tr>
-            <td>{{s.name}}</td>
+            <td>
+                <a href='/students/sview/{{s.name}}'>{{s.name}}</a>
+            </td>
             <td>{{s.major}}</td>
             <td>{{s.age}}</td>
         </tr>
