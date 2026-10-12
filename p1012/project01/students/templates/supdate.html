@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script>
+        function updateBtn(){
+            alert('확인');
+        }
+    </script>
 </head>
 <body>
     <h1>학생정보수정</h1>
@@ -23,9 +28,10 @@
         <input type='radio' name='gender' id='woman' value='여자' {%if '여자' in stu.gender %}checked{%endif%}>
         <label for='woman'>여자</label>
         <br>
-        <input type='submit' value='수정'>
+        <button type='button' onclick='updateBtn()'>수정</button>
         <a href='/students/slist/'><button type='button'>취소</button></a> 
         <br>
+        
 
 
     </form>

@@ -18,15 +18,21 @@
             <th>학과</th>
             <th>나이</th>
         </tr>
-        {% for s in list %}
-        <tr>
-            <td>
-                <a href='/students/sview/{{s.name}}'>{{s.name}}</a>
-            </td>
-            <td>{{s.major}}</td>
-            <td>{{s.age}}</td>
-        </tr>
-        {% endfor %}
+        {%if list %}
+            {% for s in list %}
+            <tr>
+                <td>
+                    <a href='/students/sview/{{s.name}}'>{{s.name}}</a>
+                </td>
+                <td>{{s.major}}</td>
+                <td>{{s.age}}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan='3' style='text-align:center'>데이터가 없습니다.</td>
+            </tr>
+        {% endif %}
     </table>
     <br>
     <a href='/students/swrite/'><button>정보입력</button></a>

@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script>
+        function updateBtn(){
+            //alert("확인");
+            if (confirm('{{stu.name}} 학생정보를 수정하시겠습니까?')){
+                location.href='/students/supdate/{{stu.name}}/';
+            }
+        }
+        function deleteBtn(){
+            if (confirm('{{stu.name}} 학생정보를 삭제하시겠습니까?')){
+                location.href='/students/sdelete/{{stu.name}}/';
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>학생상세보기</h1>
@@ -18,8 +31,8 @@
         <label>성별</label>
         {{stu.gender}}<br>
         <a href='/students/slist/'><button type='button'>리스트</button></a> 
-        <a href='/students/supdate/{{stu.name}}/'><button type='button'>수정</button></a> 
-        <a href='/students/sdelete/{{stu.name}}/'><button type='button'>삭제</button></a> 
+        <button type='button' onclick='updateBtn()'>수정</button>
+        <button type='button' onclick='deleteBtn()'>삭제</button>
         <a href='/'><button type='button'>홈으로</button></a> 
         <br>
 

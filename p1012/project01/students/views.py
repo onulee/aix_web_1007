@@ -1,6 +1,10 @@
 from django.shortcuts import render,redirect
 from students.models import Students
 
+def sdelete(request,name):
+    Students.objects.get(name=name).delete()
+    return redirect('/students/slist/')
+
 # 학생정보수정
 def supdate(request,name):
     if request.method == 'GET':
