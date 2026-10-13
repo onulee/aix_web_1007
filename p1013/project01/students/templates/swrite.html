@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>학생정보입력</title>
+    <script>
+        function insertBtn(){
+            if(confirm('학생정보를 입력하시겠습니까?')){
+                frm.submit();
+            }
+        }
+
+    </script>
 </head>
 <body>
     <h1>학생정보입력</h1>
@@ -38,7 +46,7 @@
         
         <br>
         <br>
-        <input type='submit' value='저장'>
+        <input type='button' onclick='insertBtn()' value='저장'>
         <a href='/students/slist/'><button type='button'>취소</button></a> 
         <br>
 
