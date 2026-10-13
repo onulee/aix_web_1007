@@ -1,12 +1,33 @@
 from django.shortcuts import render,redirect
 from students.models import Students
 
-# 학생정보리스트
+# 학생정보수정페이지,저장
+def supdate(request,no):
+    if request.method == 'GET':
+        qs = Students.objects.get(no=no)
+        context = {'stu':qs}
+        return render(request, 'supdate.html', context)
+    elif request.method == 'POST':
+        # 수정부분
+
+        return redirect('students:slist') #app_name,name방식
+
+# 학생정보상세보기 - 1개
+def sview(request,no):
+    qs = Students.objects.get(no=no)
+    context = {'stu':qs}
+    return render(request, 'sview.html',context)
+
+# 학생정보리스트 - 여러개
 def slist(request):
     # 딕셔너리 형태로 데이터를 전달함.
     qs = Students.objects.all().order_by('-no') # 전체가져오기, 정렬(-역순정렬)
     # qs = Students.objects.get(name='홍길동') # 1개 가져오기
+    # __contains:포함, __endswith 
     # qs = Students.objects.filter(name__contains='s') # s가 포함되어 있는 학생
+    # qs = Students.objects.filter(name__endswith='s') 
+    # gt,gte,lt,lte
+    # qs = Students.objects.filter(grade__gt=3) # 3학년이상
 
     context = {'list':qs}
     return render(request, 'slist.html',context)

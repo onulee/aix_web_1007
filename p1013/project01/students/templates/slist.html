@@ -29,17 +29,21 @@
         {% for stu in list %}
         <tr>
             <td>{{stu.no}}</td>
-            <td>{{stu.name}}</td>
+            <td>
+                <a href='{% url "students:sview" stu.no %}'>
+                    {{stu.name}}
+                </a>
+            </td>
             <td>{{stu.major}}</td>
             <td>{{stu.grade}}</td>
             <td>{{stu.sdate}}</td>
         </tr>
         {% endfor %}
     </table>
-    {{list}}
+   
     <br><br>
     <div>
-        <a href='/students/swrite/'><button type='button'>쓰기</button></a>
+        <a href='{% url "students:swrite" %}'><button type='button'>쓰기</button></a>
         <a href='/'><button type='button'>홈으로</button></a>
     </div>
 </body>

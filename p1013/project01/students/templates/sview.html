@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1{text-align:center;}
+        table{text-align:center; margin:0 auto;}
+        div{text-align:center;}
+        table,th,td{border:1px solid black; border-collapse: collapse;}
+        th,td{width:150px; height:40px;}
+        button{width:100px; height:40px;}
+    </style>
+</head>
+<body>
+    <h1>학생정보상세보기</h1>
+    <table>
+        <tr>
+            <th>번호</th>
+            <td>{{stu.no}}</td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td>{{stu.name}}</td>
+        </tr>
+        <tr>
+            <th>학과</th>
+            <td>{{stu.major}}</td>
+        </tr>
+        <tr>
+            <th>학년</th>
+            <td>{{stu.grade}}</td>
+        </tr>
+        <tr>
+            <th>나이</th>
+            <td>{{stu.age}}</td>
+        </tr>
+        <tr>
+            <th>성별</th>
+            <td>{{stu.gender}}</td>
+        </tr>
+        <tr>
+            <th>취미</th>
+            <td>{{stu.hobby}}</td>
+        </tr>
+        
+    </table>
+   
+    <br><br>
+    <div>
+        <a href='{% url "students:supdate" stu.no %}'><button type='button'>수정</button></a>
+        <a href='{% url "students:swrite" %}'><button type='button'>삭제</button></a>
+        <a href='{% url "students:slist" %}'><button type='button'>리스트</button></a>
+        <a href='/'><button type='button'>홈으로</button></a>
+    </div>
+</body>
+</html>

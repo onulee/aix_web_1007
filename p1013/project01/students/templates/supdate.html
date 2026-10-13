@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생정보수정</title>
+    <script>
+        function updateBtn(){
+            if(confirm('학생정보를 수정하시겠습니까?')){
+                frm.submit();
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <h1>학생정보수정</h1>
+    <form action='{% url "students:supdate" stu.no %}' name='frm' method='post'>
+        {% csrf_token %}
+        <label>이름</label>
+        <input type='text' name='name' id='name' value='{{stu.name}}'><br>
+        <label>학과</label>
+        <input type='text' name='major' id='major' value='{{stu.major}}'><br>
+        <label>학년</label>
+        <input type='text' name='grade' id='grade' value='{{stu.grade}}'><br>
+        <label>나이</label>
+        <input type='text' name='age' id='age' value='{{stu.age}}'><br>
+        <label>성별</label><br>
+        <input type='radio' name='gender' id='man' value='남자' {% if '남자' in stu.gender %}checked{% endif %}>
+        <label for='man'>남자</label>
+        <input type='radio' name='gender' id='woman' value='여자' {% if '여자' in stu.gender %}checked{% endif %}>
+        <label for='woman'>여자</label>
+        <br>
+        <label>취미</label><br>
+        <input type='checkbox' name='hobby' id='game' value='게임' {% if '게임' in stu.hobby %}checked{% endif %}>
+        <label for='game'>게임</label>
+        <input type='checkbox' name='hobby' id='golf' value='골프' {% if '골프' in stu.hobby %}checked{% endif %}>
+        <label for='golf'>골프</label>
+        <input type='checkbox' name='hobby' id='swim' value='수영' {% if '수영' in stu.hobby %}checked{% endif %}>
+        <label for='swim'>수영</label>
+        <input type='checkbox' name='hobby' id='run' value='조깅' {% if '조깅' in stu.hobby %}checked{% endif %}>
+        <label for='run'>조깅</label>
+        <input type='checkbox' name='hobby' id='book' value='독서' {% if '독서' in stu.hobby %}checked{% endif %}>
+        <label for='book'>독서</label>
+        
+        <br>
+        <br>
+        <input type='button' onclick='updateBtn()' value='수정'>
+        <a href='/students/slist/'><button type='button'>취소</button></a> 
+        <br>
+
+
+    </form>
+</body>
+</html>
