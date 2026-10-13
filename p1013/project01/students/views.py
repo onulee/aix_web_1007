@@ -1,6 +1,11 @@
 from django.shortcuts import render,redirect
 from students.models import Students
 
+# 학생정보삭제
+def sdelete(request,no):
+    Students.objects.get(no=no).delete()
+    return redirect('students:slist')
+
 # 학생정보수정페이지,저장
 def supdate(request,no):
     if request.method == 'GET':
@@ -9,7 +14,22 @@ def supdate(request,no):
         return render(request, 'supdate.html', context)
     elif request.method == 'POST':
         # 수정부분
-
+        qs = Students.objects.get(no=no)
+        # 수정된 데이터
+        name = request.POST.get('name')
+        major = request.POST.get('major')
+        grade = request.POST.get('grade')
+        age = request.POST.get('age')
+        gender = request.POST.get('gender')
+        hobby = request.POST.getlist('hobby')
+        # 수정반영
+        qs.name = name
+        qs.major = major
+        qs.grade = grade
+        qs.age = age
+        qs.gender = gender
+        qs.hobby = hobby
+        qs.save()
         return redirect('students:slist') #app_name,name방식
 
 # 학생정보상세보기 - 1개

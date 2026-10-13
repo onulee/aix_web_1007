@@ -7,6 +7,7 @@ urlpatterns = [
     path('slist/', views.slist, name='slist'),
     path('sview/<int:no>/', views.sview, name='sview'),
     path('supdate/<int:no>/', views.supdate, name='supdate'),
+    path('sdelete/<int:no>/', views.sdelete, name='sdelete'),
 
     
     #------------------------------------------------------

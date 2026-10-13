@@ -12,6 +12,13 @@
         th,td{width:150px; height:40px;}
         button{width:100px; height:40px;}
     </style>
+    <script>
+        function deleteBtn(){
+            if(confirm('{{stu.name}} 님의 정보를 삭제하시겠습니까?')){
+                location.href='{% url "students:sdelete" stu.no %}';
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>학생정보상세보기</h1>
@@ -50,7 +57,7 @@
     <br><br>
     <div>
         <a href='{% url "students:supdate" stu.no %}'><button type='button'>수정</button></a>
-        <a href='{% url "students:swrite" %}'><button type='button'>삭제</button></a>
+        <button type='button' onclick='deleteBtn()'>삭제</button>
         <a href='{% url "students:slist" %}'><button type='button'>리스트</button></a>
         <a href='/'><button type='button'>홈으로</button></a>
     </div>
