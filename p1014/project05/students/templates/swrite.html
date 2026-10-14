@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생정보 입력</title>
+    <link rel='stylesheet' href='/static/css/swrite.css' />
+    
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="top">
+            <div class="logo">FOREST</div>
+
+            <ul class="menu">
+                <li><a href="/">HOME</a></li>
+                <li><a href="/students/slist/">학생정보리스트</a></li>
+                <li><a href="#">학생관리</a></li>
+                <li><a href="#">교육과정</a></li>
+                <li><a href="#">문의</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- TOP BANNER -->
+    <section class="visual">
+        <div>
+            <h1>STUDENT</h1>
+            <p>학생 정보를 입력하고 관리하세요.</p>
+        </div>
+    </section>
+
+    <!-- CONTENT -->
+    <main>
+        <div class="container">
+
+            <!-- BREADCRUMB -->
+            <div class="breadcrumb">
+                HOME
+                <span>&gt;</span>
+                학생관리
+                <span>&gt;</span>
+                학생정보 입력
+            </div>
+
+            <!-- TITLE -->
+            <div class="title">
+                <h2>학생정보 입력</h2>
+                <p>학생의 기본 정보를 입력하세요.</p>
+            </div>
+
+            <!-- STUDENT INPUT FORM -->
+            <form class="student-form"
+                  id="studentForm"
+                  action="{% url 'students:swrite' %}"
+                  method="post">
+                  {% csrf_token %}
+
+                <h2>학생 기본정보 입력</h2>
+
+                <!-- 이름 -->
+                <div class="form-group">
+                    <label class="title-label" for="name">이름</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="이름을 입력하세요."
+                        required
+                    >
+                </div>
+
+                <!-- 학과 -->
+                <div class="form-group">
+                    <label class="title-label" for="major">학과</label>
+                    <input
+                        type="text"
+                        id="major"
+                        name="major"
+                        placeholder="학과를 입력하세요."
+                        required
+                    >
+                </div>
+
+                <!-- 학년 -->
+                <div class="form-group">
+                    <label class="title-label" for="grade">학년</label>
+                    <select id="grade" name="grade" required>
+                        <option value="">학년을 선택하세요.</option>
+                        <option value="1">1학년</option>
+                        <option value="2">2학년</option>
+                        <option value="3">3학년</option>
+                        <option value="4">4학년</option>
+                    </select>
+                </div>
+
+                <!-- 나이 -->
+                <div class="form-group">
+                    <label class="title-label" for="age">나이</label>
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        min="1"
+                        max="120"
+                        placeholder="나이를 입력하세요."
+                        required
+                    >
+                </div>
+
+                <!-- 성별 -->
+                <div class="form-group">
+                    <label class="title-label">성별</label>
+
+                    <div class="choice-group">
+                        <label class="choice-item">
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="남자"
+                                required
+                            >
+                            남자
+                        </label>
+
+                        <label class="choice-item">
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="여자"
+                            >
+                            여자
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 취미 -->
+                <div class="form-group">
+                    <label class="title-label">취미</label>
+
+                    <div class="choice-group">
+                        <label class="choice-item">
+                            <input
+                                type="checkbox"
+                                name="hobby"
+                                value="게임"
+                            >
+                            게임
+                        </label>
+
+                        <label class="choice-item">
+                            <input
+                                type="checkbox"
+                                name="hobby"
+                                value="골프"
+                            >
+                            골프
+                        </label>
+
+                        <label class="choice-item">
+                            <input
+                                type="checkbox"
+                                name="hobby"
+                                value="수영"
+                            >
+                            수영
+                        </label>
+
+                        <label class="choice-item">
+                            <input
+                                type="checkbox"
+                                name="hobby"
+                                value="조깅"
+                            >
+                            조깅
+                        </label>
+
+                        <label class="choice-item">
+                            <input
+                                type="checkbox"
+                                name="hobby"
+                                value="독서"
+                            >
+                            독서
+                        </label>
+                    </div>
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="form-buttons">
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+                        저장
+                    </button>
+
+                    <button
+                        type="reset"
+                        class="cancel-btn"
+                    >
+                        취소
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+
+            <div class="footer-menu">
+                <a href="#">회사소개</a>
+                <a href="#">오시는 길</a>
+                <a href="#">개인정보처리방침</a>
+                <a href="#">이용약관</a>
+            </div>
+
+            <div class="footer-info">
+                학생관리 시스템<br>
+                학생 기본정보 조회 및 관리 프로그램<br>
+                Copyright © 2026
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>
+

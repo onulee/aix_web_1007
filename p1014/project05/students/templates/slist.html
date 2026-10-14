@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 목록</title>
+    <link rel='stylesheet' href='/static/css/slist.css'/>
+  
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="top">
+            <div class="logo">FOREST</div>
+
+            <ul class="menu">
+                <li><a href="/">HOME</a></li>
+                <li><a href="#">뉴스</a></li>
+                <li><a href="#">학생관리</a></li>
+                <li><a href="#">학과정보</a></li>
+                <li><a href="#">문의</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- TOP BANNER -->
+    <section class="visual">
+        <div>
+            <h1>STUDENT</h1>
+            <p>학생 정보를 한눈에 확인하고 관리하세요.</p>
+        </div>
+    </section>
+
+    <!-- CONTENT -->
+    <main>
+        <div class="container">
+
+            <!-- BREADCRUMB -->
+            <div class="breadcrumb">
+                HOME
+                <span>&gt;</span>
+                학생관리
+                <span>&gt;</span>
+                학생목록
+            </div>
+
+            <!-- TITLE -->
+            <div class="title">
+                <h2>학생 목록</h2>
+                <p>
+                    학생별 이름, 학과, 학년, 나이, 성별, 취미 정보를
+                    확인하고 관리할 수 있습니다.
+                </p>
+            </div>
+
+            <!-- SEARCH -->
+            <div class="search">
+                <select id="searchType">
+                    <option value="name">이름</option>
+                    <option value="number">번호</option>
+                    <option value="major">학과</option>
+                    <option value="all">전체</option>
+                </select>
+
+                <input
+                    type="text"
+                    id="searchKeyword"
+                    placeholder="검색어를 입력하세요."
+                >
+
+                <button type="button" onclick="searchStudents()">
+                    검색
+                </button>
+            </div>
+
+            <!-- STUDENT LIST -->
+            <div class="score-list">
+
+                <!-- HEADER -->
+                <div class="score-row score-header">
+                    <div>번호</div>
+                    <div>이름</div>
+                    <div>학과</div>
+                    <div>학년</div>
+                    <div>나이</div>
+                    <div>성별</div>
+                    <div>취미</div>
+                    <div>수정</div>
+                    <div>삭제</div>
+                </div>
+
+                <!-- 학생정보리스트 -->
+                {% for stu in list  %}
+                <div class="score-row student-row"
+                     data-number="{{stu.no}}"
+                     data-name="{{stu.name}}"
+                     data-major="{{stu.major}}">
+                    <div>{{stu.no}}</div>
+                    <div class="name">{{stu.name}}</div>
+                    <div>{{stu.major}}</div>
+                    <div>{{stu.grade}}</div>
+                    <div>{{stu.age}}</div>
+                    <div>{{stu.gender}}</div>
+                    <div class="hobby">{{stu.hobby}}</div>
+                    <div class="remarks">
+                        <button type="button"
+                                onclick="editStudent(this)">수정</button>
+                    </div>
+                    <div class="remarks">
+                        <button type="button"
+                                onclick="deleteStudent(this)">삭제</button>
+                    </div>
+                </div>
+                {% endfor %}
+
+               
+
+            <!-- WRITE BUTTON -->
+            <div class="write-area">
+                <a href="/students/swrite/" class="write-btn">등록</a>
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="pagination">
+                <a href="#">«</a>
+                <a href="#">‹</a>
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+                <a href="#">›</a>
+                <a href="#">»</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+
+            <div class="footer-menu">
+                <a href="#">회사소개</a>
+                <a href="#">오시는 길</a>
+                <a href="#">개인정보처리방침</a>
+                <a href="#">이용약관</a>
+            </div>
+
+            <div class="footer-info">
+                학생관리 시스템<br>
+                학생 정보 조회 및 관리 프로그램<br>
+                Copyright © 2026
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // 학생 검색
+        function searchStudents() {
+            const type = document.getElementById("searchType").value;
+            const keyword = document
+                .getElementById("searchKeyword")
+                .value.trim()
+                .toLowerCase();
+
+            const rows = document.querySelectorAll(".student-row");
+
+            rows.forEach(function(row) {
+                const number = row.dataset.number;
+                const name = row.dataset.name.toLowerCase();
+                const major = row.dataset.major.toLowerCase();
+
+                let match = false;
+
+                if (type === "name") {
+                    match = name.includes(keyword);
+                } else if (type === "number") {
+                    match = number.includes(keyword);
+                } else if (type === "major") {
+                    match = major.includes(keyword);
+                } else {
+                    match = row.textContent
+                        .toLowerCase()
+                        .includes(keyword);
+                }
+
+                row.style.display = match ? "grid" : "none";
+            });
+        }
+
+        // Enter 키로 검색
+        document.getElementById("searchKeyword")
+            .addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    searchStudents();
+                }
+            });
+
+        // 학생 정보 수정
+        function editStudent(button) {
+            const row = button.closest(".student-row");
+            const cells = row.children;
+
+            const number = cells[0].textContent.trim();
+            const name = cells[1].textContent.trim();
+            const major = cells[2].textContent.trim();
+            const grade = cells[3].textContent.trim();
+            const age = cells[4].textContent.trim();
+            const gender = cells[5].textContent.trim();
+            const hobby = cells[6].textContent.trim();
+
+            alert(
+                "학생 정보 수정\n\n" +
+                "번호: " + number + "\n" +
+                "이름: " + name + "\n" +
+                "학과: " + major + "\n" +
+                "학년: " + grade + "\n" +
+                "나이: " + age + "\n" +
+                "성별: " + gender + "\n" +
+                "취미: " + hobby + "\n\n" +
+                "실제 수정 기능은 수정 페이지와 연결해야 합니다."
+            );
+        }
+
+        // 학생 정보 삭제
+        function deleteStudent(button) {
+            const row = button.closest(".student-row");
+            const name = row.children[1].textContent.trim();
+
+            if (confirm(name + " 학생 정보를 삭제하시겠습니까?")) {
+                row.remove();
+            }
+        }
+    </script>
+
+</body>
+</html>
+

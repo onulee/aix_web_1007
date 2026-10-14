@@ -1,0 +1,270 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Noto Sans KR", Arial, sans-serif;
+            color: #333;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* HEADER */
+        header {
+            border-bottom: 1px solid #eee;
+        }
+
+        .top {
+            width: 1200px;
+            height: 90px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .menu {
+            display: flex;
+            gap: 40px;
+        }
+
+        .menu li {
+            font-size: 15px;
+        }
+
+        /* TOP BANNER */
+        .visual {
+            height: 280px;
+            background:
+                linear-gradient(
+                    rgba(0, 0, 0, .28),
+                    rgba(0, 0, 0, .28)
+                ),
+                url("https://images.unsplash.com/photo-1506744038136-46273834b3fb")
+                center / cover no-repeat;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .visual h1 {
+            font-size: 42px;
+            font-weight: 400;
+        }
+
+        .visual p {
+            margin-top: 15px;
+        }
+
+        /* CONTENT */
+        .container {
+            width: 1200px;
+            margin: auto;
+            padding: 70px 0 100px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 40px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .breadcrumb span {
+            margin: 0 10px;
+        }
+
+        .title {
+            margin-bottom: 35px;
+        }
+
+        .title h2 {
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        .title p {
+            margin-top: 10px;
+            color: #999;
+        }
+
+        /* STUDENT INPUT FORM */
+        .student-form {
+            width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 35px 40px;
+            background: #fafafa;
+        }
+
+        .student-form h2 {
+            margin-bottom: 30px;
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label.title-label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            height: 42px;
+            padding: 0 10px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        /* RADIO AND CHECKBOX */
+        .choice-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 22px;
+            padding: 8px 0;
+        }
+
+        .choice-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .choice-item input {
+            width: 16px;
+            height: 16px;
+            accent-color: #333;
+            cursor: pointer;
+        }
+
+        /* BUTTONS */
+        .form-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            width: 120px;
+            height: 45px;
+            border: 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .save-btn {
+            background: #333;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #555;
+        }
+
+        .cancel-btn {
+            background: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .cancel-btn:hover {
+            background: #eee;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #333;
+            color: #aaa;
+        }
+
+        .footer-inner {
+            width: 1200px;
+            margin: auto;
+            padding: 45px 0;
+        }
+
+        .footer-menu {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .footer-menu a {
+            color: #ddd;
+            font-size: 13px;
+        }
+
+        .footer-info {
+            font-size: 12px;
+            line-height: 2;
+        }
+
+        /* MOBILE */
+        @media screen and (max-width: 768px) {
+            .top,
+            .container,
+            .footer-inner {
+                width: 90%;
+            }
+
+            .menu {
+                display: none;
+            }
+
+            .visual {
+                height: 220px;
+            }
+
+            .visual h1 {
+                font-size: 32px;
+            }
+
+            .container {
+                padding-top: 45px;
+            }
+
+            .student-form {
+                width: 100%;
+                padding: 30px 20px;
+            }
+
+            .footer-menu {
+                flex-wrap: wrap;
+            }
+        }
