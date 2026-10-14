@@ -57,19 +57,21 @@
 
             <!-- SEARCH -->
             <div class="search">
-                <select id="searchType">
-                    <option value="name">이름</option>
-                    <option value="number">번호</option>
-                    <option value="major">학과</option>
-                    <option value="all">전체</option>
-                </select>
-
-                <input
-                    type="text"
-                    id="searchKeyword"
-                    placeholder="검색어를 입력하세요."
-                >
-
+                <form action='' method='post' name='searchFrm'>
+                    {% csrf_token %}
+                    <select id="searchType" name='type'>
+                        <option value="name">이름</option>
+                        <option value="number">번호</option>
+                        <option value="major">학과</option>
+                        <option value="all">전체</option>
+                    </select>
+    
+                    <input
+                        type="text" name='keyword'
+                        id="searchKeyword"
+                        placeholder="검색어를 입력하세요."
+                    >
+                </form>
                 <button type="button" onclick="searchStudents()">
                     검색
                 </button>
@@ -87,8 +89,8 @@
                     <div>나이</div>
                     <div>성별</div>
                     <div>취미</div>
-                    <div>수정</div>
-                    <div>삭제</div>
+                    <div>등록일</div>
+                    <div>수정/삭제</div>
                 </div>
 
                 <!-- 학생정보리스트 -->
@@ -104,13 +106,11 @@
                     <div>{{stu.age}}</div>
                     <div>{{stu.gender}}</div>
                     <div class="hobby">{{stu.hobby}}</div>
+                    {% comment %} <div class="remarks">{{stu.sdate}}</div> {% endcomment %}
+                    <div class="remarks">{{stu.sdate|date:'Y-m-d'}}</div>
                     <div class="remarks">
-                        <button type="button"
-                                onclick="editStudent(this)">수정</button>
-                    </div>
-                    <div class="remarks">
-                        <button type="button"
-                                onclick="deleteStudent(this)">삭제</button>
+                        <button type="button" onclick="editStudent(this)">수정</button>
+                        <button type="button" onclick="deleteStudent(this)">삭제</button>
                     </div>
                 </div>
                 {% endfor %}
@@ -167,30 +167,9 @@
                 .getElementById("searchKeyword")
                 .value.trim()
                 .toLowerCase();
+            alert('확인');
+            searchFrm.submit();    
 
-            const rows = document.querySelectorAll(".student-row");
-
-            rows.forEach(function(row) {
-                const number = row.dataset.number;
-                const name = row.dataset.name.toLowerCase();
-                const major = row.dataset.major.toLowerCase();
-
-                let match = false;
-
-                if (type === "name") {
-                    match = name.includes(keyword);
-                } else if (type === "number") {
-                    match = number.includes(keyword);
-                } else if (type === "major") {
-                    match = major.includes(keyword);
-                } else {
-                    match = row.textContent
-                        .toLowerCase()
-                        .includes(keyword);
-                }
-
-                row.style.display = match ? "grid" : "none";
-            });
         }
 
         // Enter 키로 검색

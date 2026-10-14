@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VLAST Shop - 로그인</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #1a1a1a;
+    }
+    /* Header (우측 상단 메뉴 + 아이콘) */
+    .header {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 40px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .top-menu {
+      display: flex;
+      gap: 15px;
+      font-size: 13px;
+      color: #636363;
+      margin-right: 20px;
+    }
+    .top-menu a {
+      text-decoration: none;
+      color: #636363;
+    }
+    .top-menu a:hover {
+      color: #035fe0;
+    }
+    .icons {
+      display: flex;
+      gap: 15px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    /* Container */
+    .container {
+      max-width: 1230px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      padding: 80px 0;
+    }
+    .login-box {
+      width: 320px;
+      text-align: center;
+    }
+    .login-box h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+    }
+    /* Input */
+    .input-box {
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      font-weight: 400;
+      height: 40px;
+      outline: none;
+      border-radius: 0;
+      box-sizing: border-box;
+    }
+    .input-box:focus {
+      outline: 1.5px solid #1a1a1a;
+    }
+    .idsave{text-align: left; color: #636363; font-size: 15px; 
+            display: flex;
+            align-items: center;   /* 세로 가운데 정렬 */
+            gap: 3px;              /* 체크박스와 글자 사이 간격 */
+    }
+    /* Buttons */
+    .btn {
+      width: 100%;
+      height: 42px;
+      font-size: 15px;
+      font-weight: 500;
+      margin: 15px 0;
+      cursor: pointer;
+      border: none;
+      border-radius: 0;
+    }
+    .btn-login {
+      background-color: #035fe0;
+      color: #fafafa;
+    }
+    .btn-signup {
+      background-color: #fafafa;
+      border: 1px solid #ccc;
+      color: #1a1a1a;
+      width: 140px;
+      height: 45px;
+      margin-top: 15px;
+    }
+    /* Links */
+    .links {
+      margin: 15px 0;
+      font-size: 13px;
+    }
+    .links a {
+      text-decoration: none;
+      color: #636363;
+      margin: 0 5px;
+    }
+    /* Signup box */
+    .signup-box {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .signup-box p {
+      font-size: 13px;
+      font-weight: 400;
+      color: #636363;
+      margin: 7px 0;
+    }
+    .signup-box strong {
+      color: #1a1a1a;
+      font-weight: 700;
+    }
+    /* Footer placeholder */
+    footer {
+      border-top: 1px solid #ccc;
+      padding: 30px;
+      text-align: center;
+      font-size: 13px;
+      color: #A0A0A0;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="header">
+    <div class="top-menu">
+      <a href="#">회원가입</a> |
+      <a href="#">로그인</a> |
+      <a href="#">주문조회</a> |
+      <a href="#">최근본상품</a>
+    </div>
+    <div class="icons">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-user"></i>
+      <i class="fas fa-shopping-bag"></i>
+    </div>
+  </div>
+  <div class="container">
+    <div class="login-box">
+      <h1>로그인</h1>
+      <form>
+        <input type="text" placeholder="아이디" class="input-box" required>
+        <input type="password" placeholder="비밀번호" class="input-box" required>
+        <button type="submit" class="btn btn-login">로그인</button>
+        <br>
+        <div class="idsave">
+          <input type="checkbox" id="rememberId" name="rememberId" value="rememberId">
+          <label for="rememberId">아이디 저장</label>
+        </div>
+      </form>
+      <div class="links">
+        <a href="#">아이디 찾기</a> |
+        <a href="#">비밀번호 찾기</a>
+      </div>
+      <div class="signup-box">
+        <p><strong>아직 회원이 아니신가요?</strong></p>
+        <p>지금 회원가입을 하시면<br>다양하고 특별한 혜택이 준비되어 있습니다.</p>
+        <button class="btn-signup">회원가입</button>
+      </div>
+    </div>
+  </div>
+  <footer>
+    Copyright © VLAST Shop. All rights reserved.
+  </footer>
+</body>
+</html>
