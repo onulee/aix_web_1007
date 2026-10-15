@@ -163,8 +163,13 @@ $(document).ready(function() {
 			</div>
 			<div id="snb">
 				<ul>
+					{% if request.session.session_id %}
+					<li><a>{{request.session.session_nickname}} 님</a></li>
+					<li><a href="/member/logout/">LOGOUT</a></li>
+					{% else %}
 					<li><a href="/member/login/">LOGIN</a></li>
 					<li><a href="/member/step01/">JOIN</a></li>
+					{% endif %}
 					<li><a href="#">MY PAGE</a></li>
 					<li><a href="/admin/">admin</a></li>
 				</ul>

@@ -22,12 +22,16 @@
 <script type="text/javascript" src="/static/js/html5.js"></script>
 <script type="text/javascript" src="/static/js/respond.min.js"></script>
 <![endif]-->
-<script type="text/javascript">
-$(document).ready(function() {
-	
-
-
-});
+<script>
+	if ('{{temp}}'=='1'){
+		alert('로그인 되었습니다.');
+		location.href= '/';
+	} else if('{{temp}}'=='0'){
+		alert('아이디 또는 패스워드가 일치하지 않습니다. 다시 로그인 해주세요.');
+	} else if('{{temp}}'=='2'){
+		alert('로그아웃 되었습니다.');
+		location.href= '/';
+	} 
 </script>
 </head>
 <body>
@@ -214,14 +218,24 @@ $(document).ready(function() {
 					<h3>회원 로그인</h3>
 					<div class="informbox">
 						<div class="inform">
-							<ul>
-								<li><input type="text" class="loginType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='loginType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" /></li>
-								<li><input type="password" class="passType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='passType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" /></li>
-							</ul>
+							<form action='/member/login/' method='post' name='loginFrm'>
+								{% csrf_token %}
+								<ul>
+									<li><input type="text" name='id' class="loginType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='loginType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" required /></li>
+									<li><input type="password" name='pw' class="passType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='passType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" required /></li>
+								</ul>
+							</form>
 
-							<div class="btn"><a href="#" class="sbtn">로그인</a></div>
+							<div class="btn">
+								<a onclick='loginBtn()' style='cursor: pointer;' class="sbtn">로그인</a>
+							</div>
 							<div class="chk"><input type="checkbox" id="idsave"/><label for="idsave">아이디 저장</label></div>							
-
+							<script>
+								function loginBtn(){
+									//alert('확인')
+									loginFrm.submit();
+								}
+							</script>
 							<div class="point">
 								<p>아이디와 비밀번호를 잊으셨나요?</p>
 								<a href="#" class="nbtn">아이디/비밀번호 찾기</a>
