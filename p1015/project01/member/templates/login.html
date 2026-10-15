@@ -224,12 +224,12 @@
 									<li><input type="text" name='id' class="loginType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='loginType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" required /></li>
 									<li><input type="password" name='pw' class="passType" onfocus="this.className='mfocus'" onblur="if (this.value.length==0) {this.className='passType'}else {this.className='mfocusnot'}" style="ime-mode:inactive;" required /></li>
 								</ul>
+								
+								<div class="btn">
+									<a onclick='loginBtn()' style='cursor: pointer;' class="sbtn">로그인</a>
+								</div>
+								<div class="chk"><input type="checkbox" id="idsave" name='idsave' value='1'/><label for="idsave">아이디 저장</label></div>							
 							</form>
-
-							<div class="btn">
-								<a onclick='loginBtn()' style='cursor: pointer;' class="sbtn">로그인</a>
-							</div>
-							<div class="chk"><input type="checkbox" id="idsave"/><label for="idsave">아이디 저장</label></div>							
 							<script>
 								function loginBtn(){
 									//alert('확인')
