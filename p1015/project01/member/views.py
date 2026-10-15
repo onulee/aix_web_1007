@@ -14,7 +14,7 @@ def login(request):
     if request.method == 'GET':
         context = {}
         if request.COOKIES.get('cookie_id'): #없을때 None
-            context = {'cookie_id':'1'} #idsave = 'chk'
+            context = {'cookie_id':request.COOKIES.get('cookie_id')} #idsave = 'chk'
         return render(request, 'login.html',context)
     elif request.method == 'POST':
         id = request.POST.get('id')
@@ -34,8 +34,7 @@ def login(request):
         # 쿠키사용을 위해 분리
         response = render(request, 'login.html', context) 
         if idsave != '':
-            response.set_cookie('cookie_id','1',max_age=60*60*24*365)
-
+            response.set_cookie('cookie_id',id,max_age=60*60*24*365)
         else:
             response.delete_cookie('cookie_id')    
         return response    
