@@ -55,8 +55,13 @@ HEADER
 
 
         <div class="header-right">
-            <a href="/member/login/">로그인</a>
-            <a href="#">회원가입</a>
+            {% if request.session.se_id  %}
+                <a href="#">{{request.session.se_nickname}} 님</a>
+                <a href="/member/logout/">로그아웃</a>
+            {% else %}
+                <a href="/member/login/">로그인</a>
+                <a href="#">회원가입</a>
+            {% endif %}
             <a href="/admin/">관리자</a>
         </div>
 

@@ -53,6 +53,7 @@
                 <label for="user-id" class="sr-only"></label>
                 <input type="text" id="user-id" name="id"
                     class="input-box" placeholder="아이디" autocomplete="username" required
+                    {% if cook_id %}value={{cook_id}}{% endif %}
                 >
 
                 <label for="user-password" class="sr-only"></label>
@@ -69,7 +70,9 @@
                 <button type="submit" class="btn btn-login">로그인</button>
                 
                 <div class="idsave">
-                    <input type="checkbox" id="rememberId" name="rememberId">
+                    <input type="checkbox" id="rememberId" name="rememberId"
+                    {% if cook_id %}checked{% endif %}
+                    >
                     <label for="rememberId">아이디 저장</label>
                 </div>
             </form>
