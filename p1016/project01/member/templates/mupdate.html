@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FOREST - 회원수정</title>
   <link rel='stylesheet' href='/static/css/mwrite.css'>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
   <header>
@@ -39,7 +40,8 @@
       </ul>
     </div>
 
-    <form action='/member/mupdate/' method='post' name='memberFrm' id="signup-form" class="form-box" >
+    <form action='/member/mupdate/{{request.session.session_id}}/' method='post' name='memberFrm' id="signup-form" class="form-box" >
+    {% comment %} <form action='{% url "member:update" request.session.session_id %}' method='post' name='memberFrm' id="signup-form" class="form-box" > {% endcomment %}
       {% csrf_token %}
       <table>
         <tbody>
@@ -53,8 +55,7 @@
           </tr>
           <tr>
             <td><label for="password">비밀번호</label></td>
-            <td><input name='pw' id="password" type="password" 
-              value='{{member.pw}}'></td>
+            <td><input name='pw' id="password" type="password" ></td>
           </tr>
           <tr>
             <td><label for="password-confirm">비밀번호 확인</label></td>
@@ -131,7 +132,7 @@
       </table>
       <div class="btn-box">
         <button type="button" class="btn cancel" onclick="history.back()">취소</button>
-        <button type="submit" class="btn submit">확인</button>
+        <button type="button" onclick='updateBtn()' class="btn submit">수정</button>
       </div>
     </form>
   </main>
@@ -139,45 +140,19 @@
   <footer>Copyright © FOREST. All rights reserved.</footer>
 
   <script>
-    document.getElementById("id-check").addEventListener("click", function () {
-      const id = document.getElementById("user-id").value.trim();
-      if (!id) {
-        alert("아이디를 입력해 주세요.");
+    function updateBtn(){
+      //alert("확인");
+      const pw = $('#password').val();
+      const pw2 = $('#password-confirm').val();
+      console.log("pw,pw2 : ",pw,pw2);
+      if (pw!=pw2){
+        alert('비밀번호와 비밀번호확인이 다릅니다. 비밀번호를 제대로 입력하세요.')
         return;
       }
-      alert("아이디 중복확인 기능은 서버와 연결해야 사용할 수 있습니다.");
-    });
-
-    document.getElementById("send-code").addEventListener("click", function () {
-      const email = document.getElementById("email");
-      if (!email.checkValidity() || !email.value.trim()) {
-        alert("올바른 이메일 주소를 입력해 주세요.");
-        email.focus();
-        return;
-      }
-      alert("이메일 인증번호 발송 기능은 서버와 연결해야 사용할 수 있습니다.");
-    });
-
-    document.getElementById("verify-button").addEventListener("click", function () {
-      const code = document.getElementById("verify-code").value.trim();
-      if (!code) {
-        alert("인증번호를 입력해 주세요.");
-        return;
-      }
-      alert("인증번호 검증 기능은 서버와 연결해야 사용할 수 있습니다.");
-    });
-
-    document.getElementById("signup-form").addEventListener("submit", function (event) {
-      event.preventDefault();
-      const password = document.getElementById("password").value;
-      const passwordConfirm = document.getElementById("password-confirm").value;
-      if (password !== passwordConfirm) {
-        alert("비밀번호가 일치하지 않습니다.");
-        document.getElementById("password-confirm").focus();
-        return;
-      }
-      alert("화면 구성 예제입니다. 실제 회원가입 저장 기능은 서버와 연결해야 합니다.");
-    });
+      alert('{{request.session.session_id}}님 회원정보를 수정합니다.')
+      memberFrm.submit();
+    }
+    
   </script>
 </body>
 </html>

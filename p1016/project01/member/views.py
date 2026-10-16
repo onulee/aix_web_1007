@@ -11,7 +11,7 @@ def mupdate(request,id):
         context = {'member':qs,'tel':tel}
         return render(request, 'mupdate.html', context)
     elif request.method == 'POST':
-        id = request.POST.get('id')
+        # id = request.session.session_id
         pw = request.POST.get('pw')
         name = request.POST.get('name')
         nickname = request.POST.get('nickname')
@@ -21,10 +21,18 @@ def mupdate(request,id):
         tel = f'{tel1}-{tel2}-{tel3}'
         gender = request.POST.get('gender')
         hobby = request.POST.getlist('hobby')
-
+        # id로 검색
+        qs = Member.objects.get(id=id)
+        qs.pw = pw
+        qs.name = name
+        qs.nickname = nickname
+        qs.tel = tel
+        qs.gender = gender
+        qs.hobby = hobby
+        qs.save()
         # db저장
-        Member(id=id,pw=pw,name=name,nickname=nickname,tel=tel,gender=gender,hobby=hobby).save()
-        print(f'{id},{pw},{name},{nickname},{tel},{gender},{hobby},')
+        #Member(id=id,pw=pw,name=name,nickname=nickname,tel=tel,gender=gender,hobby=hobby).save()
+        print(f'{id},{pw},{name},{nickname},{tel},{gender},{hobby}')
         return redirect('/')
     
 #--------------------------------------------
