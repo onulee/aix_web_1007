@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>게시글등록</h1>
+    <form action='/board/bwrite/' method='post' name='boardFrm'
+    enctype='multipart/form-data'>
+        {% csrf_token %}
+        <label>제목</label>
+        <input type='text' name='btitle'><br>
+        <label>파일첨부</label>
+        <input type='file' name='bfile'><br>
+        <input type='submit' value='등록'>
+
+    </form>
+</body>
+</html>

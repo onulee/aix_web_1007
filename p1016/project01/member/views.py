@@ -22,16 +22,21 @@ def mupdate(request,id):
         gender = request.POST.get('gender')
         hobby = request.POST.getlist('hobby')
         # id로 검색
-        qs = Member.objects.get(id=id)
-        qs.pw = pw
-        qs.name = name
-        qs.nickname = nickname
-        qs.tel = tel
-        qs.gender = gender
-        qs.hobby = hobby
-        qs.save()
-        # db저장
-        #Member(id=id,pw=pw,name=name,nickname=nickname,tel=tel,gender=gender,hobby=hobby).save()
+        # qs = Member.objects.get(id=id)
+        # db 수정1
+        # qs.pw = pw
+        # qs.name = name
+        # qs.nickname = nickname
+        # qs.tel = tel
+        # qs.gender = gender
+        # qs.hobby = hobby
+        # qs.save()
+
+        # db수정2
+        Member.objects.filter(id=id).update(
+            name=name,nickname=nickname,tel=tel,
+            gender=gender,hobby=hobby
+        )
         print(f'{id},{pw},{name},{nickname},{tel},{gender},{hobby}')
         return redirect('/')
     
