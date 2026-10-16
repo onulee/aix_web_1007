@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOREST - 회원가입</title>
+  <link rel='stylesheet' href='/static/css/mwrite.css'>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div class="logo"><a href="#">FOREST</a></div>
+      <nav aria-label="주 메뉴">
+        <ul class="menu">
+          <li><a href="#">소개</a></li>
+          <li><a href="#">뉴스</a></li>
+          <li><a href="#">학생관리</a></li>
+          <li><a href="#">학과정보</a></li>
+          <li><a href="#">문의</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="visual">
+    <div>
+      <h1>JOIN US</h1>
+      <p>FOREST 회원가입을 통해 다양한 서비스를 이용하세요.</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="title">회원가입</div>
+    <div class="orderStep">
+      <ul>
+        <li>1. 약관동의</li>
+        <li><span class="current">2. 정보입력</span></li>
+        <li>3. 가입완료</li>
+      </ul>
+    </div>
+
+    <form action='/member/mwrite/' method='post' name='memberFrm' id="signup-form" class="form-box" >
+      {% csrf_token %}
+      <table>
+        <tbody>
+          <tr>
+            <td><label for="user-id">아이디</label></td>
+            <td><div class="id-check-box">
+              <input name='id' id="user-id" type="text" placeholder="영문소문자/숫자, 4~16자" required>
+              <button type="button" id="id-check">중복확인</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><label for="password">비밀번호</label></td>
+            <td><input name='pw' id="password" type="password" placeholder="영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자" required></td>
+          </tr>
+          <tr>
+            <td><label for="password-confirm">비밀번호 확인</label></td>
+            <td><input name='pw2' id="password-confirm" type="password" required></td>
+          </tr>
+          <tr>
+            <td><label for="name">이름</label></td>
+            <td><input name='name' id="name" type="text" required></td>
+          </tr>
+          <tr>
+            <td><label for="nickname">닉네임</label></td>
+            <td><input name='nickname' id="nickname" type="text" placeholder="사용할 닉네임 입력" required></td>
+          </tr>
+          <tr>
+            <td><label for="phone1">휴대전화</label></td>
+            <td><div class="phone-input">
+              <select name='tel1' id="phone1" aria-label="휴대전화 앞자리">
+                <option>010</option><option>011</option><option>016</option><option>017</option>
+              </select>
+              <span>-</span><input name='tel2' type="text" aria-label="휴대전화 가운데 자리" maxlength="4" inputmode="numeric" required>
+              <span>-</span><input name='tel3' type="text" aria-label="휴대전화 끝자리" maxlength="4" inputmode="numeric" required>
+            </div></td>
+          </tr>
+          
+          
+          <tr>
+            <td>성별</td>
+            <td>
+              <div class="choice-group" role="group" aria-label="성별">
+                <label><input type="radio" name="gender" value="남자" required> 남자</label>
+                <label><input type="radio" name="gender" value="여자"> 여자</label>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>취미</td>
+            <td>
+              <div class="choice-group hobby-group" role="group" aria-label="취미">
+                <label><input type="checkbox" name="hobby" value="게임"> 게임</label>
+                <label><input type="checkbox" name="hobby" value="골프"> 골프</label>
+                <label><input type="checkbox" name="hobby" value="수영"> 수영</label>
+                <label><input type="checkbox" name="hobby" value="조깅"> 조깅</label>
+                <label><input type="checkbox" name="hobby" value="독서"> 독서</label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn-box">
+        <button type="button" class="btn cancel" onclick="history.back()">취소</button>
+        <button type="submit" class="btn submit">확인</button>
+      </div>
+    </form>
+  </main>
+
+  <footer>Copyright © FOREST. All rights reserved.</footer>
+
+  <script>
+    document.getElementById("id-check").addEventListener("click", function () {
+      const id = document.getElementById("user-id").value.trim();
+      if (!id) {
+        alert("아이디를 입력해 주세요.");
+        return;
+      }
+      alert("아이디 중복확인 기능은 서버와 연결해야 사용할 수 있습니다.");
+    });
+
+    document.getElementById("send-code").addEventListener("click", function () {
+      const email = document.getElementById("email");
+      if (!email.checkValidity() || !email.value.trim()) {
+        alert("올바른 이메일 주소를 입력해 주세요.");
+        email.focus();
+        return;
+      }
+      alert("이메일 인증번호 발송 기능은 서버와 연결해야 사용할 수 있습니다.");
+    });
+
+    document.getElementById("verify-button").addEventListener("click", function () {
+      const code = document.getElementById("verify-code").value.trim();
+      if (!code) {
+        alert("인증번호를 입력해 주세요.");
+        return;
+      }
+      alert("인증번호 검증 기능은 서버와 연결해야 사용할 수 있습니다.");
+    });
+
+    document.getElementById("signup-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const password = document.getElementById("password").value;
+      const passwordConfirm = document.getElementById("password-confirm").value;
+      if (password !== passwordConfirm) {
+        alert("비밀번호가 일치하지 않습니다.");
+        document.getElementById("password-confirm").focus();
+        return;
+      }
+      alert("화면 구성 예제입니다. 실제 회원가입 저장 기능은 서버와 연결해야 합니다.");
+    });
+  </script>
+</body>
+</html>
