@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from member.models import Member
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
+
 
 def logout(request):
     request.session.clear() #섹션 모두삭제
@@ -10,6 +13,11 @@ def logout(request):
 # get,post
 def login(request):
     if request.method == 'GET':
+        input_id = '1111'
+        hash_id = make_password(input_id)
+        print("해쉬비밀번호 : ",input_id,hash_id)
+        print("해쉬확인",check_password(input_id, hash_id))
+        
         # 쿠키확인 ============================
         cook_id = request.COOKIES.get('cook_id','')
         context = {'cook_id':cook_id}
