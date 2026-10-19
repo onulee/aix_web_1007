@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),
     path('board/', include('board.urls')),
+    path('member/', include('member.urls')),
 ]
 
 # /media/1.jpg

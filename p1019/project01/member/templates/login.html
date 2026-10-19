@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/static/css/login.css'>
+    <title>FOREST - 로그인</title>
+    <script>
+        if('{{temp}}' == '1'){
+            alert("로그인 되었습니다.");
+            location.href = "/";
+        }else if('{{temp}}'=='0'){
+            alert('아이디 또는 패스워드가 일치하지 않습니다.');
+        }else if('{{temp}}'=='2'){
+            alert('로그아웃 되었습니다.');
+            location.href = "/";
+        }
+    </script>
+    
+</head>
+<body>
+    <!-- 첫 번째 디자인의 상단 메뉴 -->
+    <header>
+        <div class="top">
+            <div class="logo"><a href="#">FOREST</a></div>
+            <nav aria-label="주 메뉴">
+                <ul class="menu">
+                    <li><a href="#">소개</a></li>
+                    <li><a href="#">뉴스</a></li>
+                    <li><a href="#">학생관리</a></li>
+                    <li><a href="#">학과정보</a></li>
+                    <li><a href="#">문의</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 첫 번째 디자인의 이미지 배너 -->
+    <section class="visual">
+        <div>
+            <h1>LOGIN</h1>
+            <p>로그인 후 다양한 서비스를 이용하세요.</p>
+        </div>
+    </section>
+
+    <!-- 두 번째 디자인의 로그인 영역 -->
+    <main class="login-section">
+        <section class="login-box" aria-labelledby="login-title">
+            <h2 id="login-title">로그인</h2>
+
+            <form action="/member/login/" method="post" name='loginFrm'>
+                {% csrf_token %}
+                <label for="user-id" class="sr-only"></label>
+                <input
+                    type="text"
+                    id="user-id"
+                    name="id"
+                    class="input-box"
+                    placeholder="아이디"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="user-password" class="sr-only"></label>
+                <input
+                    type="password"
+                    id="user-password"
+                    name="pw"
+                    class="input-box"
+                    placeholder="비밀번호"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button type="submit" class="btn btn-login">로그인</button>
+
+                <div class="idsave">
+                    <input type="checkbox" id="rememberId" name="rememberId">
+                    <label for="rememberId">아이디 저장</label>
+                </div>
+            </form>
+
+            <div class="links">
+                <a href="#">아이디 찾기</a> |
+                <a href="#">비밀번호 찾기</a>
+            </div>
+
+            <div class="signup-box">
+                <p><strong>아직 회원이 아니신가요?</strong></p>
+                <p>지금 회원가입을 하시면<br>다양하고 특별한 혜택이 준비되어 있습니다.</p>
+                <button type="button" class="btn-signup" onclick="location.href='#'">회원가입</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Copyright © FOREST. All rights reserved.
+    </footer>
+</body>
+</html>

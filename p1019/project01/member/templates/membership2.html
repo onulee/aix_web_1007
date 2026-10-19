@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOREST - 회원가입</title>
+  <style>
+    @font-face {
+      font-family: "Pretendard";
+      src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff") format("woff");
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Pretendard";
+      src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff") format("woff");
+      font-weight: 700;
+      font-display: swap;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif; color: #333; background: #fff; line-height: 1.5; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* 첫 번째 소스의 상단 메뉴 */
+    header { border-bottom: 1px solid #eee; background: #fff; }
+    .top {
+      width: min(1200px, calc(100% - 40px));
+      min-height: 90px; margin: 0 auto; display: flex;
+      align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .logo { font-size: 28px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
+    .menu { display: flex; align-items: center; flex-wrap: wrap; gap: 40px; }
+    .menu li { font-size: 15px; }
+    .menu a:hover { color: #035fe0; }
+
+    /* 첫 번째 소스의 이미지 배너 */
+    .visual {
+      min-height: 280px; padding: 40px 20px;
+      background: linear-gradient(rgba(0,0,0,.28), rgba(0,0,0,.28)),
+        url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85") center / cover no-repeat;
+      display: flex; justify-content: center; align-items: center;
+      text-align: center; color: #fff;
+    }
+    .visual h1 { font-size: 42px; font-weight: 400; letter-spacing: 2px; }
+    .visual p { margin-top: 15px; font-size: 16px; }
+
+    /* 두 번째 소스의 회원가입 정보입력 영역 */
+    .container { width: min(720px, calc(100% - 40px)); margin: 0 auto; }
+    .title { text-align: center; padding: 55px 0 45px; font-size: 30px; font-weight: 700; }
+    .orderStep { text-align: center; padding-bottom: 20px; margin-bottom: 10px; border-bottom: 1px solid #1a1a1a; }
+    .orderStep ul { display: flex; justify-content: center; gap: 40px; }
+    .orderStep li { font-size: 14px; }
+    .orderStep .current { color: #035fe0; font-size: 15px; font-weight: 700; }
+    .form-box { margin: 0 auto; max-width: 720px; padding: 10px 30px; }
+    .form-box table { width: 100%; border-collapse: collapse; }
+    .form-box td { padding: 4px 0 12px; vertical-align: middle; }
+    .form-box td:first-child { width: 140px; font-weight: 700; color: #1a1a1a; padding-right: 16px; }
+    input[type="text"], input[type="password"], input[type="email"], select {
+      width: 100%; padding: 0 12px; font-size: 15px; height: 45px;
+      border: 1px solid #ccc; background: #fff; box-sizing: border-box;
+    }
+    input:focus, select:focus { outline: 1.5px solid #1a1a1a; }
+    .id-check-box, .email-input, .code-input { display: flex; align-items: center; gap: 12px; }
+    .id-check-box input, .email-input input, .code-input input { flex: 1; min-width: 0; }
+    .id-check-box button, .email-input button, .code-input button {
+      width: 110px; height: 45px; border: 1px solid #035fe0; background: #035fe0;
+      color: #fff; cursor: pointer; font-size: 15px; font-weight: 500; flex-shrink: 0;
+    }
+    .phone-input { display: flex; align-items: center; gap: 5px; }
+    .phone-input select, .phone-input input {
+      flex: 1; min-width: 0; height: 45px; font-size: 15px; border: 1px solid #ccc;
+      background: #fff; padding: 0 10px; box-sizing: border-box;
+    }
+    .phone-input span { width: 15px; text-align: center; }
+    .btn-box { display: flex; justify-content: center; gap: 15px; padding: 35px 0 55px; }
+    .btn-box .btn {
+      width: 160px; height: 50px; font-size: 15px; border: 1px solid #ccc;
+      background: #fff; color: #1a1a1a; cursor: pointer;
+    }
+    .btn-box .btn.submit { background: #035fe0; border-color: #035fe0; color: #fff; font-weight: 500; }
+    footer { padding: 28px 20px; border-top: 1px solid #eee; color: #999; font-size: 13px; text-align: center; }
+
+    @media (max-width: 760px) {
+      .top { padding: 20px 0; flex-direction: column; justify-content: center; }
+      .menu { justify-content: center; gap: 18px; }
+      .visual { min-height: 220px; }
+      .visual h1 { font-size: 34px; }
+      .orderStep ul { gap: 18px; }
+      .form-box { padding: 10px 0; }
+      .form-box td:first-child { width: 115px; padding-right: 10px; }
+      .btn-box { flex-direction: column; gap: 10px; }
+      .btn-box .btn { width: 100%; }
+    }
+    @media (max-width: 420px) {
+      .top { width: calc(100% - 28px); }
+      .menu { gap: 12px; }
+      .menu li { font-size: 13px; }
+      .visual h1 { font-size: 30px; }
+      .visual p { font-size: 14px; }
+      .orderStep li { font-size: 12px; }
+      .container { width: calc(100% - 28px); }
+      .form-box td:first-child { width: 92px; font-size: 13px; }
+      .form-box td { font-size: 13px; }
+      .id-check-box, .email-input, .code-input { gap: 6px; }
+      .id-check-box button, .email-input button, .code-input button { width: 92px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div class="logo"><a href="#">FOREST</a></div>
+      <nav aria-label="주 메뉴">
+        <ul class="menu">
+          <li><a href="#">소개</a></li>
+          <li><a href="#">뉴스</a></li>
+          <li><a href="#">학생관리</a></li>
+          <li><a href="#">학과정보</a></li>
+          <li><a href="#">문의</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="visual">
+    <div>
+      <h1>JOIN US</h1>
+      <p>FOREST 회원가입을 통해 다양한 서비스를 이용하세요.</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="title">회원가입</div>
+    <div class="orderStep">
+      <ul>
+        <li>1. 약관동의</li>
+        <li><span class="current">2. 정보입력</span></li>
+        <li>3. 가입완료</li>
+      </ul>
+    </div>
+
+    <form id="signup-form" class="form-box">
+      <table>
+        <tbody>
+          <tr>
+            <td><label for="user-id">아이디</label></td>
+            <td><div class="id-check-box">
+              <input id="user-id" type="text" placeholder="영문소문자/숫자, 4~16자" required>
+              <button type="button" id="id-check">중복확인</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><label for="password">비밀번호</label></td>
+            <td><input id="password" type="password" placeholder="영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자" required></td>
+          </tr>
+          <tr>
+            <td><label for="password-confirm">비밀번호 확인</label></td>
+            <td><input id="password-confirm" type="password" required></td>
+          </tr>
+          <tr>
+            <td><label for="name">이름</label></td>
+            <td><input id="name" type="text" required></td>
+          </tr>
+          <tr>
+            <td><label for="nickname">닉네임</label></td>
+            <td><input id="nickname" type="text" placeholder="사용할 닉네임 입력" required></td>
+          </tr>
+          <tr>
+            <td><label for="phone1">휴대전화</label></td>
+            <td><div class="phone-input">
+              <select id="phone1" aria-label="휴대전화 앞자리">
+                <option>010</option><option>011</option><option>016</option><option>017</option>
+              </select>
+              <span>-</span><input type="text" aria-label="휴대전화 가운데 자리" maxlength="4" inputmode="numeric" required>
+              <span>-</span><input type="text" aria-label="휴대전화 끝자리" maxlength="4" inputmode="numeric" required>
+            </div></td>
+          </tr>
+          <tr>
+            <td><label for="email">이메일</label></td>
+            <td><div class="email-input">
+              <input id="email" type="email" placeholder="example@domain.com" required>
+              <button type="button" id="send-code">인증번호받기</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><label for="verify-code">인증번호 확인</label></td>
+            <td><div class="code-input">
+              <input id="verify-code" type="text" placeholder="인증번호 입력">
+              <button type="button" id="verify-button">확인</button>
+            </div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn-box">
+        <button type="button" class="btn cancel" onclick="history.back()">취소</button>
+        <button type="submit" class="btn submit">확인</button>
+      </div>
+    </form>
+  </main>
+
+  <footer>Copyright © FOREST. All rights reserved.</footer>
+
+  <script>
+    document.getElementById("id-check").addEventListener("click", function () {
+      const id = document.getElementById("user-id").value.trim();
+      if (!id) {
+        alert("아이디를 입력해 주세요.");
+        return;
+      }
+      alert("아이디 중복확인 기능은 서버와 연결해야 사용할 수 있습니다.");
+    });
+
+    document.getElementById("send-code").addEventListener("click", function () {
+      const email = document.getElementById("email");
+      if (!email.checkValidity() || !email.value.trim()) {
+        alert("올바른 이메일 주소를 입력해 주세요.");
+        email.focus();
+        return;
+      }
+      alert("이메일 인증번호 발송 기능은 서버와 연결해야 사용할 수 있습니다.");
+    });
+
+    document.getElementById("verify-button").addEventListener("click", function () {
+      const code = document.getElementById("verify-code").value.trim();
+      if (!code) {
+        alert("인증번호를 입력해 주세요.");
+        return;
+      }
+      alert("인증번호 검증 기능은 서버와 연결해야 사용할 수 있습니다.");
+    });
+
+    document.getElementById("signup-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const password = document.getElementById("password").value;
+      const passwordConfirm = document.getElementById("password-confirm").value;
+      if (password !== passwordConfirm) {
+        alert("비밀번호가 일치하지 않습니다.");
+        document.getElementById("password-confirm").focus();
+        return;
+      }
+      alert("화면 구성 예제입니다. 실제 회원가입 저장 기능은 서버와 연결해야 합니다.");
+    });
+  </script>
+</body>
+</html>
