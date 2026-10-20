@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뉴스 상세보기</title>
+<link rel='stylesheet' href='/static/css/bview.css'>
+
+</head>
+<body>
+<!-- HEADER -->
+<header>
+<div class="top">
+<div class="logo">
+            FOREST
+        </div>
+<ul class="menu">
+<li><a href="#">소개</a></li>
+<li><a href="#">뉴스</a></li>
+<li><a href="#">학생관리</a></li>
+<li><a href="#">학과정보</a></li>
+<li><a href="#">문의</a></li>
+</ul>
+</div>
+</header>
+<!-- VISUAL -->
+<section class="visual">
+<div>
+<h1>NEWS</h1>
+<p>포레스트의 새로운 소식을 만나보세요.</p>
+</div>
+</section>
+<main>
+
+    <div class="container">
+
+
+        <!-- BREADCRUMB -->
+
+        <div class="breadcrumb">
+
+            HOME
+            <span>></span>
+
+            FOREST
+            <span>></span>
+
+            NEWS
+
+        </div>
+
+
+        <!-- PAGE TITLE -->
+
+        <div class="page-title">
+
+            <h2>뉴스</h2>
+
+        </div>
+
+
+        <!-- =========================
+             POST
+        ========================= -->
+
+        <article class="post">
+
+
+            <!-- POST HEADER -->
+
+            <div class="post-header">
+                <!-- 제목 -->
+                <h3>{{board.btitle}}</h3>
+                <div class="post-info">
+                    <span>작성자 : {{board.member.nickname}}</span>
+                    <span>{{board.bdate | date:'Y.m.d'}}</span>
+                    <span>조회수 : {{board.bhit}}</span>
+                </div>
+            </div>
+            
+            <!-- POST CONTENT -->
+            <div class="post-content">
+                <p></p>
+                <p>{{board.bcontent}}</p>
+            </div>
+
+            <!-- POST IMAGE -->
+            {% if board.bfile %}
+            <div class="post-image">
+                <img src="{{board.bfile.url}}" alt="{{board.btitle}}" >
+            </div>
+            {% endif %}
+
+
+            <!-- =========================
+                 PREVIOUS / NEXT
+            ========================= -->
+
+            <div class="post-navigation">
+
+                <a href="#">
+
+                    <div class="nav-title">
+                        이전글
+                    </div>
+
+                    <div class="nav-content">
+                        {{pre_board.bno}}{{pre_board.btitle}}
+                    </div>
+
+                    <div class="nav-date">
+                        {{pre_board.bdate | date:'Y.m.d' }}
+                    </div>
+
+                </a>
+
+
+                <a href="#">
+
+                    <div class="nav-title">
+                        다음글
+                    </div>
+
+                    <div class="nav-content">
+                        {{next_board.bno}}{{next_board.btitle}}
+                    </div>
+
+                    <div class="nav-date">
+                        {{next_board.bdate | date:'Y.m.d' }}
+                    </div>
+
+                </a>
+
+            </div>
+
+
+        </article>
+
+
+        <!-- =========================
+             BUTTON
+        ========================= -->
+
+        <div class="button-area">
+
+
+            <!-- LEFT -->
+            <div class="button-left">
+                <a href="/board/blist/?page={{page}}" class="btn btn-dark">목록</a>
+            </div>
+            <!-- RIGHT -->
+            <div class="button-right">
+                <a href="/board/breply/{{board.bno}}/" class="btn">답변달기</a>
+                <a href="/board/bupdate/{{board.bno}}/" class="btn">수정</a>
+                <a onclick='deleteBtn()' style='cursor: pointer;' class="btn btn-delete">삭제</a>
+            </div>
+            <script>
+                function deleteBtn(){
+                    if (confirm('{{board.bno}}번 게시글을 삭제하시겠습니까?')){
+                        //ajax -> post전송 또는 delete전송으로 보내야 함.
+                        // get방식
+                        location.href='/board/bdelete/{{board.bno}}/';
+                    }
+                }
+            </script>
+
+        </div>
+
+
+        <!-- =========================
+             COMMENTS
+        ========================= -->
+
+        <section class="comments">
+
+
+            <h3 class="comments-title">
+
+                댓글
+
+                <span class="comment-count">
+                    3
+                </span>
+
+            </h3>
+
+
+            <!-- COMMENT FORM -->
+
+            <div class="comment-form">
+
+                <textarea
+                    placeholder="댓글을 입력하세요."
+                ></textarea>
+
+
+                <div class="comment-form-bottom">
+
+                    <input
+                        type="text"
+                        class="comment-name"
+                        placeholder="작성자"
+                    >
+
+                    <button
+                        type="button"
+                        class="comment-submit"
+                    >
+                        댓글 등록
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMMENT LIST -->
+
+            <div class="comment-list">
+
+
+                <!-- COMMENT 1 -->
+
+                <div class="comment">
+
+                    <div class="comment-header">
+
+                        <span class="comment-user">
+                            홍길동
+                        </span>
+
+                        <span class="comment-date">
+                            2026.09.15 14:30
+                        </span>
+
+                    </div>
+
+                    <div class="comment-text">
+
+                        가을 패키지가 정말 기대됩니다.
+                        좋은 정보 감사합니다.
+
+                    </div>
+
+                    <div class="comment-buttons">
+
+                        <button>
+                            답글
+                        </button>
+
+                        <button>
+                            수정
+                        </button>
+
+                        <button>
+                            삭제
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMMENT 2 -->
+
+                <div class="comment">
+
+                    <div class="comment-header">
+
+                        <span class="comment-user">
+                            김민수
+                        </span>
+
+                        <span class="comment-date">
+                            2026.09.15 13:15
+                        </span>
+
+                    </div>
+
+                    <div class="comment-text">
+
+                        가족들과 방문할 예정인데
+                        좋은 프로그램이 많네요.
+
+                    </div>
+
+                    <div class="comment-buttons">
+
+                        <button>
+                            답글
+                        </button>
+
+                        <button>
+                            수정
+                        </button>
+
+                        <button>
+                            삭제
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMMENT 3 -->
+
+                <div class="comment">
+
+                    <div class="comment-header">
+
+                        <span class="comment-user">
+                            이수진
+                        </span>
+
+                        <span class="comment-date">
+                            2026.09.14 18:20
+                        </span>
+
+                    </div>
+
+                    <div class="comment-text">
+
+                        다음 달에 예약하려고 합니다.
+                        이용 기간을 확인해봐야겠네요.
+
+                    </div>
+
+                    <div class="comment-buttons">
+
+                        <button>
+                            답글
+                        </button>
+
+                        <button>
+                            수정
+                        </button>
+
+                        <button>
+                            삭제
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </div>
+
+</main>
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<div class="footer-menu">
+<a href="#">회사소개</a>
+<a href="#">오시는 길</a>
+<a href="#">개인정보처리방침</a>
+<a href="#">이용약관</a>
+<a href="#">이메일무단수집거부</a>
+</div>
+<div class="footer-info">
+
+            포레스트 리조트\
+            충청북도 제천시 백운면 금봉로 365\
+            대표번호 : 043-649-6000
+
+        </div>
+</div>
+</footer>
+</body>
+</html>

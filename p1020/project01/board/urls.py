@@ -3,6 +3,9 @@ from . import views
 
 app_name='board'
 urlpatterns = [
+    # 차트그래프
+    path('chart/', views.chart, name='chart'),
+
     path('bwrite/', views.bwrite, name='bwrite'),
     path('blist/', views.blist, name='blist'),
     path('bview/<int:bno>/', views.bview, name='bview'),

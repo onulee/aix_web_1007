@@ -5,6 +5,33 @@ from django.conf import settings
 from django.conf.urls.static import static
 import os
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+# 차트그래프
+def chart(request):
+    # id_list = ['aaa','bbb','ccc','ddd','eee','fff']
+    # qs = Board.objects.all().order_by('bno')[:6]
+    # qs_value = list(qs.values())
+
+    # id_list = [1,2,3,4,5,6]
+    # bhit_list = [19,20,21,26,40,70]
+    # print(qs_value)
+    # context = {'id_list':id_list,'bhit_list':bhit_list, }
+    return render(request, 'chart.html')
+
+
+# ajax페이지 이동
+# @csrf_exempt : csrf_token 예외처리
+def chart_data(request):
+    id_list = ['aaa','bbb','ccc','ddd','eee','fff']
+    bhit_list = [19,20,21,26,40,70]
+    data = {'id_list':id_list,'bhit_list':bhit_list}
+
+    # db에서 가져와서 차트그래프 그리기
+
+    return JsonResponse(data)
+
 
 # 게시글 리스트
 # GET - 페이지열기, POST - 검색
@@ -32,10 +59,13 @@ def blist(request):
         #         ( Q(btitle__contains=search_word)|Q(bcontent__contains=search_word) )\
         #         .order_by('-bgroup','bstep')
 
-        # 검색
+        # 검색 icontains
         qs = Board.objects.filter\
-                ( Q(bno__gte=30)|Q(bhit__lte=50) )\
+                ( Q(id__icontains='s')|Q(bhit__gte=50) )\
                 .order_by('-bgroup','bstep')
+        # qs = Board.objects.filter\
+        #         ( Q(bno__gte=30)|Q(bhit__lte=50) )\
+        #         .order_by('-bgroup','bstep')
         print('개수 : ',qs.count())
         # 페이징처리--------------------------
         paginator = Paginator(qs,100) # 5줄씩 리턴
