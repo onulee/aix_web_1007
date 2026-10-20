@@ -74,7 +74,12 @@
                 {% for board in list %}
                     <tr>
                         <td class="number">{{board.bno}}</td>
-                        <td class="subject"><a href="/board/bview/{{board.bno}}/">{{board.btitle}}</a></td>
+                        <td class="subject">
+                            <a href="/board/bview/{{board.bno}}/">
+                                {% for i in ""|rjust:board.bindent %}▶{% endfor %}
+                                {{board.btitle}}
+                            </a>
+                        </td>
                         <td>{{board.member.nickname}}</td>
                         <td>{{board.bdate | date:'Y-m-d H:i'}}</td>
                         <td>{{board.bhit}}</td>
@@ -96,11 +101,14 @@
 <div class="pagination">
 <a href="#">«</a>
 <a href="#">‹</a>
-<a class="active" href="#">1</a>
-<a href="#">2</a>
-<a href="#">3</a>
-<a href="#">4</a>
-<a href="#">5</a>
+{% for p in list.paginator.page_range %}
+    {%if page != p %}
+        <a href="/board/blist?page={{p}}">{{p}}</a>
+    {% else %}
+        <a class="active" href="/board/blist?page={{p}}">{{p}}</a>
+    {% endif %}
+{% endfor %}
+
 <a href="#">›</a>
 <a href="#">»</a>
 </div>

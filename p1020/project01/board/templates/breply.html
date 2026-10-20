@@ -13,7 +13,7 @@
         }
 
         if('{{temp}}'=='1'){
-            alert('게시글이 등록되었습니다.');
+            alert('답변달기가 등록되었습니다.');
             location.href='/board/blist/';
         }
     </script>
@@ -95,7 +95,7 @@
 
         <form
             class="write-form"
-            action="/board/breply/"
+            action="/board/breply/{{board.bno}}/"
             method="post"
             enctype="multipart/form-data"
         >

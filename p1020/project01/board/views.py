@@ -5,12 +5,39 @@ from django.conf import settings
 from django.conf.urls.static import static
 import os
 from member.models import Member
+from django.core.paginator import Paginator
 
 # 답변달기
+# GET - 페이지열기, POST - 게시글저장
 def breply(request,bno):
-    qs = Board.objects.get(bno=bno)
-    context = {'board':qs}
-    return render(request, 'breply.html', context)
+    if request.method == 'GET':
+        qs = Board.objects.get(bno=bno)
+        context = {'board':qs}
+        return render(request, 'breply.html', context)
+    elif request.method == 'POST':
+        bgroup = request.POST.get('bgroup') #같은그룹핑
+        bstep = int(request.POST.get('bstep'))   # 순서 - 문자열
+        bindent = int(request.POST.get('bindent')) # 들여쓰기 - 문자열
+        btitle = request.POST.get('btitle') # 제목
+        bcontent = request.POST.get('bcontent') # 내용
+        bfile = request.FILES.get('bfile') # 파일
+        id = request.session['session_id']
+        member = Member.objects.get(id=id)
+
+        # qs = Board.objects.create(btitle=btitle,member=member,bcontent=bcontent,bfile=bfile)
+        # # 답변달기
+        # qs.bgroup = qs.bno
+        # qs.save()
+        # 같은그룹에 부모보다 큰 bstep을 1씩 증가시켜줌
+        r_qs = Board.objects.filter(bgroup=bgroup, bstep__gt=bstep)
+        r_qs.update(bstep=F('bstep')+1) #F함수 : 검색된 항목의 필드를 가져와서 모두 적용시켜줌.
+        # 답변달기 저장
+        Board.objects.create(member=member,btitle=btitle,bcontent=bcontent,\
+            bgroup=bgroup,bstep=bstep+1,bindent=bindent+1,bfile=bfile )
+
+        context = {'temp':1}
+        return render(request, 'breply.html', context)
+
 
 
 # 게시글 삭제
@@ -55,11 +82,20 @@ def bupdate(request,bno):
         return render(request, 'bwrite.html',context)
 
 
-# 게시글 리스트
+
+
+# 게시글 리스트 # 하단넘버링
 def blist(request):
     qs = Board.objects.all().order_by('-bgroup','bstep')
-    context = {'list':qs}  #id->member
+    paginator = Paginator(qs,5)
+    # 현재페이지
+    page = int(request.GET.get('page',1)) # 페이지가 넘어오면 그 값, 없을때 1
+    p_qs = paginator.get_page(page)
+
+    context = {'list':p_qs,'page':page}  #id->member
     return render(request, 'blist.html',context)
+
+
 
 # 게시글 등록
 # GET - 페이지열기, POST - 저장
