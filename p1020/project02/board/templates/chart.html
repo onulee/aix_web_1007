@@ -46,6 +46,8 @@
         //console.log({{bhit_list}});
         function chartBtnAjax(){
             alert('ajax 데이터 가져오기');
+            let c_label = [];
+            let c_data = [];
             $.ajax({
                 url:'/board/chart_data/',
                 type:'post',
@@ -55,6 +57,48 @@
                 success:function(data){
                     console.log('확인 : ',data);
                     alert('성공');
+                    data.qs_value.forEach(
+                        function(d){
+                            c_label.push(d.id);
+                            c_data.push(d.bhit);
+                        }
+                    )
+                    console.log('c_label : ',c_label);
+                    console.log('c_data : ',c_data);
+
+                    //차트그래프------------------------------------------
+                    const ctx = document.getElementById('myChart');
+
+                    //기존데이터 삭제후 다시 가져오기
+                    let chartStatus = Chart.getChart("myChart");
+                    if(chartStatus != undefined){
+                    console.log("success");
+                    chartStatus.destroy();
+                    }
+
+
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                        labels: c_label,
+                        datasets: [{
+                            label: '# of Votes',
+                            data: c_data,
+                            borderWidth: 1
+                        }]
+                        },
+                        options: {
+                        scales: {
+                            y: {
+                            beginAtZero: true
+                            }
+                        }
+                        }
+                    });   
+
+
+
+
                 },
                 error:function(){
                     alert('실패');

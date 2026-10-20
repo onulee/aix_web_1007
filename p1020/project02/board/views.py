@@ -24,11 +24,12 @@ def chart(request):
 # ajax페이지 이동
 # @csrf_exempt : csrf_token 예외처리
 def chart_data(request):
-    id_list = ['aaa','bbb','ccc','ddd','eee','fff']
-    bhit_list = [19,20,21,26,40,70]
-    data = {'id_list':id_list,'bhit_list':bhit_list}
-
+    # id_list = ['aaa','bbb','ccc','ddd','eee','fff']
+    # bhit_list = [19,20,21,26,40,70]
     # db에서 가져와서 차트그래프 그리기
+    qs = Board.objects.all().order_by('bno')[:6]
+    qs_value = list(qs.values())
+    data = {'qs_value':qs_value}
 
     return JsonResponse(data)
 
