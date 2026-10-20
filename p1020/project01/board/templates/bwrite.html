@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/static/css/bwrite.css'>
+    <title>뉴스 글쓰기</title>
+    <script>
+        // 로그인확인
+        if('{{request.session.session_id}}' == ''){
+            alert('로그인을 하셔야 게시글 작성이 가능합니다.');
+            location.href='/member/login/';
+        }
+
+
+        if('{{temp}}'=='1'){
+            alert('게시글이 등록되었습니다.');
+            location.href='/board/blist/';
+        }else if('{{temp}}'=='0'){
+            alert('{{bno}}번 게시글을 삭제합니다.');
+            location.href='/board/blist/';
+        }else if('{{temp}}'=='2'){
+            alert('{{bno}}번 게시글을 수정합니다.');
+            location.href='/board/blist/';
+        }
+    </script>
+    
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+<header>
+<div class="top">
+<div class="logo">
+            FOREST
+        </div>
+<ul class="menu">
+<li><a href="#">소개</a></li>
+<li><a href="#">뉴스</a></li>
+<li><a href="#">학생관리</a></li>
+<li><a href="#">학과정보</a></li>
+<li><a href="#">문의</a></li>
+</ul>
+</div>
+</header>
+<!-- VISUAL -->
+<section class="visual">
+<div>
+<h1>NEWS</h1>
+<p>포레스트의 새로운 소식을 만나보세요.</p>
+</div>
+</section>
+
+
+<!-- =========================
+     CONTENT
+========================= -->
+
+<main>
+
+    <div class="container">
+
+
+        <!-- BREADCRUMB -->
+
+        <div class="breadcrumb">
+
+            HOME
+
+            <span>></span>
+
+            FOREST
+
+            <span>></span>
+
+            NEWS
+
+            <span>></span>
+
+            WRITE
+
+        </div>
+
+
+        <!-- PAGE TITLE -->
+
+        <div class="page-title">
+
+            <h2>
+                글쓰기
+            </h2>
+
+        </div>
+
+
+        <!-- =========================
+             WRITE FORM
+        ========================= -->
+
+        <form
+            class="write-form"
+            action="/board/bwrite/"
+            method="post"
+            enctype="multipart/form-data"
+        >
+        {% csrf_token %}
+            <!-- TITLE -->
+
+            <div class="form-row">
+
+                <div class="form-label">
+
+                    제목
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </div>
+
+
+                <div class="form-input">
+
+                    <input
+                        type="text"
+                        name="btitle"
+                        placeholder="제목을 입력하세요."
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- AUTHOR -->
+
+            <div class="form-row">
+
+                <div class="form-label">
+
+                    작성자
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </div>
+
+
+                <div class="form-input">
+
+                    <input
+                        type="text"
+                        name="id"
+                        class="author-input"
+                        placeholder="작성자"
+                        disabled
+                        value='{{request.session.session_nickname}}'
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- CONTENT -->
+
+            <div class="form-row content-row">
+
+                <div class="form-label">
+
+                    내용
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </div>
+
+
+                <div class="form-input content-input">
+
+                    <textarea
+                        name="bcontent"
+                        placeholder="내용을 입력하세요."
+                        required
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- FILE -->
+
+            <div class="form-row">
+
+                <div class="form-label">
+                    첨부파일
+                </div>
+
+
+                <div class="form-input file-input">
+
+                    <input
+                        type="file"
+                        name="bfile"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 BUTTON
+            ========================= -->
+
+            <div class="button-area">
+
+                <a href="/" class="btn">홈으로</a>
+                <a
+                    href="/board/blist/"
+                    class="btn btn-cancel"
+                >
+                    취소
+                </a>
+
+
+                <button type="submit" class="btn btn-dark">
+                    등록
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+
+        <div class="footer-menu">
+
+            <a href="#">
+                회사소개
+            </a>
+
+            <a href="#">
+                오시는 길
+            </a>
+
+            <a href="#">
+                개인정보처리방침
+            </a>
+
+            <a href="#">
+                이용약관
+            </a>
+
+            <a href="#">
+                이메일무단수집거부
+            </a>
+
+        </div>
+
+
+        <div class="footer-info">
+
+            포레스트 리조트<br>
+
+            충청북도 제천시 백운면 금봉로 365<br>
+
+            대표번호 : 043-649-6000
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+</body>
+</html>
+

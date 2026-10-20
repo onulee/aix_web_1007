@@ -1,10 +1,24 @@
 from django.shortcuts import render,redirect
 from django.db.models import F,Q
 from board.models import Board
+from django.conf import settings
+from django.conf.urls.static import static
+import os
 
 # 게시글 삭제
 def bdelete(request,bno):
-    Board.objects.get(bno=bno).delete()
+
+    qs = Board.objects.get(bno=bno)
+
+    # 파일삭제
+    media_root = settings.MEDIA_ROOT
+    remove_file = media_root+"/"+str(qs.bfile)
+    if os.path.isfile(remove_file):
+        os.remove(remove_file)
+
+    # db삭제
+    qs.delete()
+
     context={'temp':0,'bno':bno}
     return render(request, 'bwrite.html',context)
 
