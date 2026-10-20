@@ -85,15 +85,40 @@ def bupdate(request,bno):
 
 
 # 게시글 리스트 # 하단넘버링
+# GET - 페이지열기, POST - 검색부분
 def blist(request):
-    qs = Board.objects.all().order_by('-bgroup','bstep')
-    paginator = Paginator(qs,5)
-    # 현재페이지
-    page = int(request.GET.get('page',1)) # 페이지가 넘어오면 그 값, 없을때 1
-    p_qs = paginator.get_page(page)
+    if request.method == 'GET':
+        qs = Board.objects.all().order_by('-bgroup','bstep')
+        paginator = Paginator(qs,5)
+        # 현재페이지
+        page = int(request.GET.get('page',1)) # 페이지가 넘어오면 그 값, 없을때 1
+        p_qs = paginator.get_page(page)
 
-    context = {'list':p_qs,'page':page}  #id->member
-    return render(request, 'blist.html',context)
+        context = {'list':p_qs,'page':page}  #id->member
+        return render(request, 'blist.html',context)
+    elif request.method == 'POST':
+        category = request.POST.get('category')
+        search_word = request.POST.get('search_word')
+        # btitle검색
+        if category == 'btitle':
+            qs = Board.objects.filter(btitle__contains=search_word).order_by('-bgroup','bstep')
+        elif category == 'bcontent':
+            qs = Board.objects.filter(bcontent__contains=search_word).order_by('-bgroup','bstep')
+        else:
+            qs = Board.objects.filter\
+                (Q(btitle__contains=search_word) | Q(bcontent__contains=search_word)   )\
+                .order_by('-bgroup','bstep')
+
+        paginator = Paginator(qs,5)
+        # 현재페이지
+        page = int(request.GET.get('page',1)) # 페이지가 넘어오면 그 값, 없을때 1
+        p_qs = paginator.get_page(page)
+
+        context = {'list':p_qs,'page':page}  #id->member
+        return render(request, 'blist.html',context)
+
+
+
 
 
 
@@ -122,6 +147,7 @@ def bwrite(request):
 
 # 게시글 상세보기
 def bview(request,bno):
+    page = int(request.GET.get('page',1))
     # board 1개 검색
     # qs = Board.objects.get(bno=bno)
     # qs.bhit = qs.bhit+1
@@ -144,5 +170,5 @@ def bview(request,bno):
     # pre_qs = Board.objects.filter(bno__lt=bno).order_by('-bno').first()
     # next_qs = Board.objects.filter(bno__gt=bno).order_by('bno').first()
 
-    context = {'board':qs,'pre_board':pre_qs,'next_board':next_qs}
+    context = {'board':qs,'pre_board':pre_qs,'next_board':next_qs,'page':page}
     return render(request, 'bview.html',context)

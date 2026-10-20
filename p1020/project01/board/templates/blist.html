@@ -48,15 +48,24 @@
             </p>
 </div>
 <!-- SEARCH -->
-<div class="search">
-<select>
-<option>제목</option>
-<option>내용</option>
-<option>전체</option>
-</select>
-<input placeholder="검색어를 입력하세요." type="text"/>
-<button>검색</button>
-</div>
+<form action='/board/blist/' method='post' name='searchFrm'>
+    {% csrf_token %}
+    <div class="search">
+        <select name='category'>
+            <option value='btitle'>제목</option>
+            <option value='bcontent'>내용</option>
+            <option value='all'>전체</option>
+        </select>
+        <input placeholder="검색어를 입력하세요." type="text" name='search_word'/>
+        <button type='button' onclick='searchBtn()'>검색</button>
+    </div>
+</form> 
+<script>
+    function searchBtn(){
+        alert('검색을 진행합니다.');
+        searchFrm.submit();
+    }
+</script>
 <!-- NEWS LIST -->
 <div class="board-wrap">
     <table class="board-table">
@@ -75,7 +84,7 @@
                     <tr>
                         <td class="number">{{board.bno}}</td>
                         <td class="subject">
-                            <a href="/board/bview/{{board.bno}}/">
+                            <a href="/board/bview/{{board.bno}}/?page={{page}}">
                                 {% for i in ""|rjust:board.bindent %}▶{% endfor %}
                                 {{board.btitle}}
                             </a>
@@ -99,8 +108,13 @@
 </div>
 <!-- PAGINATION -->
 <div class="pagination">
-<a href="#">«</a>
-<a href="#">‹</a>
+{% if list.has_previous  %}
+    <a href="/board/blist?page=1">«</a>
+    <a href="/board/blist?page={{list.previous_page_number}}">‹</a>
+{% else %}
+    <a>«</a>
+    <a>‹</a>
+{% endif %}    
 {% for p in list.paginator.page_range %}
     {%if page != p %}
         <a href="/board/blist?page={{p}}">{{p}}</a>
@@ -108,9 +122,13 @@
         <a class="active" href="/board/blist?page={{p}}">{{p}}</a>
     {% endif %}
 {% endfor %}
-
-<a href="#">›</a>
-<a href="#">»</a>
+{% if list.has_next %}
+    <a href="/board/blist?page={{list.next_page_number}}">›</a>
+    <a href="/board/blist?page={{list.paginator.num_pages}}">»</a>
+{% else %}
+    <a>›</a>
+    <a>»</a>
+{% endif %}
 </div>
 </div>
 </main>
