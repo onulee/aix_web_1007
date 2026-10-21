@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>영화차트</title>
+<link rel='stylesheet' href='/static/css/bview.css'>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dcc9c2ff470111781f4ce0317ddd4efe"></script>
+
+</head>
+<body>
+<!-- HEADER -->
+<header>
+    <div class="top">
+    <div class="logo">
+                FOREST
+            </div>
+    <ul class="menu">
+    <li><a href="#">소개</a></li>
+    <li><a href="#">뉴스</a></li>
+    <li><a href="#">학생관리</a></li>
+    <li><a href="#">학과정보</a></li>
+    <li><a href="#">문의</a></li>
+    </ul>
+    </div>
+</header>
+<!-- VISUAL -->
+<section class="visual">
+    <div>
+        <h1>NEWS</h1>
+        <p>포레스트의 새로운 소식을 만나보세요.</p>
+    </div>
+</section>
+<!-- 차트그리기 -->
+<script>
+    function chartBtn(){
+        $.ajax({
+            url:'/screen/chart_data/',                // 보내는링크주소
+            type:'post',                             // 전송방식
+            headers:{'X-CSRFToken':'{{csrf_token}}'},// csrf_token
+            data:{},                                 // html에서 django보내는 데이터
+            dataType:'json',                         // 받는데이터 타입 : json,xml,text
+            success:function(data){ 
+                alert('성공');
+                console.log(data);
+            },
+            error:function(){
+                alert('실패');
+            }
+        });//ajax
+    }
+</script>
+<main>
+    <div class="container">
+        <button type='button'>차트그리기</button>
+        <br>
+        <br>
+        <!-- 지도를 표시할 div 입니다 -->
+        <div id="map" style="width:100%;height:350px;"></div>
+    </div>
+</main>
+<script>
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+    mapOption = { 
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+ 
+// 마커를 표시할 위치와 title 객체 배열입니다 
+var positions = [
+    {
+        title: '카카오', 
+        latlng: new kakao.maps.LatLng(33.450705, 126.570677)
+    },
+    {
+        title: '생태연못', 
+        latlng: new kakao.maps.LatLng(33.450936, 126.569477)
+    },
+    {
+        title: '텃밭', 
+        latlng: new kakao.maps.LatLng(33.450879, 126.569940)
+    },
+    {
+        title: '근린공원',
+        latlng: new kakao.maps.LatLng(33.451393, 126.570738)
+    }
+];
+
+// 마커 이미지의 이미지 주소입니다
+var imageSrc = "https://t1.kakaocdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+    
+for (var i = 0; i < positions.length; i ++) {
+    
+    // 마커 이미지의 이미지 크기 입니다
+    var imageSize = new kakao.maps.Size(24, 35); 
+    
+    // 마커 이미지를 생성합니다    
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+    
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng, // 마커를 표시할 위치
+        title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        image : markerImage // 마커 이미지 
+    });
+} 
+</script>
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<div class="footer-menu">
+<a href="#">회사소개</a>
+<a href="#">오시는 길</a>
+<a href="#">개인정보처리방침</a>
+<a href="#">이용약관</a>
+<a href="#">이메일무단수집거부</a>
+</div>
+<div class="footer-info">
+
+            포레스트 리조트\
+            충청북도 제천시 백운면 금봉로 365\
+            대표번호 : 043-649-6000
+
+        </div>
+</div>
+</footer>
+</body>
+</html>

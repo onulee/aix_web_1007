@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>회원가입 | 포레스트 리솜</title>
+
+    <!-- Daum 우편번호 서비스 -->
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: #333;
+            background: #fff;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* HEADER */
+        header {
+            height: 90px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+        }
+
+        .header-inner {
+            width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #354d3c;
+        }
+
+        nav {
+            display: flex;
+            gap: 38px;
+        }
+
+        nav a {
+            font-size: 15px;
+            color: #444;
+        }
+
+        nav a:hover {
+            color: #66856f;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 18px;
+            font-size: 13px;
+            color: #777;
+        }
+
+
+        /* SUB VISUAL */
+
+        .sub-visual {
+            height: 300px;
+
+            background:
+                linear-gradient(
+                    rgba(35, 55, 42, 0.35),
+                    rgba(35, 55, 42, 0.35)
+                ),
+                url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=80");
+
+            background-size: cover;
+            background-position: center;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #fff;
+            text-align: center;
+        }
+
+        .sub-visual h1 {
+            font-size: 42px;
+            font-weight: 500;
+            letter-spacing: 3px;
+        }
+
+        .sub-visual p {
+            margin-top: 15px;
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+
+        /* CONTENT */
+
+        .container {
+            width: 1000px;
+            margin: 0 auto;
+            padding: 80px 0 120px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .page-title h2 {
+            font-size: 30px;
+            font-weight: 500;
+        }
+
+        .page-title p {
+            margin-top: 12px;
+            color: #888;
+            font-size: 14px;
+        }
+
+
+        /* STEP */
+
+        .join-step {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 55px;
+        }
+
+        .step {
+            position: relative;
+            width: 180px;
+            text-align: center;
+        }
+
+        .step:not(:last-child)::after {
+            content: "";
+
+            position: absolute;
+            top: 24px;
+            right: -50px;
+
+            width: 100px;
+            height: 1px;
+
+            background: #ddd;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+
+            margin: 0 auto 12px;
+
+            border-radius: 50%;
+
+            background: #eee;
+            color: #888;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+        }
+
+        .step.active .step-number {
+            background: #4c6956;
+            color: #fff;
+        }
+
+        .step strong {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+
+        /* FORM */
+
+        .form-title {
+            padding-bottom: 15px;
+
+            border-bottom: 2px solid #333;
+
+            font-size: 19px;
+            font-weight: 600;
+        }
+
+        .required {
+            color: #c55;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: flex;
+            min-height: 58px;
+
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-label {
+            width: 190px;
+
+            background: #f8f8f6;
+
+            padding: 18px 20px;
+
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            flex: 1;
+
+            padding: 10px 15px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        /* INPUT */
+
+        input,
+        select {
+            height: 38px;
+
+            border: 1px solid #ddd;
+
+            padding: 0 12px;
+
+            font-family: inherit;
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #718979;
+        }
+
+        .input-normal {
+            width: 360px;
+        }
+
+        .input-small {
+            width: 120px;
+        }
+
+        .input-medium {
+            width: 220px;
+        }
+
+
+        /* BUTTON */
+
+        .btn-check {
+            height: 38px;
+
+            padding: 0 18px;
+
+            border: 1px solid #555;
+
+            background: #555;
+            color: #fff;
+
+            cursor: pointer;
+
+            font-family: inherit;
+        }
+
+        .btn-check:hover {
+            background: #354d3c;
+        }
+
+
+        /* ADDRESS */
+
+        .address-area {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .address-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .zip-code {
+            width: 150px;
+        }
+
+        .address {
+            width: 600px;
+        }
+
+        .address-detail {
+            width: 600px;
+        }
+
+
+        /* AGREEMENT */
+
+        .agreement {
+            margin-top: 55px;
+        }
+
+        .agreement-box {
+            margin-top: 15px;
+
+            border: 1px solid #ddd;
+        }
+
+        .agree-all {
+            padding: 18px 20px;
+
+            background: #f7f7f5;
+
+            border-bottom: 1px solid #ddd;
+
+            font-weight: 600;
+        }
+
+        .agree-item {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 16px 20px;
+
+            border-bottom: 1px solid #eee;
+
+            font-size: 14px;
+        }
+
+        .agree-item:last-child {
+            border-bottom: none;
+        }
+
+        .agree-item label {
+            cursor: pointer;
+        }
+
+        .agree-item span {
+            color: #888;
+            font-size: 12px;
+        }
+
+
+        /* BUTTON AREA */
+
+        .button-area {
+            margin-top: 50px;
+
+            display: flex;
+            justify-content: center;
+
+            gap: 10px;
+        }
+
+        .btn {
+            width: 180px;
+            height: 52px;
+
+            border: none;
+
+            font-family: inherit;
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background: #eee;
+            color: #555;
+        }
+
+        .btn-submit {
+            background: #4c6956;
+            color: #fff;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+
+        /* FOOTER */
+
+        footer {
+            background: #333;
+            color: #aaa;
+
+            padding: 45px 0;
+        }
+
+        .footer-inner {
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            color: #fff;
+
+            font-size: 20px;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 18px;
+        }
+
+        .footer-menu {
+            display: flex;
+
+            gap: 25px;
+
+            margin-bottom: 20px;
+        }
+
+        .footer-menu a {
+            font-size: 13px;
+        }
+
+        .footer-info {
+            font-size: 12px;
+
+            line-height: 1.9;
+        }
+
+        .copyright {
+            margin-top: 20px;
+
+            font-size: 11px;
+
+            color: #777;
+        }
+
+
+        /* MOBILE */
+
+        @media screen and (max-width: 1100px) {
+
+            .header-inner,
+            .footer-inner {
+                width: 90%;
+            }
+
+            .container {
+                width: 90%;
+            }
+
+            nav {
+                gap: 15px;
+            }
+
+            .address {
+                width: 100%;
+            }
+
+            .address-detail {
+                width: 100%;
+            }
+        }
+
+
+        @media screen and (max-width: 700px) {
+
+            header {
+                height: auto;
+
+                padding: 20px 0;
+            }
+
+            .header-inner {
+                flex-direction: column;
+
+                gap: 18px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+            .header-right {
+                display: none;
+            }
+
+            .sub-visual {
+                height: 220px;
+            }
+
+            .sub-visual h1 {
+                font-size: 30px;
+            }
+
+            .form-row {
+                display: block;
+            }
+
+            .form-label {
+                width: 100%;
+
+                padding: 12px 15px;
+            }
+
+            .form-input {
+                padding: 12px 15px;
+
+                flex-wrap: wrap;
+            }
+
+            .input-normal,
+            .input-medium {
+                width: 100%;
+            }
+
+            .address {
+                width: 100%;
+            }
+
+            .address-detail {
+                width: 100%;
+            }
+
+            .button-area {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="header-inner">
+
+            <a href="#" class="logo">
+                FOREST RESOM
+            </a>
+
+            <nav>
+                <a href="#">포레스트</a>
+                <a href="#">스파</a>
+                <a href="#">객실</a>
+                <a href="#">특별한 경험</a>
+                <a href="#">부대시설</a>
+                <a href="#">브랜드소개</a>
+                <a href="#">예약</a>
+            </nav>
+
+            <div class="header-right">
+                <a href="#">로그인</a>
+                <a href="#">회원가입</a>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- SUB VISUAL -->
+
+    <section class="sub-visual">
+
+        <div>
+
+            <h1>MEMBERSHIP</h1>
+
+            <p>
+                자연과 휴식을 함께하는 특별한 회원이 되어보세요.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONTENT -->
+
+    <main class="container">
+
+        <div class="page-title">
+
+            <h2>회원가입</h2>
+
+            <p>
+                포레스트 리솜의 다양한 서비스를 이용하기 위해
+                회원가입을 진행해주세요.
+            </p>
+
+        </div>
+
+
+        <!-- STEP -->
+
+        <div class="join-step">
+
+            <div class="step active">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <strong>
+                    약관동의
+                </strong>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <strong>
+                    정보입력
+                </strong>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <strong>
+                    가입완료
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- BASIC INFORMATION -->
+
+        <section>
+
+            <h3 class="form-title">
+                기본정보
+                <span class="required">
+                    * 필수입력
+                </span>
+            </h3>
+
+
+            <form id="joinForm">
+
+
+                <!-- 이름 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        이름 <span class="required">*</span>
+                    </div>
+
+                    <div class="form-input">
+
+                        <input
+                            type="text"
+                            id="name"
+                            class="input-medium"
+                            placeholder="이름을 입력하세요"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- 아이디 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        아이디 <span class="required">*</span>
+                    </div>
+
+                    <div class="form-input">
+
+                        <input
+                            type="text"
+                            id="userId"
+                            class="input-normal"
+                            placeholder="영문, 숫자 4~20자"
+                        >
+
+                        <button
+                            type="button"
+                            class="btn-check"
+                            onclick="checkId()"
+                        >
+                            중복확인
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 비밀번호 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        비밀번호 <span class="required">*</span>
+                    </div>
+
+                    <div class="form-input">
+
+                        <input
+                            type="password"
+                            id="password"
+                            class="input-normal"
+                            placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- 비밀번호 확인 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        비밀번호 확인 <span class="required">*</span>
+                    </div>
+
+                    <div class="form-input">
+
+                        <input
+                            type="password"
+                            id="passwordConfirm"
+                            class="input-normal"
+                            placeholder="비밀번호를 다시 입력하세요"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- 이메일 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        이메일 <span class="required">*</span>
+                    </div>
+
+                    <div class="form-input">
+
+                        <input
+                            type="email"
+                            id="email"
+                            class="input-normal"
+                            placeholder="example@email.com"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- 휴대전화 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        휴대전화 <span class="required">*</span>
+                    </div>
+
+                    <div class="form-input">
+
+                        <select id="phone1" class="input-small">
+
+                            <option>010</option>
+                            <option>011</option>
+                            <option>016</option>
+                            <option>017</option>
+                            <option>019</option>
+
+                        </select>
+
+                        <span>-</span>
+
+                        <input
+                            type="text"
+                            id="phone2"
+                            class="input-small"
+                            maxlength="4"
+                        >
+
+                        <span>-</span>
+
+                        <input
+                            type="text"
+                            id="phone3"
+                            class="input-small"
+                            maxlength="4"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- 주소 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        주소 <span class="required">*</span>
+                    </div>
+
+
+                    <div class="form-input">
+
+                        <div class="address-area">
+
+
+                            <!-- 우편번호 -->
+
+                            <div class="address-row">
+
+                                <input
+                                    type="text"
+                                    id="postcode"
+                                    class="zip-code"
+                                    placeholder="우편번호"
+                                    readonly
+                                >
+
+                                <button
+                                    type="button"
+                                    class="btn-check"
+                                    onclick="searchAddress()"
+                                >
+                                    우편번호 검색
+                                </button>
+
+                            </div>
+
+
+                            <!-- 기본주소 -->
+
+                            <div class="address-row">
+
+                                <input
+                                    type="text"
+                                    id="address"
+                                    class="address"
+                                    placeholder="기본주소"
+                                    readonly
+                                >
+
+                            </div>
+
+
+                            <!-- 상세주소 -->
+
+                            <div class="address-row">
+
+                                <input
+                                    type="text"
+                                    id="detailAddress"
+                                    class="address-detail"
+                                    placeholder="상세주소를 입력하세요"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 생년월일 -->
+
+                <div class="form-row">
+
+                    <div class="form-label">
+                        생년월일
+                    </div>
+
+                    <div class="form-input">
+
+                        <input
+                            type="text"
+                            id="birth"
+                            class="input-medium"
+                            placeholder="예: 19800101"
+                            maxlength="8"
+                        >
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+
+
+        <!-- BUTTON -->
+
+        <div class="button-area">
+
+            <button
+                type="button"
+                class="btn btn-cancel"
+                onclick="history.back()"
+            >
+                취소
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-submit"
+                onclick="join()"
+            >
+                회원가입
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-inner">
+
+            <div class="footer-logo">
+                FOREST RESOM
+            </div>
+
+            <div class="footer-menu">
+
+                <a href="#">회사소개</a>
+                <a href="#">오시는 길</a>
+                <a href="#">개인정보처리방침</a>
+                <a href="#">이용약관</a>
+                <a href="#">이메일무단수집거부</a>
+
+            </div>
+
+
+            <div class="footer-info">
+
+                포레스트 리솜 충청북도 제천시 백운면 금봉로 365<br>
+
+                대표번호 : 043-649-6000
+
+                &nbsp;&nbsp;
+
+                예약문의 : 1600-0060
+
+            </div>
+
+
+            <div class="copyright">
+
+                COPYRIGHT(C) HOBAN HOTEL & RESORT.
+                ALL RIGHTS RESERVED.
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <script>
+
+        /* =========================
+           우편번호 검색
+        ========================= */
+
+        function searchAddress() {
+
+            new daum.Postcode({
+
+                oncomplete: function(data) {
+
+                    let roadAddr = data.roadAddress;
+
+                    let jibunAddr = data.jibunAddress;
+
+                    document.getElementById("postcode").value =
+                        data.zonecode;
+
+
+                    if (roadAddr !== "") {
+
+                        document.getElementById("address").value =
+                            roadAddr;
+
+                    } else {
+
+                        document.getElementById("address").value =
+                            jibunAddr;
+
+                    }
+
+
+                    document.getElementById("detailAddress").focus();
+
+                }
+
+            }).open();
+
+        }
+
+
+        /* =========================
+           전체 약관 동의
+        ========================= */
+
+        function checkAll() {
+
+            const allCheck =
+                document.getElementById("agreeAll");
+
+            const checkboxes =
+                document.querySelectorAll(".agree");
+
+
+            checkboxes.forEach(function(checkbox) {
+
+                checkbox.checked =
+                    allCheck.checked;
+
+            });
+
+        }
+
+
+        /* =========================
+           개별 약관 체크
+        ========================= */
+
+        document
+            .querySelectorAll(".agree")
+            .forEach(function(checkbox) {
+
+                checkbox.addEventListener(
+                    "change",
+                    function() {
+
+                        const all =
+                            document.querySelectorAll(".agree");
+
+                        const checked =
+                            document.querySelectorAll(
+                                ".agree:checked"
+                            );
+
+
+                        document.getElementById(
+                            "agreeAll"
+                        ).checked =
+                            all.length === checked.length;
+
+                    }
+                );
+
+            });
+
+
+        /* =========================
+           아이디 중복확인
+        ========================= */
+
+        function checkId() {
+
+            const userId =
+                document
+                    .getElementById("userId")
+                    .value
+                    .trim();
+
+
+            if (userId === "") {
+
+                alert("아이디를 입력하세요.");
+
+                return;
+
+            }
+
+
+            if (userId.length < 4) {
+
+                alert("아이디는 4자 이상 입력하세요.");
+
+                return;
+
+            }
+
+
+            alert("사용 가능한 아이디입니다.");
+
+        }
+
+
+        /* =========================
+           회원가입
+        ========================= */
+
+        function join() {
+
+            const name =
+                document
+                    .getElementById("name")
+                    .value
+                    .trim();
+
+
+            const userId =
+                document
+                    .getElementById("userId")
+                    .value
+                    .trim();
+
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
+
+
+            const passwordConfirm =
+                document
+                    .getElementById("passwordConfirm")
+                    .value;
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+
+            const postcode =
+                document
+                    .getElementById("postcode")
+                    .value
+                    .trim();
+
+
+            const detailAddress =
+                document
+                    .getElementById("detailAddress")
+                    .value
+                    .trim();
+
+
+            const agree =
+                document.querySelectorAll(
+                    ".agree:checked"
+                );
+
+
+            /* 이름 */
+
+            if (name === "") {
+
+                alert("이름을 입력하세요.");
+
+                document
+                    .getElementById("name")
+                    .focus();
+
+                return;
+
+            }
+
+
+            /* 아이디 */
+
+            if (userId === "") {
+
+                alert("아이디를 입력하세요.");
+
+                document
+                    .getElementById("userId")
+                    .focus();
+
+                return;
+
+            }
+
+
+            /* 비밀번호 */
+
+            if (password === "") {
+
+                alert("비밀번호를 입력하세요.");
+
+                document
+                    .getElementById("password")
+                    .focus();
+
+                return;
+
+            }
+
+
+            /* 비밀번호 확인 */
+
+            if (password !== passwordConfirm) {
+
+                alert("비밀번호가 일치하지 않습니다.");
+
+                document
+                    .getElementById("passwordConfirm")
+                    .focus();
+
+                return;
+
+            }
+
+
+            /* 이메일 */
+
+            if (email === "") {
+
+                alert("이메일을 입력하세요.");
+
+                document
+                    .getElementById("email")
+                    .focus();
+
+                return;
+
+            }
+
+
+            /* 주소 */
+
+            if (postcode === "") {
+
+                alert("우편번호를 검색하세요.");
+
+                return;
+
+            }
+
+
+            if (detailAddress === "") {
+
+                alert("상세주소를 입력하세요.");
+
+                document
+                    .getElementById("detailAddress")
+                    .focus();
+
+                return;
+
+            }
+
+
+            /* 필수 약관 */
+
+            if (agree.length < 2) {
+
+                alert("필수 약관에 동의해주세요.");
+
+                return;
+
+            }
+
+
+            alert(
+                "회원가입이 완료되었습니다.\n" +
+                name + "님, 환영합니다."
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>
+

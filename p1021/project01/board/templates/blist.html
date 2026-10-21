@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>뉴스 게시판</title>
+<link rel='stylesheet' href='/static/css/blist.css'>
+</head>
+<body>
+<!-- HEADER -->
+<header>
+<div class="top">
+<div class="logo">
+            FOREST
+        </div>
+<ul class="menu">
+<li><a href="#">소개</a></li>
+<li><a href="#">뉴스</a></li>
+<li><a href="#">학생관리</a></li>
+<li><a href="#">학과정보</a></li>
+<li><a href="#">문의</a></li>
+</ul>
+</div>
+</header>
+<!-- VISUAL -->
+<section class="visual">
+<div>
+<h1>NEWS</h1>
+<p>포레스트의 새로운 소식을 만나보세요.</p>
+</div>
+</section>
+<!-- CONTENT -->
+<main>
+<div class="container">
+<div class="breadcrumb">
+            HOME
+            <span>&gt;</span>
+            FOREST
+            <span>&gt;</span>
+            NEWS
+        </div>
+<div class="title">
+<h2>뉴스</h2>
+<p>
+                포레스트의 다양한 소식과 새로운 이야기를 확인해보세요.
+            </p>
+</div>
+<!-- SEARCH -->
+<div class="search">
+<select>
+<option>제목</option>
+<option>내용</option>
+<option>전체</option>
+</select>
+<input placeholder="검색어를 입력하세요." type="text"/>
+<button>검색</button>
+</div>
+<!-- NEWS LIST -->
+<div class="board-wrap">
+    <table class="board-table">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>조회수</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if list %} {# 게시글이 있으면 #}
+                {% for board in list %}
+                    <tr>
+                        <td class="number">{{board.bno}}</td>
+                        <td class="subject"><a href="/board/bview/{{board.bno}}/">{{board.btitle}}</a></td>
+                        <td>{{board.id}}</td>
+                        <td>{{board.bdate | date:'Y-m-d H:i'}}</td>
+                        <td>{{board.bhit}}</td>
+                    </tr>
+                {% endfor %}
+            {% else %} {# 게시글이 없으면 #}
+                    <tr>
+                        <td colspan='5' class="number">게시글이 없습니다.</td>
+                    </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+<!-- WRITE BUTTON -->
+<div class="write-area">
+<a class="write-btn" href="/board/bwrite/">글쓰기</a>
+</div>
+<!-- PAGINATION -->
+<div class="pagination">
+<a href="#">«</a>
+<a href="#">‹</a>
+<a class="active" href="#">1</a>
+<a href="#">2</a>
+<a href="#">3</a>
+<a href="#">4</a>
+<a href="#">5</a>
+<a href="#">›</a>
+<a href="#">»</a>
+</div>
+</div>
+</main>
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<div class="footer-menu">
+<a href="#">회사소개</a>
+<a href="#">오시는 길</a>
+<a href="#">개인정보처리방침</a>
+<a href="#">이용약관</a>
+<a href="#">이메일무단수집거부</a>
+</div>
+<div class="footer-info">
+
+            포레스트 리조트\
+            충청북도 제천시 백운면 금봉로 365\
+            대표번호 : 043-649-6000
+
+        </div>
+</div>
+</footer>
+</body>
+</html>

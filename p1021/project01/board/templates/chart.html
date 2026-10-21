@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>차트그래프</title>
+<link rel='stylesheet' href='/static/css/bview.css'>
+
+</head>
+<body>
+<!-- HEADER -->
+<header>
+    <div class="top">
+    <div class="logo">
+                FOREST
+            </div>
+    <ul class="menu">
+    <li><a href="#">소개</a></li>
+    <li><a href="#">뉴스</a></li>
+    <li><a href="#">학생관리</a></li>
+    <li><a href="#">학과정보</a></li>
+    <li><a href="#">문의</a></li>
+    </ul>
+    </div>
+</header>
+<!-- VISUAL -->
+<section class="visual">
+    <div>
+        <h1>NEWS</h1>
+        <p>포레스트의 새로운 소식을 만나보세요.</p>
+    </div>
+</section>
+<!-- 차트그리기 -->
+<script>
+    function chartBtn(){
+        let word = $("#word").val();
+        let search = $("#search").val();
+        id_list = []
+        bhit_list = []
+        alert('차트를 생성합니다.');
+        $.ajax({
+            url:'/board/chart_data/',                // 보내는링크주소
+            type:'post',                             // 전송방식
+            headers:{'X-CSRFToken':'{{csrf_token}}'},// csrf_token
+            data:{'word':word,'search':search},                                 // html에서 django보내는 데이터
+            dataType:'json',                         // 받는데이터 타입 : json,xml,text
+            success:function(data){                  // 성공시 전달데이터를 data변수 추가
+                alert('성공');
+                //console.log('data1 : ',data.data1);
+                //console.log('data2 : ',data.data2);
+                //console.log('list 전체 : ',data.list);
+                //1번째 forEach문
+                data.list.forEach(function(d){
+                    id_list.push(d.id);
+                    bhit_list.push(d.bhit);
+                    }
+                )
+                console.log('id_list : ',id_list);
+                console.log('bhit_list : ',bhit_list);
+
+                let charts = Chart.getChart('myChart');
+                if(charts != undefined){
+                    charts.destroy();
+                }
+
+                //그래프 그리기
+                const ctx = document.getElementById('myChart');
+
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                    labels: id_list,  //id추가
+                    datasets: [{
+                        label: '게시판조회수',
+                        data: bhit_list, //bhit추가
+                        borderWidth: 1
+                    }]
+                    },
+                    options: {
+                    scales: {
+                        y: {
+                        beginAtZero: true
+                        }
+                    }
+                    }
+                });    
+
+            },//success
+            error:function(){ alert('실패') }
+        });//ajax
+    }
+</script>
+<main>
+    <div class="container">
+        <input type='text' name='word' id='word' placeholder='검색어를 입력하세요.'><br>
+        <input type='text' name='search' id='search' placeholder='조회수 범위를 입력하세요.'><br>
+        <button type='button' onclick='chartBtn()'>그래프그리기</button>
+        <br><br>
+        <!-- 그래프 그려지는 태그 -->
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+
+    </div>
+</main>
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<div class="footer-menu">
+<a href="#">회사소개</a>
+<a href="#">오시는 길</a>
+<a href="#">개인정보처리방침</a>
+<a href="#">이용약관</a>
+<a href="#">이메일무단수집거부</a>
+</div>
+<div class="footer-info">
+
+            포레스트 리조트\
+            충청북도 제천시 백운면 금봉로 365\
+            대표번호 : 043-649-6000
+
+        </div>
+</div>
+</footer>
+</body>
+</html>
