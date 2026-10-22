@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script>
+if('{{request.session.session_e_key}}' == ''){
+	alert('이메일 인증을 하셔야 회원가입이 가능합니다.');
+	location.href='/member/step01/';
+}
+</script>
 <title> JARDIN SHOP </title>
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
