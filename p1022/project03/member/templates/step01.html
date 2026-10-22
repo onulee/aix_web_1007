@@ -278,16 +278,27 @@ $(document).ready(function() {
 					<script>
 						
 						function ekeyBtn(){
-							let temp_key = '{{request.session.session_e_key}}'; 
 							const ekey = $("#ekey").val();
-							if (temp_key == ekey){
-								alert('인증키가 확인되었습니다. 다음으로 진행합니다.');
-								location.href='/member/step02/';
-							}else{
-								alert('인증키가 다릅니다. 확인해서 다시 입력하세요.');
-							}
-							//alert('인증키를 확인합니다.');
-						}
+							console.log('인증키입력 : ',ekey);
+							$.ajax({
+								url:'/member/ekey/',                // 보내는링크주소
+								type:'post',                             // 전송방식
+								headers:{'X-CSRFToken':'{{csrf_token}}'},// csrf_token
+								data:{'ekey':ekey},                     // html에서 django보내는 데이터
+								dataType:'json', 
+								success:function(data){ 
+									if(data.temp=='1'){
+										alert('인증키가 확인되었습니다.');
+										location.href='/member/step02/';
+									}else{
+										alert('인증키가 다릅니다. 다시 확인해주세요.');
+									}
+								},
+								error:function(){
+									alert('실패');
+								}	
+							});//ajax
+						}//ekeyBtn
 
 
 						function emailBtn(){
