@@ -276,9 +276,9 @@ $(document).ready(function() {
 					</div>
 					<!-- //Btn Area -->
 					<script>
-						let temp_key = ''; //전역변수
-
+						
 						function ekeyBtn(){
+							let temp_key = '{{request.session.session_e_key}}'; 
 							const ekey = $("#ekey").val();
 							if (temp_key == ekey){
 								alert('인증키가 확인되었습니다. 다음으로 진행합니다.');

@@ -11,6 +11,15 @@ import random
 import string
 import json
 
+# 인증키 확인 - 서버에서 확인할것
+def ekey(request):
+    ekey = request.POST.get('ekey','')
+    s_key = request.session['session_e_key']
+    if ekey == s_key:
+        context = {'temp':1} # 인증성공
+    else:
+        context = {'temp':0} # 인증실패   
+    return JsonResponse(context)
 
 def email(request):
     # 1. 이메일 주소 가져오기
@@ -47,7 +56,7 @@ def email(request):
     s.sendmail(sendEmail,email,msg.as_string()) # 메일발송
     s.close() # 메일닫기
 
-    # request.session['session_e_key'] = e_key
+    request.session['session_e_key'] = e_key # migrate를 안해서 session테이블
 
     context = {'e_key':e_key}
     # ---------------------------------------------------
