@@ -231,7 +231,9 @@ $(document).ready(function() {
 									<td class="tnone">{{board.bno}}</td>
 									<td class="left">
 										<a href="/customer/cview/{{board.bno}}/">{{board.btitle}}</a>
+										{% if board.is_new %}
 										<img src="/static/images/ico/ico_new.gif" alt="NEW" />
+										{% endif %}
 									</td>
 									<td>{{board.bdate | date:'Y-m-d'}}</td>
 									<td class="tnone right">{{board.bhit}}</td>
