@@ -266,44 +266,59 @@ $(document).ready(function() {
 					<!-- //Btn Area -->
 
 
-					<!-- 댓글-->
+					<!-- 댓글등록 -->
 					<div class="replyWrite">
 						<ul>
 							<li class="in">
-								<p class="txt">총 <span class="orange">3</span> 개의 댓글이 달려있습니다.</p>
+								<p class="txt">총 <span class="orange">1</span> 개의 댓글이 달려있습니다.</p>
 								<p class="password">비밀번호&nbsp;&nbsp;<input type="password" class="replynum" /></p>
 								<textarea class="replyType"></textarea>
 							</li>
-							<li class="btn"><a href="#" class="replyBtn">등록</a></li>
+							<li class="btn"><a onclick='writeBtn()' style='cursor:pointer;' class="replyBtn">등록</a></li>
 						</ul>
 						<p class="ntic">※ 비밀번호를 입력하시면 댓글이 비밀글로 등록 됩니다.</p>
 					</div>
 
 					<div class="replyBox">
+						<!-- 댓글리스트 반복 -->
+						{% if commlist %}
+							{% for comm in commlist  %}
+							<ul>
+								<li class="name">{{comm.member.id}} 
+									<span>[{{comm.cdate|date:'Y-m-d'}}&nbsp;&nbsp;{{comm.cdate|date:'H:i:s'}}]</span>
+								</li>
+								<li class="txt">{{comm.ccontent}}</li>
+								<li class="btn">
+									<a onclick='updateBtn()' style='cursor: pointer;' class="rebtn">수정</a>
+									<a onclick='deleteBtn()' style='cursor: pointer;' class="rebtn">삭제</a>
+								</li>
+							</ul>
+							{% endfor %}
+						{% else %}
 						<ul>
-							<li class="name">jjabcde <span>[2014-03-04&nbsp;&nbsp;15:01:59]</span></li>
-							<li class="txt"><textarea class="replyType"></textarea></li>
-							<li class="btn">
-								<a href="#" class="rebtn">수정</a>
-								<a href="#" class="rebtn">삭제</a>
-							</li>
+							<li class="txt">댓글이 없습니다!! </li>
 						</ul>
+						{% endif %} 
 
-						<ul>
-							<li class="name">jjabcde <span>[2014-03-04&nbsp;&nbsp;15:01:59]</span></li>
-							<li class="txt">대박!!! 이거 저한테 완전 필요한 이벤트였어요!!</li>
-							<li class="btn">
-								<a href="#" class="rebtn">수정</a>
-								<a href="#" class="rebtn">삭제</a>
-							</li>
-						</ul>
-
+						<!-- ---------------------------- -->
+						<!-- 수정입력화면
+							<ul>
+								<li class="name">jjabcde <span>[2014-03-04&nbsp;&nbsp;15:01:59]</span></li>
+								<li class="txt"><textarea class="replyType"></textarea></li>
+								<li class="btn">
+									<a href="#" class="rebtn">저장</a>
+									<a href="#" class="rebtn">취소</a>
+								</li>
+							</ul>
+						-->
+						<!-- 비밀글화면 
 						<ul>
 							<li class="name">jjabcde <span>[2014-03-04&nbsp;&nbsp;15:01:59]</span></li>
 							<li class="txt">
 								<a href="password.html" class="passwordBtn"><span class="orange">※ 비밀글입니다.</span></a>
 							</li>
 						</ul>
+						-->
 					</div>
 					<!-- //댓글 -->
 
