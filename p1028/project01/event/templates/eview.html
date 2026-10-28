@@ -7,10 +7,10 @@
 <meta name="description" content="JARDIN SHOP" />
 <meta name="keywords" content="JARDIN SHOP" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scaleable=no" />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/css/reset.css?v=Y" />
 <link rel="stylesheet" type="text/css" href="/static/css/layout.css?v=Y" />
 <link rel="stylesheet" type="text/css" href="/static/css/content.css?v=Y" />
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="/static/js/top_navi.js"></script>
 <script type="text/javascript" src="/static/js/left_navi.js"></script>
 <script type="text/javascript" src="/static/js/main.js"></script>
@@ -22,10 +22,55 @@
 <script>
 $(function() {
 	$(document).on('click','.replyBtn',function(){
-		const replynum = $('.replynum').val();
-		const replyType = $('.replyType').val();
+		const cpw = $('.replynum').val(); //비밀번호
+		const ccontent = $('.replyType').val(); //내용
+		alert(`댓글을 저장합니다.`);
 
-		alert(`확인 : ${replynum}, ${replyType}`);
+		//ajax사용 - django저장
+		$.ajax({
+			url:'/comment/commWrite/',  //링크주소
+			type:'post',               //get,post
+			headers:{'X-CSRFToken':'{{csrf_token}}'}, //csrf_token
+			data:{
+				'eno':'{{event.eno}}',
+				'cpw':cpw,
+				'ccontent':ccontent },     //보내는 데이터
+			dataType:'json',                          //리턴타입:json,xml,text
+			success:function(data){                   // 리턴받는데이터 data
+				alert('성공');
+				console.log(data);
+
+				//prepend추가
+				//댓글추가 - append:아래추가,prepend:위에 추가,html:모두삭제후 추가,remove
+				$('.replyBox').prepend(`
+					<ul>
+					<li class="name">${data.comment[0].member_id}
+						<span>[${data.comment[0].cdate}]</span>
+					</li>
+						<li class="txt">${ccontent}</li>
+						<li class="btn">
+						<a onclick='updateBtn()' style='cursor: pointer;' class="rebtn">수정</a>
+						<a onclick='deleteBtn()' style='cursor: pointer;' class="rebtn">삭제</a>
+					</li>
+					</ul>
+				`);
+
+				//리셋
+				$('.replynum').val('');
+				$('.replyType').val('');
+
+
+			},
+			error:function(){
+				alert('실패');
+			}
+		})
+
+
+
+		
+		
+
 	});
 
 
