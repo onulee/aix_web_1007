@@ -22,19 +22,66 @@
 <script>
 $(function() {
 
+	//전역변수 초기화
+	let cno;
+	let id;
+	let cdate;
+	let ccontent;
+	let temp = 0;
+
+	//06. 댓글수정저장
+	$(document).on('click','.saveBtn',function(){
+		alert('댓글을 수정합니다.');
+		cno = $(this).closest('ul').attr('id'); //ul태그 id값을 가져옴.
+		id = '{{request.session.session_id}}';
+		ccontent = $(this).closest('ul').children('.txt').children('.replyType').val();
+		console.log(cno,id,ccontent);
+
+
+
+	});//saveBtn
+
+	//05. 댓글수정취소
+	$(document).on('click','.cancelBtn',function(){
+		alert('댓글수정을 취소합니다.');
+		ccontent,cdate,id,cno;
+		let hdata = `
+			<li class="name">${id}
+				<span class='cdate'>${cdate}</span>
+			</li>
+				<li class="txt ccontent">${ccontent}</li>
+				<li class="btn">
+				<a style='cursor: pointer;' class="updateBtn rebtn">수정</a>
+				<a style='cursor: pointer;' class="deleteBtn rebtn">삭제</a>
+			</li>
+		`;
+		$('#'+cno).html(hdata);
+		temp = 0;
+	});//cancelBtn
+	
 	//04. 댓글수정버튼클릭
 	$(document).on('click','.updateBtn',function(){
-		const cno = $(this).closest('ul').attr('id'); //ul태그 id값을 가져옴.
+		if(temp != 0){
+			alert('다른 댓글 수정화면을 닫으셔야 수정이 가능합니다.');
+			return;
+		}
+		temp = 1;
+		cno = $(this).closest('ul').attr('id'); //ul태그 id값을 가져옴.
+		id = '{{request.session.session_id}}';
+		cdate = $(this).closest('ul').children('.name').children('span').text()
+		ccontent = $(this).closest('ul').children('.ccontent').text()
+
 		alert(cno+'번 댓글을 수정합니다.');
 		let hdata = `
-				<li class="name">jjabcde <span>[2014-03-04&nbsp;&nbsp;15:01:59]</span></li>
-				<li class="txt"><textarea class="commText replyType"></textarea></li>
+				<li class="name">${id} <span>${cdate}</span></li>
+				<li class="txt"><textarea class="commText replyType">${ccontent}</textarea></li>
 				<li class="btn">
 					<a style='cursor: pointer;' class="saveBtn rebtn">저장</a>
 					<a style='cursor: pointer;' class="cancelBtn rebtn">취소</a>
 				</li>
 		`;
 		$('#'+cno).html(hdata);
+		
 	});//updateBtn
 
 	//03. 댓글삭제
@@ -104,9 +151,9 @@ $(function() {
 				$('.replyBox').prepend(`
 					<ul id='${data.comment[0].cno}'>
 					<li class="name">${data.comment[0].member_id}
-						<span>[${data.comment[0].cdate}]</span>
+						<span class='cdate'>[${data.comment[0].cdate}]</span>
 					</li>
-						<li class="txt">${ccontent}</li>
+						<li class="txt ccontent">${ccontent}</li>
 						<li class="btn">
 						<a style='cursor: pointer;' class="updateBtn rebtn">수정</a>
 						<a style='cursor: pointer;' class="deleteBtn rebtn">삭제</a>
@@ -372,7 +419,7 @@ $(function() {
 								<p class="password">비밀번호&nbsp;&nbsp;
 									<input name='cpw' type="password" class="replynum" />
 								</p>
-								<textarea name='ccontent' class="replyType"></textarea>
+								<textarea name='ccontent' class="ccontent replyType"></textarea>
 							</li>
 							<li class="btn"><a style='cursor:pointer;' class="replyBtn">등록</a></li>
 						</ul>
@@ -387,7 +434,7 @@ $(function() {
 								<li class="name">{{comm.member.id}} 
 									<span>[{{comm.cdate|date:'Y-m-d'}}&nbsp;&nbsp;{{comm.cdate|date:'H:i:s'}}]</span>
 								</li>
-								<li class="txt">{{comm.ccontent}}</li>
+								<li class="txt ccontent">{{comm.ccontent}}</li>
 								<li class="btn">
 									<a style='cursor: pointer;' class="updateBtn rebtn">수정</a>
 									<a style='cursor: pointer;' class="deleteBtn rebtn">삭제</a>

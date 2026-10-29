@@ -13,6 +13,17 @@ from comment.models import Comment
 from event.models import Event
 from member.models import Member
 
+# 04.댓글수정저장
+def commUpdate(request):
+    cno = request.POST.get('cno')
+    ccontent = request.POST.get('ccontent')
+    id = request.session['session_id']
+    qs = Comment.objects.filter(cno=cno)
+    qs.ccontent = ccontent
+    qs.save()
+    context = {'result':'성공'}
+    return JsonResponse(context)
+
 # 03.댓글삭제
 def commDelete(request):
     cno = request.POST.get('cno')
