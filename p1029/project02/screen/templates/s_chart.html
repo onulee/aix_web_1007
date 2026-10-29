@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>영화차트</title>
+<link rel='stylesheet' href='/static/css/bview.css'>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dcc9c2ff470111781f4ce0317ddd4efe"></script>
+
+</head>
+<body>
+<!-- HEADER -->
+<header>
+    <div class="top">
+    <div class="logo">
+                FOREST
+            </div>
+    <ul class="menu">
+    <li><a href="#">소개</a></li>
+    <li><a href="#">뉴스</a></li>
+    <li><a href="#">학생관리</a></li>
+    <li><a href="#">학과정보</a></li>
+    <li><a href="#">문의</a></li>
+    </ul>
+    </div>
+</header>
+<!-- VISUAL -->
+<section class="visual">
+    <div>
+        <h1>NEWS</h1>
+        <p>포레스트의 새로운 소식을 만나보세요.</p>
+    </div>
+</section>
+<!-- 차트그리기 -->
+
+<main>
+    <div class="container">
+        <input type='text' name='search_word' id='search_word' >
+        <button type='button' onclick='chartBtn()'>차트그리기</button>
+        <br>
+        <br>
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</main>
+<script>
+    function chartBtn(){
+         
+
+        title_list = [];
+        crevenue_list = [];
+        const search_word = $("#search_word").val();
+        alert(search_word+" (으)로 검색을 시작합니다.")
+        $.ajax({
+            url:'/screen/chart_data/',
+            headers:{'X-CSRFToken':'{{csrf_token}}'},
+            type:'post',
+            dataType:'json',
+            data:{'search_word':search_word},
+            success:function(data){
+                alert('성공');
+                console.log(data);
+                data.list.forEach(function(s){
+                    title_list.push(s.title);
+                    crevenue_list.push(s.crevenue);
+                });
+                console.log('title_list : ',title_list)
+                console.log('crevenue_list : ',crevenue_list)
+
+                // 기존 chart가 그려져 있으면 리셋후 진행
+                let charts = Chart.getChart('myChart');
+                if(charts != undefined){
+                    charts.destroy();
+                }
+
+                //그래프그리기
+                const ctx = document.getElementById('myChart');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                    labels: title_list,
+                    datasets: [{
+                        label: '영화별 매출액',
+                        data: crevenue_list,
+                        borderWidth: 1,
+                        backgroundColor: [ 
+                            'rgba(255, 99, 132, 0.2)', 
+                            'rgba(54, 162, 235, 0.2)', 
+                            'rgba(255, 206, 86, 0.2)', 
+                            'rgba(75, 192, 192, 0.2)', 
+                            'rgba(119, 52, 253, 0.2)', 
+                            'rgba(255, 159, 64, 0.2)' 
+                        ]
+                    }]
+                    },
+                    options: {
+                    scales: {
+                        y: {
+                        beginAtZero: true
+                        }
+                    }
+                    }
+                });
+
+
+
+
+                //-----------------------------------------------
+            },
+            error:function(){
+                alert('실패');
+            }
+        });//ajax
+    }
+
+</script>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<div class="footer-menu">
+<a href="#">회사소개</a>
+<a href="#">오시는 길</a>
+<a href="#">개인정보처리방침</a>
+<a href="#">이용약관</a>
+<a href="#">이메일무단수집거부</a>
+</div>
+<div class="footer-info">
+
+            포레스트 리조트\
+            충청북도 제천시 백운면 금봉로 365\
+            대표번호 : 043-649-6000
+
+        </div>
+</div>
+</footer>
+</body>
+</html>
