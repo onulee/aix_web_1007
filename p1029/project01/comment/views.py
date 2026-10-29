@@ -17,11 +17,17 @@ from member.models import Member
 def commUpdate(request):
     cno = request.POST.get('cno')
     ccontent = request.POST.get('ccontent')
-    id = request.session['session_id']
-    qs = Comment.objects.filter(cno=cno)
-    qs.ccontent = ccontent
-    qs.save()
-    context = {'result':'성공'}
+    
+    # 1.수정
+    Comment.objects.filter(cno=cno).update(ccontent=ccontent)
+    qs = Comment.objects.filter(cno=cno).values()
+    l_qs = list(qs)
+    # 2.수정
+    # qs = Comment.objects.get(cno=cno)
+    # qs.ccontent = ccontent
+    # qs.save()
+
+    context = {'result':'성공','comment':l_qs}
     return JsonResponse(context)
 
 # 03.댓글삭제

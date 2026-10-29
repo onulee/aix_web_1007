@@ -31,14 +31,44 @@ $(function() {
 
 	//06. 댓글수정저장
 	$(document).on('click','.saveBtn',function(){
-		alert('댓글을 수정합니다.');
 		cno = $(this).closest('ul').attr('id'); //ul태그 id값을 가져옴.
-		id = '{{request.session.session_id}}';
 		ccontent = $(this).closest('ul').children('.txt').children('.replyType').val();
-		console.log(cno,id,ccontent);
 
+		//ajax사용 - django수정저장
+		$.ajax({
+			url:'/comment/commUpdate/',  //링크주소
+			type:'post',               //get,post
+			headers:{'X-CSRFToken':'{{csrf_token}}'}, //csrf_token
+			data:{
+				'cno':cno,
+				'ccontent':ccontent },     //보내는 데이터
+			dataType:'json',                          //리턴타입:json,xml,text
+			success:function(data){                   // 리턴받는데이터 data
+				alert('댓글수정을 완료했습니다.');
+				console.log(data);
 
+				//html추가
+				$('#'+cno).html(`
+					<li class="name">${data.comment[0].member_id}
+						<span class='cdate'>[${data.comment[0].cdate}]</span>
+					</li>
+						<li class="txt ccontent">${ccontent}</li>
+						<li class="btn">
+						<a style='cursor: pointer;' class="updateBtn rebtn">수정</a>
+						<a style='cursor: pointer;' class="deleteBtn rebtn">삭제</a>
+					</li>
+				`);
 
+				//리셋
+				$('.replynum').val('');
+				$('.replyType').val('');
+			},
+			error:function(){
+				alert('실패');
+			}
+		});//ajax
+
+		temp = 0;
 	});//saveBtn
 
 	//05. 댓글수정취소

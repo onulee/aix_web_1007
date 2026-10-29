@@ -8,6 +8,6 @@ urlpatterns = [
     path('commWrite/', views.commWrite, name='commWrite'),
     # ajax 댓글삭제
     path('commDelete/', views.commDelete, name='commDelete'),
-    # ajax 댓글삭제
+    # ajax 댓글수정저장
     path('commUpdate/', views.commUpdate, name='commUpdate'),
 ]
