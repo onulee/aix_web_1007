@@ -44,10 +44,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project01.urls'
 
+# templates경로설정 - 전체templates폴더, app별 templates폴더
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

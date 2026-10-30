@@ -10,9 +10,18 @@ def likes(request):
     id = request.session['session_id']
     member = Member.objects.get(id=id)
     eno = request.POST.get('eno')
+    event = Event.objects.get(eno=eno)   # 1번 이벤트게시글
     print('확인 : ',id,eno)
-
-    context = {'result':1}
+    # 1번게시글에 해당유저가 좋아요를 클릭했는지, 안했는지 확인
+    if event.likes.filter(id=id).exists():
+        event.likes.remove(member)
+        result = 0
+    else:
+        event.likes.add(member)    
+        result = 1
+    count = event.likes.count()
+    print('좋아요 개수',count)
+    context = {'result':result,'count':count}
     return JsonResponse(context)
 
 # 이벤트리스트

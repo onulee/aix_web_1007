@@ -394,12 +394,12 @@ $(function() {
 							success:function(data){                   // 리턴받는데이터 data
 								console.log(data);
 								let hdata = '';
-								if(data.result == 1){
+								if(data.result == '1'){
 									alert('좋아요 추가');
-									hdata = `<i class="fa-solid fa-heart"></i> `;
+									hdata = `<i class="fa-solid fa-heart"></i> ${data.count}`;
 								}else{
 									alert('좋아요 취소');
-									hdata = `<i class="fa-regular fa-heart"></i> `;
+									hdata = `<i class="fa-regular fa-heart"></i> ${data.count}`;
 								}
 								$('.likesBtn').html(hdata);
 							},
@@ -426,7 +426,11 @@ $(function() {
 									<li>제목 : {{event.etitle}}
 										<span style='margin-left:100px;' class='likes'>좋아요 : 
 											<span class='likesBtn' style='cursor: pointer;'>
-												<i class="fa-regular fa-heart"></i> 0
+												{% if event.likes.count != 0 %}
+													<i class="fa-solid fa-heart"></i> {{event.likes.count}}
+												{% else %}
+													<i class="fa-regular fa-heart"></i> {{event.likes.count}}
+												{% endif %}
 												
 											</span>
 										</span>
