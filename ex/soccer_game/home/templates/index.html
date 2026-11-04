@@ -1,0 +1,300 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D 가상 애니메이션 축구 게임</title>
+    <!-- 뒤에 ?v=1.0 처럼 버전을 붙여두면 디자인이 고정된 상태로 로직만 안전하게 업데이트됩니다 -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.0">
+</head>
+<body>
+
+<div class="game-wrapper">
+    <!-- 1. 좌측 홈팀 락커룸 -->
+    <div class="panel">
+        <h3 class="panel-header">🏠 홈 락커룸</h3>
+        
+        <div class="tactics-control-box">
+            <div class="t-row">
+                <label>포메이션</label>
+                <select id="home-formation-select">
+                    <option value="4-3-3">4-3-3 (공격형)</option>
+                    <option value="4-4-2">4-4-2 (표준형)</option>
+                    <option value="3-5-2">3-5-2 (중원강화)</option>
+                    <option value="4-2-3-1">4-2-3-1 (안정형)</option>
+                </select>
+            </div>
+            <div class="t-row">
+                <label>팀 전술</label>
+                <select id="home-tactic-select">
+                    <option value="공격형">전방 압박 / 게겐프레싱</option>
+                    <option value="밸런스" selected>밸런스 / 밸런스드</option>
+                    <option value="수비형">선수비 후역습</option>
+                    <option value="점유율">티키타카 / 점유율 축구</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section-sub-header">🟢 선발 라인업 (11명)</div>
+        <div class="player-list" id="home-player-list"></div>
+        
+        <div class="section-sub-header">🟡 교체 후보 선수</div>
+        <div class="player-list sub-list" id="home-sub-list"></div>
+    </div>
+
+    <!-- 2. 중앙 경기장 및 전광판 영역 -->
+    <div class="stadium-container">
+        <div class="team-selector-bar">
+            <div class="select-group">
+                <select id="home-league-select">
+                    <option value="1부리그">1부리그</option>
+                    <option value="2부리그">2부리그</option>
+                </select>
+                <select id="home-team-select"></select>
+            </div>
+
+            <div class="center-menu-title">
+                <span>🏆 감독! 내가한다 🏆</span>
+            </div>
+
+            <div class="select-group">
+                <select id="away-league-select">
+                    <option value="1부리그">1부리그</option>
+                    <option value="2부리그" selected>2부리그</option>
+                </select>
+                <select id="away-team-select"></select>
+            </div>
+        </div>
+
+        <div class="scoreboard-board">
+            <div class="team-score-area">
+                <img id="home-logo" src="" alt="홈마크" class="team-emblem">
+                <div class="team-info-box">
+                    <span id="home-team-name" class="team-name">홈팀</span> 
+                    <span class="team-score">[ <span id="home-score">0</span> ]</span>
+                </div>
+            </div>
+
+            <div class="match-timer" id="match-timer">00:00</div>
+
+            <div class="team-score-area right">
+                <div class="team-info-box right">
+                    <span class="team-score">[ <span id="away-score">0</span> ]</span>
+                    <span id="away-team-name" class="team-name">어웨이팀</span>
+                </div>
+                <img id="away-logo" src="" alt="어웨이마크" class="team-emblem">
+            </div>
+        </div>
+
+        <canvas id="pitchCanvas" width="1050" height="650"></canvas>
+
+        <div class="match-broadcast-box">
+            <!-- 1. 왼쪽: 현대자동차 광고 배너 -->
+            <div class="ad-side-banner left-ad">
+                <span class="ad-brand">HYUNDAI</span>
+                <span class="ad-sub">현대자동차</span>
+            </div>
+
+            <!-- 2. 가운데: 실시간 경기 중계 확인 창 -->
+            <div class="match-broadcast-center">
+                <div class="broadcast-title">⚡ 실시간 경기 중계 보기 </div>
+                <div class="match-logs" id="match-logs">
+                    <div>[00:00] 양 팀 선수들이 그라운드에 입장했습니다. 경기를 시작하세요!</div>
+                </div>
+            </div>
+
+            <!-- 3. 오른쪽: 삼성전자 광고 배너 -->
+            <div class="ad-side-banner right-ad">
+                <span class="ad-brand">SAMSUNG</span>
+                <span class="ad-sub">삼성전자</span>
+            </div>
+        </div>
+
+        <div class="ad-board">
+            <div class="ad-text">🔥 2026 K리그 공식 파트너와 함께하는 가상 축구 매니저 게임 🔥 | 승리를 향한 최적의 전술을 구성하세요!</div>
+        </div>
+        <!-- 하단 경기 제어 버튼 4가지 -->
+        <div class="controls">
+            <button id="btn-start">경기 시작</button>
+            <button id="btn-end" class="secondary">경기 종료</button>
+            <button id="btn-new" class="secondary">새로운 게임</button>
+            <button id="btn-quit" class="danger">게임 종료</button>
+        </div>
+    </div>
+    <!-- 기존 내용 유지 -->
+    <!------------------------------------------------------------------------------------------ 하단 버튼 수정 시작 --------------------------------------------------------------------------------->
+    
+    <!-- 📌 [고도화] 구단 성적 데이터 기반 매치 팀 성적 전면 비교 분석 리포트 -->
+    <div id="stats-modal" class="modal-overlay" style="display: none;">
+        <div class="stats-modal-content-team">
+            <button id="stats-modal-close" class="modal-close-btn">&times;</button>
+            <div class="modal-header">
+                <h2>🏆 K리그 공식 구단 성적 기반 매치 비교 분석 리포트</h2>
+                <!-- ⏱️ 경기 시간이 표시될 영역에 ID 추가 -->
+                <div style="font-size: 1.2rem; color: #ff5252; font-weight: bold;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;경기 시간: <span id="report-match-time">00:00</span> | 연장 시간: <span id="report-extra-time">00:00</span>
+                </div>
+            </div>
+            
+            <div class="team-comparison-container">
+                
+                <!-- 1. 상단: [구단 마크 / 구단 명 / MVP 선수 VS MVP 선수 / 구단 명 / 구단 마크] 순서 나열 -->
+                <div class="match-top-banner">
+                    <!-- 홈팀 정보 및 MVP -->
+                    <div class="banner-team-side home">
+                        <img id="modal-home-emblem" src="" alt="홈 구단마크" class="banner-emblem">
+                        <div class="banner-team-text">
+                            <span id="modal-home-name" class="banner-team-name">홈팀</span>
+                            <span class="banner-mvp-label">MVP: <b id="home-mvp-name">-</b></span>
+                        </div>
+                        <img id="home-mvp-thumb" src="" alt="홈 MVP" class="banner-mvp-thumb">
+                    </div>
+
+                    <div class="vs-badge-center">VS</div>
+
+                    <!-- 어웨이팀 정보 및 MVP -->
+                    <div class="banner-team-side away">
+                        <img id="away-mvp-thumb" src="" alt="어웨이 MVP" class="banner-mvp-thumb">
+                        <div class="banner-team-text right">
+                            <span id="modal-away-name" class="banner-team-name">어웨이팀</span>
+                            <span class="banner-mvp-label">MVP: <b id="away-mvp-name">-</b></span>
+                        </div>
+                        <img id="modal-away-emblem" src="" alt="어웨이 구단마크" class="banner-emblem">
+                    </div>
+                </div>
+
+                <!-- 2. 중앙 지표명 기준 양방향 분기 가로막대형 구단 성적 비교 섹션 -->
+                <div class="comparison-bars-section">
+                    
+                    <!-- 득점 -->
+                    <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-goal" class="compare-fill home" style="width: 0%;"></div><span id="home-val-goal" class="val-text left">0</span></div>
+                        <div class="compare-label">⚽ 득점</div>
+                        <div class="bar-side right"><span id="away-val-goal" class="val-text right">0</span><div id="away-bar-goal" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                    <!-- 슈팅 -->
+                    <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-shots" class="compare-fill home" style="width: 0%;"></div><span id="home-val-shots" class="val-text left">0</span></div>
+                        <div class="compare-label">🎯 슈팅 시도</div>
+                        <div class="bar-side right"><span id="away-val-shots" class="val-text right">0</span><div id="away-bar-shots" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                    <!-- 유효 슈팅 -->
+                    <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-sog" class="compare-fill home" style="width: 0%;"></div><span id="home-val-sog" class="val-text left">0</span></div>
+                        <div class="compare-label">⚡ 유효 슈팅</div>
+                        <div class="bar-side right"><span id="away-val-sog" class="val-text right">0</span><div id="away-bar-sog" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                    <!-- 패스 성공률 -->
+                    <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-pass" class="compare-fill home" style="width: 0%;"></div><span id="home-val-pass" class="val-text left">0%</span></div>
+                        <div class="compare-label">🔄 패스 성공률</div>
+                        <div class="bar-side right"><span id="away-val-pass" class="val-text right">0%</span><div id="away-bar-pass" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                    <!-- 키패스 -->
+                        <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-keypass" class="compare-fill home" style="width: 0%;"></div><span id="home-val-keypass" class="val-text left">0</span></div>
+                        <div class="compare-label">🔑 키패스</div>
+                        <div class="bar-side right"><span id="away-val-keypass" class="val-text right">0</span><div id="away-bar-keypass" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                    <!-- 크로스 성공률 -->
+                    <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-cross" class="compare-fill home" style="width: 0%;"></div><span id="home-val-cross" class="val-text left">0%</span></div>
+                        <div class="compare-label">📐 크로스 성공률</div>
+                        <div class="bar-side right"><span id="away-val-cross" class="val-text right">0%</span><div id="away-bar-cross" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                    <!-- 태클 성공 -->
+                    <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-tackle" class="compare-fill home" style="width: 0%;"></div><span id="home-val-tackle" class="val-text left">0</span></div>
+                        <div class="compare-label">🛡️ 태클 성공</div>
+                        <div class="bar-side right"><span id="away-val-tackle" class="val-text right">0</span><div id="away-bar-tackle" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                    <!-- 인터셉트 -->
+                    <div class="compare-row">
+                        <div class="bar-side left"><div id="home-bar-intercept" class="compare-fill home" style="width: 0%;"></div><span id="home-val-intercept" class="val-text left">0</span></div>
+                        <div class="compare-label">🛑 인터셉트</div>
+                        <div class="bar-side right"><span id="away-val-intercept" class="val-text right">0</span><div id="away-bar-intercept" class="compare-fill away" style="width: 0%;"></div></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<!----------------------------------------------------------------------------------------- 하단 버튼 수정 끝 ---------------------------------------------------------------------------------->
+    <!-- 3. 우측 어웨이팀 락커룸 -->
+    <div class="panel">
+        <h3 class="panel-header">✈️ 어웨이 락커룸</h3>
+        <div class="tactics-control-box">
+            <div class="t-row">
+                <label>포메이션</label>
+                <select id="away-formation-select">
+                    <option value="4-3-3">4-3-3 (공격형)</option>
+                    <option value="4-4-2" selected>4-4-2 (표준형)</option>
+                    <option value="3-5-2">3-5-2 (중원강화)</option>
+                    <option value="4-2-3-1">4-2-3-1 (안정형)</option>
+                </select>
+            </div>
+            <div class="t-row">
+                <label>팀 전술</label>
+                <select id="away-tactic-select">
+                    <option value="공격형">전방 압박 / 게겐프레싱</option>
+                    <option value="밸런스">밸런스 / 밸런스드</option>
+                    <option value="수비형">선수비 후역습</option>
+                    <option value="점유율">티키타카 / 점유율 축구</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section-sub-header">🟢 선발 라인업 (11명)</div>
+        <div class="player-list" id="away-player-list"></div>
+        
+        <div class="section-sub-header">🟡 교체 후보 선수</div>
+        <div class="player-list sub-list" id="away-sub-list"></div>
+    </div>
+</div>
+
+<!-- 선수 상세 정보 및 육각 그래프 팝업 모달 -->
+<div id="player-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <button id="modal-close" class="modal-close-btn">&times;</button>
+        <div class="modal-header">
+            <img id="modal-player-thumb" alt="선수 사진" class="modal-thumb">
+            <div>
+                <h4 id="modal-player-name">선수 이름</h4>
+                <p id="modal-player-sub">No.0 | 포지션</p>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="stat-row"><span>소속 클럽</span> <span id="modal-club">-</span></div>
+            <div class="stat-row"><span>키 / 체중</span> <span id="modal-hw">-</span></div>
+            <div class="stat-row"><span>생년월일</span> <span id="modal-birth">-</span></div>
+            
+            <div class="graph-section-title">📊 포지션별 능력치 육각 분석</div>
+            <div class="radar-container">
+                <canvas id="radarCanvas" width="260" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="bg-img-path" value="{% static 'images/pitch_bg.png' %}">
+<input type="hidden" id="static-url-base" value="{% static 'images/' %}">
+<input type="hidden" id="data-url-base" value="{% static 'data/' %}">
+
+<!-- 1. 지오메트리 및 규칙 엔진 선언 (공백 추가 완료) -->
+<script src="{% static 'js/PitchGeometry.js' %}"></script>
+<script src="{% static 'js/MatchRuleEngine.js' %}"></script>
+
+<!-- 2. 기존 메인 게임 스크립트 선언 -->
+<script src="{% static 'js/game.js' %}"></script>
+</body>
+</html>

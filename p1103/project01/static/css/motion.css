@@ -1,0 +1,230 @@
+/* =====================================================
+   motion.css - 토스(toss.im) 스타일 애니메이션
+   - 기존 디자인(틀)은 그대로 두고 "움직임"만 추가
+   - JS가 <html>에 .motion-on 을 붙였을 때만 동작
+     (JS가 꺼져 있으면 원래 화면 그대로 보임)
+   ===================================================== */
+
+:root {
+    /* 토스 특유의 "빠르게 출발 → 부드럽게 멈춤" 곡선 */
+    --ease-toss: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-press: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== 1. 스크롤하면 아래에서 떠오르기 (fade-up) =====
+   - 나타나기 전(:not(.is-in))에만 위치를 바꿔 두고,
+     나타난 뒤에는 원래 hover 효과가 그대로 살아 있도록 함 */
+.motion-on [data-reveal] {
+    transition:
+        opacity 0.9s var(--ease-toss),
+        transform 1.1s var(--ease-toss),
+        filter 0.9s var(--ease-toss);
+    transition-delay: var(--d, 0s);
+}
+.motion-on [data-reveal]:not(.is-in) {
+    opacity: 0;
+    transform: translate3d(0, 48px, 0);
+}
+/* 살짝 커지면서 나타나기 */
+.motion-on [data-reveal="scale"]:not(.is-in) { transform: translate3d(0, 30px, 0) scale(0.94); }
+/* 왼쪽 / 오른쪽에서 들어오기 */
+.motion-on [data-reveal="left"]:not(.is-in)  { transform: translate3d(-40px, 0, 0); }
+.motion-on [data-reveal="right"]:not(.is-in) { transform: translate3d(40px, 0, 0); }
+/* 제자리에서 흐릿 → 선명 */
+.motion-on [data-reveal="blur"]:not(.is-in)  { transform: translate3d(0, 20px, 0); filter: blur(8px); }
+
+/* 등장이 끝나면(.is-done) 빠른 반응 속도로 돌아감 → 마우스 올렸을 때 즉각 반응 */
+.motion-on [data-reveal].is-done {
+    transition:
+        transform 0.35s var(--ease-toss),
+        box-shadow 0.35s ease,
+        background 0.35s ease,
+        background-color 0.35s ease,
+        opacity 0.35s ease;
+    transition-delay: 0s;
+}
+
+/* ===== 2. 큰 제목 줄 단위로 밑에서 솟아오르기 (마스크 효과) ===== */
+.m-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;          /* 글자 아래 잘림 방지 */
+}
+.m-line > span {
+    display: inline-block;
+}
+.motion-on .m-line > span {
+    transform: translate3d(0, 110%, 0);
+    transition: transform 1.1s var(--ease-toss);
+    transition-delay: var(--d, 0s);
+}
+.motion-on .is-in .m-line > span,
+.motion-on .m-line.is-in > span {
+    transform: none;
+}
+
+/* ===== 3. 스크롤 따라 글자가 차오르는 효과 (토스 대표 효과) ===== */
+.m-fill .m-word {
+    color: #d6cdc2;                  /* 아직 안 읽은 글자: 연한 색 */
+    transition: color 0.35s ease;
+}
+.m-fill .m-word.on {
+    color: inherit;                  /* 읽은 글자: 원래 색 */
+}
+
+/* ===== 4. 페이지 첫 로딩 애니메이션 ===== */
+@keyframes m-down {
+    from { opacity: 0; transform: translate3d(0, -16px, 0); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes m-up {
+    from { opacity: 0; transform: translate3d(0, 24px, 0); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes m-zoom-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes m-from-right {
+    from { opacity: 0; transform: translate3d(60px, 0, 0); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes m-pop {
+    0%   { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.96); }
+    100% { opacity: 1; transform: none; }
+}
+
+/* 로고 → 메뉴 → 로그인 순서로 위에서 내려오기 */
+.motion-on .tm-logo   { animation: m-down 0.8s var(--ease-toss) both; }
+.motion-on .tm-nav li { animation: m-down 0.8s var(--ease-toss) both; }
+.motion-on .tm-nav li:nth-child(1) { animation-delay: 0.10s; }
+.motion-on .tm-nav li:nth-child(2) { animation-delay: 0.16s; }
+.motion-on .tm-nav li:nth-child(3) { animation-delay: 0.22s; }
+.motion-on .tm-nav li:nth-child(4) { animation-delay: 0.28s; }
+.motion-on .tm-member { animation: m-down 0.8s var(--ease-toss) 0.34s both; }
+
+/* 메인 사진: 살짝 작은 상태에서 커지며 등장 */
+.motion-on .hero { animation: m-zoom-in 1.2s var(--ease-toss) 0.15s both; }
+/* 챗봇 창: 오른쪽에서 미끄러져 들어오기 */
+.motion-on .hero-wrap .tc-app { animation: m-from-right 1.1s var(--ease-toss) 0.35s both; }
+
+/* ===== 5. 메인 사진: 천천히 확대되는 효과 (Ken Burns) ===== */
+.hero-slide {
+    transform: scale(1.08);
+    transition: opacity 1.2s ease, transform 6s linear;
+}
+.hero-slide.active {
+    transform: scale(1);
+}
+
+/* ===== 6. 헤더: 스크롤하면 그림자 생김 ===== */
+.tm-header {
+    transition: box-shadow 0.4s var(--ease-toss), background-color 0.4s ease;
+}
+.tm-header.is-scrolled {
+    box-shadow: 0 8px 24px rgba(60, 40, 20, 0.10);
+}
+
+/* 메뉴 밑줄: 가운데에서 양옆으로 쭉 늘어나기 */
+.tm-nav a {
+    position: relative;
+    border-bottom-color: transparent !important;
+}
+.tm-nav a::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transition: transform 0.45s var(--ease-toss);
+}
+.tm-nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* ===== 7. 누를 때 살짝 눌리는 느낌 (토스 버튼 감성) ===== */
+.tm-nav a,
+.tm-member a,
+.hero-btn,
+.slider-ctrl button,
+.tc-reset,
+.tc-menu button {
+    transition-property: transform, box-shadow, background, background-color, color, border-color;
+    transition-duration: 0.35s;
+    transition-timing-function: var(--ease-toss);
+}
+.tm-nav a:active,
+.tm-member a:active,
+.hero-btn:active,
+.slider-ctrl button:active,
+.tc-reset:active,
+.tc-menu button:active,
+.tips-card:active {
+    transform: scale(0.96) !important;
+    transition-duration: 0.12s;
+}
+.region-card:active {
+    transform: translateY(-2px) scale(0.97) !important;
+    transition-duration: 0.12s;
+}
+
+/* 챗봇 추천 버튼: 올리면 살짝 떠오름 */
+.tc-menu button:hover {
+    transform: translateY(-3px);
+}
+
+/* ===== 8. 챗봇 새 메시지: 말풍선이 톡 튀어나오기 ===== */
+.motion-on .tc-msg {
+    animation: m-pop 0.55s var(--ease-toss) both;
+}
+
+/* ===== 9. 지역 카드 / 꿀팁 카드: 화면에 들어오면 사진이 천천히 줌아웃 ===== */
+.motion-on .region-card[data-reveal] img {
+    transition: transform 1.4s var(--ease-toss);
+    transition-delay: var(--d, 0s);
+}
+.motion-on .region-card[data-reveal]:not(.is-in) img {
+    transform: scale(1.15);
+}
+.motion-on .region-card[data-reveal].is-done img {
+    transition: transform 0.4s ease;
+    transition-delay: 0s;
+}
+
+/* 꿀팁 카드의 별: 카드보다 조금 늦게 등장 */
+.motion-on .tips-card .stars {
+    transition: opacity 0.6s var(--ease-toss), transform 0.6s var(--ease-toss);
+    transition-delay: calc(var(--d, 0s) + 0.35s);
+}
+.motion-on .tips-card:not(.is-in) .stars {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+}
+
+/* ===== 10. 스크롤에 맞춰 커지는 섹션 (JS가 --p 값 0~1 전달) ===== */
+.motion-on [data-scroll-scale] {
+    transform: scale(calc(0.92 + 0.08 * var(--p, 1)));
+    opacity: calc(0.35 + 0.65 * var(--p, 1));
+    transform-origin: center top;
+    will-change: transform, opacity;
+}
+
+/* ===== 11. 움직임 줄이기 설정을 켠 사용자는 애니메이션 끔 ===== */
+@media (prefers-reduced-motion: reduce) {
+    .motion-on *,
+    .motion-on *::before,
+    .motion-on *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+    .motion-on [data-reveal],
+    .motion-on .m-line > span,
+    .motion-on [data-scroll-scale],
+    .motion-on .tips-card .stars {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+    }
+    .m-fill .m-word { color: inherit !important; }
+}

@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}여행메이트{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/join.css' %}">
+    <!-- 토스 스타일 애니메이션 -->
+    <link rel="stylesheet" href="{% static 'css/motion.css' %}">
+    <script>document.documentElement.classList.add('motion-on');</script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/motion.js' %}"></script>
+    {% block head %}{% endblock %}
+
+    <!-- 공통 디자인 고정 : 각 페이지 CSS가 덮어써도 원래대로 되돌림 -->
+    <style>
+        body {
+            display: block !important;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(243, 168, 63, 0.35) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(251, 207, 185, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(245, 230, 215, 0.8) 0%, transparent 70%),
+                linear-gradient(135deg, #FAF7F2 0%, #F3EDE4 100%) !important;
+            background-attachment: fixed !important;
+            color: #262626 !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Noto Sans KR", sans-serif !important;
+        }
+
+        /* ===== 헤더 높이를 슬림하고 아담하게 정돈 ===== */
+        .tm-header {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            height: 75px !important; /* 헤더 전체 높이는 슬림하게 고정! */
+            padding: 0 max(36px, calc((100vw - 1540px) / 2 + 36px)) !important;
+        }
+        .tm-logo {
+            padding: 0 !important;
+            margin: 0 !important;
+            text-align: left !important;
+        }
+        .tm-logo .header-logo img {
+            height: 60px !important;          /* 실제 레이아웃 공간은 아담하게 잡고 */
+            transform: scale(1.8) !important;   /* 시각적으로만 1.5배 키워줌 (헤더는 안 커짐!) */
+            transform-origin: left center;    /* 왼쪽 기준으로 커지도록 정렬 */
+            width: auto !important;
+            object-fit: contain;
+        }
+        .tm-bar {
+            background: transparent !important;
+            padding: 0 !important;
+        }
+        .tm-nav ul {
+            gap: 26px !important;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+        .tm-nav a {
+            color: #3C3028 !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            border-bottom: 0 !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .tm-nav a:hover {
+            color: #A85D32 !important;
+        }
+        .header-auth {
+            display: flex;
+            justify-self: end;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #6B5B52;
+        }
+
+        .header-auth a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .header-auth a:hover {
+            color: #A85D32;
+        }
+
+        .header-auth span {
+            color: #D1C5BD;
+        }
+    </style>
+    
+</head>
+<body>
+
+<!-- ===== 헤더 (모든 페이지 공통) ===== -->
+<div class="tm-header">
+    <h1 class="tm-logo">
+        <a href="{% url 'index' %}" class="header-logo">
+            <img src="{% static 'images/txt/logo.png' %}" alt="TravelMate" style="height: 120px; object-fit: contain;">
+        </a>
+    </h1>
+    <div class="tm-bar">
+        <!-- 카테고리 메뉴 (가운데) -->
+        <nav class="tm-nav">
+            <ul>
+                <li><a href="{% url 'tour:tlist' %}">인기여행지 TOP10</a></li>
+                <li><a href="{% url 'tour:resv' %}">숙박·교통 바로가기</a></li>
+                <li><a href="{% url 'tour:graph_v1' %}">통계 자료</a></li>
+                <li><a href="{% url 'qna:index' %}">Q&A</a></li>
+
+            </ul>
+        </nav>
+
+    </div>
+        <div class="header-auth">
+        {% block header_auth %}{% endblock %}
+    </div>
+</div>
+
+<!-- ===== 페이지마다 바뀌는 내용 ===== -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- ===== 푸터 ===== -->
+<footer class="tm-footer">
+    © 2026 여행메이트
+</footer>
+
+{% block script %}{% endblock %}
+</body>
+</html>

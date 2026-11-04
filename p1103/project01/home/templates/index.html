@@ -1,0 +1,614 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}여행메이트 - 메인{% endblock %}
+{% block header_auth %}
+<div class="header-auth">
+    {% if request.session.session_id %}
+        <b>{{ request.session.session_nickname }}</b>님
+        <span>|</span>
+        <a href="{% url 'member:logout' %}">로그아웃</a>
+    {% else %}
+        <a href="{% url 'member:login' %}">로그인</a>
+        <span>|</span>
+        <a href="{% url 'member:join' %}">회원가입</a>
+    {% endif %}
+</div>
+{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+
+<!-- ===== 메인 페이지 전용 스타일 ===== -->
+<style>
+/* ===== 0. 기본 톤 & 폰트 세팅 ===== */
+body {
+    /* 토스 공홈 스타일의 부드럽고 몽환적인 다중 가을빛 그라데이션 */
+    background:
+        radial-gradient(circle at 15% 20%, rgba(243, 168, 63, 0.35) 0%, transparent 45%), /* 왼쪽 위: 따스한 가을 햇살/노을빛 */
+        radial-gradient(circle at 85% 75%, rgba(251, 207, 185, 0.25) 0%, transparent 50%), /* 오른쪽 아래: 은은한 단풍 코랄빛 */
+        radial-gradient(circle at 50% 50%, rgba(245, 230, 215, 0.8) 0%, transparent 70%),  /* 중앙: 포근한 샌드 베이지 톤 */
+        linear-gradient(135deg, #FAF7F2 0%, #F3EDE4 100%) !important;                      /* 전체 베이스: 깨끗하고 부드러운 화이트/베이지 톤 */
+    background-attachment: fixed;
+    color: #262626;
+    font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Noto Sans KR", sans-serif;
+    letter-spacing: -0.3px;
+    margin: 0 !important;
+}
+
+/* ===== 상단 단풍잎 전용 레이어 ===== */
+#header-leaf-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 75px;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+}
+
+.falling-maple {
+    position: absolute;
+    top: -30px;
+    width: 22px;
+    height: 22px;
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 10;
+    animation: gentleSway 4s ease-in-out infinite alternate;
+}
+
+@keyframes gentleSway {
+    0% { transform: rotate(-18deg) translateX(-5px); }
+    100% { transform: rotate(18deg) translateX(5px); }
+}
+
+/* ===== 1. 상단 히어로 배너 & AI 창 (사진 옆 1:1 정렬 유지) ===== */
+.hero-wrap {
+    max-width: 1540px;
+    margin: 30px auto 0; /* 헤더 아래 여백 30px */
+    padding: 0 36px;
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+}
+
+.hero {
+    flex: 0 0 70%;
+    height: 500px;
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    /* 부드러운 전환 효과와 GPU 가속 활성화 */
+    transition: opacity 1.8s ease-in-out !important;
+    will-change: opacity;
+    transform: translateZ(0); /* 브라우저가 GPU를 쓰도록 강제하여 툭툭 끊기는 현상 방지 */
+    z-index: 1;
+}
+
+.hero-slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.hero-text {
+    position: relative;
+    z-index: 4;
+    text-align: left !important;
+}
+
+.hero-text h2 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.8px;
+    color: #FFFFFF;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+}
+.hero-sub {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #fcc581 !important;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 사진 바로 옆 AI 챗봇 박스 영역 */
+.hero-wrap > #chat-box,
+.hero-wrap > div:not(.hero) {
+    flex: 1;
+    height: auto !important;
+    min-height: 0 !important;
+    contain: size;
+    margin: 0 !important;
+    background: #FFFFFF;
+    border-radius: 28px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+/* ===== 2. 전국 17개 지역 '여행 서류철(파일첩)' 컨테이너 ===== */
+#region { 
+    max-width: 1540px; 
+    margin: 70px auto 0;
+    padding: 40px 36px 36px;
+    background: #ffffff;
+    border: 1.5px solid #EAE1D5;
+    border-radius: 0 28px 28px 28px;
+    position: relative;
+    box-shadow: 0 18px 45px rgba(60, 40, 20, 0.06);
+}
+
+#region::before {
+    content: '📁 TRAVEL ARCHIVE';
+    position: absolute;
+    top: -38px;
+    left: -1.5px;
+    width: 280px;
+    height: 38px;
+    background: #ffffff;
+    border: 1.5px solid #EAE1D5;
+    border-bottom: 1.5px solid #ffffff;
+    border-radius: 18px 18px 0 0;
+    display: flex;
+    align-items: center;
+    padding-left: 22px;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #A85D32;
+    box-shadow: 0 -4px 12px rgba(60, 40, 20, 0.02);
+}
+
+.sec-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px dashed #EAE1D5;
+}
+.sec-head h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1E1E1E;
+    letter-spacing: -0.5px;
+    margin: 0 0 6px;
+}
+.sec-head p {
+    font-size: 14.5px;
+    color: #71717A;
+    margin: 0;
+}
+
+.slider-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FAF7F2;
+    padding: 6px 14px;
+    border-radius: 30px;
+    border: 1px solid #ECE3DA;
+}
+.slider-ctrl button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: #ffffff;
+    color: #4A3E36;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+.slider-ctrl button:hover {
+    background: #8A4E29;
+    color: #ffffff;
+}
+.slider-ctrl span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8C7D70;
+}
+
+.region-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 8px 4px 12px;
+    scrollbar-width: none;
+}
+.region-track::-webkit-scrollbar { display: none; }
+.region-card {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    background: #1A1512;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+    flex: 0 0 274px;
+}
+.region-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 34px rgba(60, 40, 20, 0.16);
+}
+.region-card img {
+    transition: transform 0.4s ease;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+.region-card:hover img {
+    transform: scale(1.06);
+}
+.region-card .info {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 22px;
+    background: linear-gradient(to top, rgba(20, 15, 10, 0.85) 0%, rgba(20, 15, 10, 0.3) 55%, transparent 100%);
+    color: #ffffff;
+}
+.region-card .info strong {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+.region-card .info span {
+    font-size: 13px;
+    color: #E6DCD1;
+    margin-top: 4px;
+}
+
+/* ===== 3. 하단 여행 팁 섹션 ===== */
+.tips-sec { 
+    width: 100%;
+    background-color: #F4EFEB; 
+    border-top: 1px solid #EBE4DA;
+    padding: 70px 20px 90px;
+    margin-top: 60px;
+}
+.tips-box {
+    max-width: 1480px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: none;
+    border-radius: 28px;
+    padding: 56px 44px;
+    text-align: center;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+}
+.tips-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    background: #FFF2EB;
+    color: #FF5E36;
+    font-size: 13px;
+    font-weight: 700;
+}
+.tips-box h2 { 
+    margin: 16px 0 8px; 
+    font-size: 30px; 
+    font-weight: 800;
+    color: #1E1E1E;
+    letter-spacing: -0.5px;
+}
+.tips-box > p { 
+    margin: 0 0 40px; 
+    font-size: 15px; 
+    color: #71717A;
+}
+.tips-cards { 
+    display: flex; 
+    gap: 24px; 
+}
+.tips-card {
+    flex: 1;
+    text-align: left;
+    padding: 32px 28px;
+    background: #FBFBFA;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.tips-card:hover {
+    transform: translateY(-4px);
+    background: #ffffff;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+.tips-card .stars {
+    color: #F59E0B;
+    font-size: 15px;
+    letter-spacing: 2.5px;
+    margin-bottom: 14px;
+}
+.tips-card p { 
+    margin: 0 0 22px; 
+    font-size: 14.5px; 
+    line-height: 1.65;
+    color: #4A4A4A;
+    font-weight: 500;
+}
+.tips-card .author {
+    border-top: 1px solid #EFEAE4;
+    padding-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.tips-card .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.avatar-kim { background-color: #FF5E36; }
+.avatar-lee { background-color: #0284C7; }
+.avatar-park { background-color: #16A34A; }
+
+.tips-card .who-info strong {
+    display: block;
+    font-size: 13.5px;
+    color: #1E1E1E;
+    font-weight: 700;
+}
+.tips-card .who-info span {
+    display: block;
+    font-size: 12px;
+    color: #8C7B6E;
+    margin-top: 2px;
+}
+
+@media (max-width: 1024px) {
+    .hero-wrap { flex-direction: column; }
+    .hero, .hero-wrap > #chat-box, .hero-wrap > div:not(.hero) { width: 100%; flex: none; height: 450px; }
+}
+@media (max-width: 768px) { 
+    .tips-cards { flex-direction: column; } 
+    .tips-box { padding: 36px 20px; }
+    #region::before { width: 220px; font-size: 10px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- 상단 단풍잎 애니메이션 전용 레이어 -->
+<div id="header-leaf-layer"></div>
+
+<!-- ===== 페이지마다 바뀌는 내용 ===== -->
+<!-- ===== 6단계: 메인 상단 사진 + AI 챗봇 나란히 배치 ===== -->
+<div class="hero-wrap">
+    <section class="hero">
+        <div class="hero-slide active" style="background-image:url('{% static 'images/hero/hero1.jpg' %}')"></div>
+        <div class="hero-slide" style="background-image:url('{% static 'images/hero/hero2.jpg' %}')"></div>
+        <div class="hero-slide" style="background-image:url('{% static 'images/hero/hero3.jpg' %}')"></div>
+        <div class="hero-slide" style="background-image:url('{% static 'images/hero/hero4.jpg' %}')"></div>
+
+        <div class="hero-text" data-reveal-lines>
+            <p class="hero-sub"><span class="m-line"><span style="--d:.45s">빅데이터로 찾은 세대별 인기 여행지</span></span></p>
+            <h2>
+                <span class="m-line"><span style="--d:.6s">우리 세대가 사랑한</span></span>
+                <span class="m-line"><span style="--d:.72s">대한민국 여행지</span></span>
+            </h2>
+        </div>
+
+    </section>
+
+    <!-- 맞춤추천 AI 챗봇 (사진 바로 옆 1:1 완벽 정렬) -->
+    {% include 'chat_box.html' %}
+</div>
+
+<!-- ===== 7단계: 전국 17개 지역 파노라마 (파일첩 디자인 적용) ===== -->
+<section class="sec" id="region" data-scroll-scale>
+    <div class="sec-head">
+        <div data-stagger="0.1">
+            <h2 data-reveal>전국 17개 지역 여행지</h2>
+            <p data-reveal>지역을 누르면 연령대별 인기관광지 TOP10을 볼 수 있어요.</p>
+        </div>
+        <div class="slider-ctrl" data-reveal="right" style="--d:.2s">
+            <button id="region-prev">‹</button>
+            <span><b id="page-now">1</b> / <span id="page-total">5</span></span>
+            <button id="region-next">›</button>
+        </div>
+    </div>
+
+    <div class="region-track" data-stagger="0.08" data-stagger-loop="4">
+        {% for r in regions %}
+        <a class="region-card" data-reveal="scale" href="{% url 'tour:region' r.code %}">
+            <img src="{% static r.img %}" alt="{{ r.name }}">
+            <div class="info">
+                <strong>{{ r.name }}</strong>
+                <span>대표 여행지 · {{ r.spot }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ===== 8단계: 여행을 더 즐겁게 만드는 방법 ===== -->
+<section class="tips-sec">
+    <div class="tips-box" data-reveal="scale">
+        <span class="tips-badge" data-reveal="blur" style="--d:.15s">“ Real Travel Story</span>
+        <h2 data-fill>여행을 더 즐겁게 만드는 방법</h2>
+        <p data-reveal style="--d:.25s">TravelMate 서포터즈와 여행 크리에이터들이 전하는 가을 여행 꿀팁</p>
+
+        <div class="tips-cards" data-stagger="0.12">
+            <!-- 1번 카드 -->
+            <div class="tips-card" data-reveal>
+                <div>
+                    <div class="stars">★★★★★</div>
+                    <p>"경기도와 강원도 단풍 코스는 10월 3~4주차가 가장 절정이에요. 주말 정체를 피해 오전 7시 이전에 출발하는 것을 강력 추천합니다!"</p>
+                </div>
+                <div class="author">
+                    <div class="avatar avatar-kim">김</div>
+                    <div class="who-info">
+                        <strong>김민준 님</strong>
+                        <span>네이버 여행 인플루언서</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2번 카드 -->
+            <div class="tips-card" data-reveal>
+                <div>
+                    <div class="stars">★★★★★</div>
+                    <p>"서울 남산 둘레길과 경복궁 향원정은 가을철 인생샷 명소입니다. 단풍 채광이 가장 예쁜 평일 오전 10시쯤 방문하면 한적해요."</p>
+                </div>
+                <div class="author">
+                    <div class="avatar avatar-lee">이</div>
+                    <div class="who-info">
+                        <strong>이서연 님</strong>
+                        <span>여행 전문 사진작가</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3번 카드 -->
+            <div class="tips-card" data-reveal>
+                <div>
+                    <div class="stars">★★★★★</div>
+                    <p>"제주도와 전남 해안 도로는 억새와 노을이 장관입니다. 렌터카 오픈탑이나 해안도로 드라이브 코스로 적극 추천드려요!"</p>
+                </div>
+                <div class="author">
+                    <div class="avatar avatar-park">박</div>
+                    <div class="who-info">
+                        <strong>박진우 님</strong>
+                        <span>전국 드라이브 매니아</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script>
+$(function(){
+    /* 상단 사진 자동 넘김 */
+    let idx = 0;
+    const slides = $('.hero-slide');
+    const dots   = $('.hero-dots button');
+    let timer;
+
+    function show(n){
+        slides.removeClass('active').eq(n).addClass('active');
+        if(dots.length) { dots.removeClass('active').eq(n).addClass('active'); }
+        idx = n;
+    }
+    function start(){
+        timer = setInterval(function(){ show((idx + 1) % slides.length); }, 4000);
+    }
+    if(dots.length) {
+        dots.click(function(){
+            clearInterval(timer);
+            show($(this).index());
+            start();
+        });
+    }
+    start();
+
+    /* 지역 파노라마 4개씩 넘기기 */
+    const track = $('.region-track')[0];
+
+    function step(){
+        return track ? track.clientWidth + 16 : 300;
+    }
+    function updatePage(){
+        if(!track) return;
+        const total = Math.ceil(track.scrollWidth / step());
+        let now = Math.round(track.scrollLeft / step()) + 1;
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 5) now = total;
+        $('#page-now').text(now);
+        $('#page-total').text(total);
+    }
+    $('#region-prev').click(function(){ if(track) track.scrollBy({ left: -step() }); });
+    $('#region-next').click(function(){ if(track) track.scrollBy({ left:  step() }); });
+    if(track) { $(track).bind('scroll', updatePage); }
+    updatePage();
+
+    /* 상단 단풍잎 떨어지는 애니메이션 스크립트 */
+    setInterval(function() {
+        const screenWidth = $(window).width();
+        const randomSize = 20 + Math.random() * 8; // 20px ~ 28px 크기
+
+        const mapleSvg = `
+            <div class="falling-maple" style="width:${randomSize}px; height:${randomSize}px;">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 4 L43 20 L37 15 L36 37 L18 22 L21 35 L13 36 L24 49 L6 57 L24 62 L21 68 L35 66 L32 74 L48 64 L52 64 L68 74 L65 66 L79 68 L76 62 L94 57 L76 49 L87 36 L79 35 L82 22 L64 37 L63 15 L57 20 Z" fill="#EE5019"/>
+                    <path d="M50 4 L50 64 L52 64 L68 74 L65 66 L79 68 L76 62 L94 57 L76 49 L87 36 L79 35 L82 22 L64 37 L63 15 L57 20 Z" fill="#D63B0D"/>
+                    <path d="M50 18 L50 64 M50 48 L26 32 M50 48 L74 32 M50 58 L20 56 M50 58 L80 56" stroke="#B82D04" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M50 63 Q51 82 47 93 C46 95 49 96 51 93 Q54 82 51 63 Z" fill="#D63B0D"/>
+                </svg>
+            </div>
+        `;
+        const $leaf = $(mapleSvg);
+        
+        let randomLeft;
+        if (Math.random() < 0.5) {
+            randomLeft = (screenWidth * 0.01) + (Math.random() * (screenWidth * 0.18));
+        } else {
+            randomLeft = (screenWidth * 0.86) + (Math.random() * (screenWidth * 0.12));
+        }
+
+        const fallDuration = 10 + Math.random() * 4; // 10초 ~ 14초
+        
+        $leaf.css({ left: randomLeft + 'px' });
+        $('#header-leaf-layer').append($leaf);
+
+        $leaf.animate({
+            top: '75px',
+            left: (randomLeft + (Math.random() * 20 - 10)) + 'px',
+            opacity: 0
+        }, {
+            duration: fallDuration * 1000,
+            easing: 'linear',
+            complete: function() {
+                $(this).remove();
+            }
+        });
+    }, 500);
+});
+</script>
+{% endblock %}

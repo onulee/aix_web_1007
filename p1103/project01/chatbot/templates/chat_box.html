@@ -1,0 +1,162 @@
+{% load static %}
+<!-- 메인 페이지용 챗봇 창 (index.html에서 include) -->
+<div class="tc-app">
+
+    <!-- 상단 -->
+    <div class="tc-head">
+        <div class="tc-avatar">T</div>
+        <div class="tc-info">
+            <strong>맞춤추천 AI 트래비</strong>
+            {% if ai_ready %}<em class="on">● AI 상담 중</em>{% else %}<em class="off">● 기본 응답 모드 (AI 키 없음)</em>{% endif %}
+        </div>
+        <button type="button" class="tc-reset" onclick="resetChat()">↺ 새 대화</button>
+    </div>
+
+    <!-- 대화 영역 -->
+    <div class="tc-body" id="chatBody">
+        <div class="tc-date"><span id="today"></span></div>
+
+        <!-- 환영 메시지 -->
+        <div class="tc-msg bot">
+            <div class="tc-avatar sm">T</div>
+            <div class="tc-main">
+                <div class="tc-name">트래비</div>
+                <div class="tc-bubble welcome">
+                    <b>안녕하세요{% if request.session.session_nickname %} {{ request.session.session_nickname }}님{% endif %}! 맞춤추천 AI 트래비예요.</b><br>
+                    지역, 기간, 연령대, 누구와 가는지 알려주시면 <b>연령대별 인기관광지 데이터</b>로 여행코스를 짜 드려요.
+                    <div class="tc-menu">
+                        <button type="button" onclick="sendMsg('1박2일 여행코스 추천해줘')"><i>🗺️</i>코스 추천</button>
+                        <button type="button" onclick="sendMsg('20대에게 인기 많은 부산 관광지 알려줘')"><i>🔥</i>연령대별 인기</button>
+                        <button type="button" onclick="sendMsg('부모님과 가기 좋은 여행지 추천해줘')"><i>👨‍👩‍👧</i>동행별 추천</button>
+                        <button type="button" onclick="sendMsg('요즘 계절에 가기 좋은 여행지 알려줘')"><i>🍁</i>계절 여행지</button>
+                    </div>
+                </div>
+                <div class="tc-chips">
+                    {% for q in quick %}<button type="button" class="tc-chip" onclick="sendMsg(this.textContent)">{{ q }}</button>{% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 입력창 -->
+    <div class="tc-foot">
+        <form id="chatForm" onsubmit="sendMsg(); return false;">
+            {% csrf_token %}
+            <textarea id="message" rows="1" maxlength="500" placeholder="예) 30대 친구 셋이서 강릉 1박2일 코스 짜줘"></textarea>
+            <button type="submit" class="tc-send" aria-label="보내기">➤</button>
+        </form>
+        <p class="tc-notice">AI 답변은 참고용이에요. 운영시간·요금은 방문 전 꼭 확인하세요.</p>
+    </div>
+</div>
+
+<!-- 이전 대화 (새로고침 시 복원) -->
+{{ history|json_script:"history-data" }}
+
+<script>
+const CSRF = '{{ csrf_token }}';
+let busy = false;
+
+// 글자 안의 태그를 무력화 + 간단한 꾸미기(**굵게**, - 목록)
+function esc(t){
+    return String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function format(text){
+    return esc(text).split('\n').map(function(line){
+        line = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+        if(/^\s*[-•]\s/.test(line)) return '<div class="li">' + line.replace(/^\s*[-•]\s/, '') + '</div>';
+        if(/^#{1,4}\s/.test(line)) return '<div class="h">' + line.replace(/^#{1,4}\s/, '') + '</div>';
+        return line === '' ? '<div class="gap"></div>' : '<div>' + line + '</div>';
+    }).join('');
+}
+function nowTime(){
+    const d = new Date();
+    return (d.getHours() < 12 ? '오전 ' : '오후 ') + ((d.getHours() % 12) || 12) + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+function scrollDown(){
+    const b = document.getElementById('chatBody');
+    b.scrollTop = b.scrollHeight;
+}
+
+// 말풍선 추가
+function addUser(text){
+    $('#chatBody').append(`<div class="tc-msg user"><div class="tc-main"><div class="tc-bubble">${esc(text)}</div><span class="tc-time">${nowTime()}</span></div></div>`);
+    scrollDown();
+}
+function addBot(text, chips){
+    let html = `<div class="tc-msg bot"><div class="tc-avatar sm">T</div><div class="tc-main">
+                <div class="tc-name">트래비</div>
+                <div class="tc-bubble">${format(text)}</div><span class="tc-time">${nowTime()}</span>`;
+    if(chips && chips.length){
+        html += '<div class="tc-chips">' + chips.map(c => `<button type="button" class="tc-chip" onclick="sendMsg(this.textContent)">${esc(c)}</button>`).join('') + '</div>';
+    }
+    html += '</div></div>';
+    $('#chatBody').append(html);
+    scrollDown();
+}
+
+// 질문 보내기 - ajax
+function sendMsg(text){
+    if(busy) return;
+    text = (text ?? $('#message').val()).trim();
+    if(text == '') return;
+
+    busy = true;
+    $('#message').val('').css('height', 'auto');
+    $('#chatBody .tc-chips').remove();          // 이전 추천질문 버튼 지우기
+    addUser(text);
+    $('#chatBody').append('<div class="tc-msg bot typing" id="typing"><div class="tc-avatar sm">T</div><div class="tc-bubble"><span></span><span></span><span></span></div></div>');
+    scrollDown();
+
+    $.ajax({
+        url:"{% url 'chatbot:ask' %}",
+        headers:{'X-CSRFToken':CSRF},
+        type:'post',
+        dataType:'json',
+        data:{'message':text},
+        success:function(data){
+            if(data.result != '성공'){ addBot(data.msg); return; }
+            addBot(data.answer, data.chips);
+        },
+        error:function(){
+            addBot('죄송해요, 잠시 연결이 원활하지 않아요. 다시 한번 질문해 주세요.');
+        },
+        complete:function(){
+            $('#typing').remove();
+            busy = false;
+            $('#message').focus();
+        }
+    });
+}
+
+// 새 대화
+function resetChat(){
+    if(!confirm('대화 내용을 지우고 새로 시작할까요?')) return;
+    $.ajax({
+        url:"{% url 'chatbot:reset' %}", headers:{'X-CSRFToken':CSRF}, type:'post', dataType:'json',
+        success:function(){ location.reload(); }
+    });
+}
+
+$(function(){
+    const d = new Date();
+    $('#today').text(d.getFullYear() + '년 ' + (d.getMonth() + 1) + '월 ' + d.getDate() + '일');
+
+    // 이전 대화 복원
+    const history = JSON.parse(document.getElementById('history-data').textContent);
+    if(history.length){
+        $('#chatBody .tc-chips').remove();
+        history.forEach(h => h.role == 'user' ? addUser(h.content) : addBot(h.content));
+    }
+
+    // Enter = 보내기, Shift+Enter = 줄바꿈
+    $('#message').bind('keydown', function(e){
+        if(e.key == 'Enter' && !e.shiftKey && !(e.originalEvent && e.originalEvent.isComposing)){
+            e.preventDefault();
+            sendMsg();
+        }
+    }).bind('input', function(){
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+});
+</script>

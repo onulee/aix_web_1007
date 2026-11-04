@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}문의 상세 | 여행메이트{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/tm-qna.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="qa-wrap" style="padding-top: 70px !important;">
+
+    <div class="qa-heading" style="margin-top: 0 !important; padding-top: 0 !important;">
+        
+        <span class="qa-kicker">TRAVELMATE Q&A</span>
+        <h2>1:1 문의 상세</h2>
+        <p>문의 내용과 답변을 확인할 수 있습니다.</p>
+    </div>
+
+    <!-- 흰색 문의 상세 박스 시작 -->
+    <div class="qa-detail">
+
+        <div class="qa-detail-title">
+            <h2>{{ question.title }}</h2>
+
+            <p>
+                작성자 : {{ question.author }}
+                &nbsp; | &nbsp;
+                작성일 : {{ question.created_at|date:'Y.m.d' }}
+            </p>
+        </div>
+
+        <div class="qa-detail-content">
+            {{ question.content|linebreaksbr }}
+        </div>
+
+        <div class="qa-detail-answer">
+
+            <h3>관리자 답변</h3>
+
+            {% if question.answer %}
+
+                <p>{{ question.answer|linebreaksbr }}</p>
+
+            {% else %}
+
+                <p>아직 답변이 등록되지 않았습니다.</p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+    <!-- 흰색 문의 상세 박스 끝 -->
+
+
+    <!-- 갈색 배경 위에 버튼만 표시 -->
+    <div class="qa-back-bottom">
+
+        <a href="{% url 'qna:index' %}#question-panel"
+            class="qa-primary">
+            목록으로 돌아가기
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

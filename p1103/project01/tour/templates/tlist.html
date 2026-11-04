@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}지역별 인기 관광지 TOP10 - TravelMate{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/tm-top10.css' %}">
+<!--카카오맵 api 인증키 입력위치-->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a4fa8139f98804626771565dbb1d671d&amp;libraries=services"></script>
+{% endblock %}
+{% block content %}
+<div class="tm-top10" data-api="{% url 'tour:top10_data' %}" data-region="{{ selected_code|default:'seoul' }}">
+<aside class="tm-top10-side"><h3>전국 지역</h3><div id="tm-regions">{% for code,name in regions %}<button type="button" data-region="{{ code }}">{{ name }}</button>{% endfor %}</div></aside>
+<section class="tm-top10-mapwrap"><div class="tm-top10-mapnote"><h2 id="tm-map-title">전국 인기 관광지</h2><p>서울특별시 연령대별 인기 관광지 TOP10을 확인해 보세요.</p></div><div id="tm-map"></div></section>
+<section class="tm-top10-results"><p class="tm-top10-kicker">TRAVELMATE</p><h2 id="tm-title">지역별 인기 관광지 TOP 10</h2><p>관광지를 선택하면 지도에서 위치를 확인할 수 있습니다.</p><div class="tm-top10-ages"><button data-age="20" class="active">20대</button><button data-age="30">30대</button><button data-age="40">40대</button><button data-age="50">50대</button><button data-age="60">60대+</button></div><div id="tm-cards" class="tm-top10-cards" aria-live="polite">관광지 데이터를 불러오는 중입니다.</div></section>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/tm-top10.js' %}?v=2"></script>
+{% endblock %}

@@ -1,0 +1,688 @@
+/* ==========================================
+   TravelMate - 연령대별 인기 관광지 TOP10
+========================================== */
+
+.tm-top10 {
+    display: grid;
+    grid-template-columns: 210px minmax(320px, 1.15fr) minmax(350px, 1fr);
+    gap: 14px;
+    padding: 16px;
+    background: #faf4eb;
+    min-height: 760px;
+    color: #442116;
+    font-family: 'Noto Sans KR', sans-serif;
+    box-sizing: border-box;
+}
+
+.tm-top10 * {
+    box-sizing: border-box;
+}
+
+.tm-top10-side,
+.tm-top10-mapwrap,
+.tm-top10-results {
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 5px 22px #65391a13;
+}
+
+/* ==========================================
+   왼쪽 지역 선택 영역
+========================================== */
+
+.tm-top10-side {
+    padding: 20px 12px;
+}
+
+.tm-top10-side h3 {
+    margin: 0 10px 16px;
+    font-size: 18px;
+}
+
+.tm-top10-side button {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: #532819;
+    text-align: left;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tm-top10-side button.active,
+.tm-top10-side button:hover {
+    background: #9e451d;
+    color: white;
+}
+
+/* ==========================================
+   카카오맵 영역
+========================================== */
+
+.tm-top10-mapwrap {
+    position: relative;
+    min-height: 720px;
+}
+
+.tm-top10-mapnote {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 2;
+    background: #fffffff0;
+    padding: 18px 22px;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px #0002;
+    pointer-events: none;
+}
+
+.tm-top10-mapnote h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+}
+
+.tm-top10-mapnote p {
+    margin: 0;
+    font-size: 13px;
+}
+
+#tm-map {
+    width: 100%;
+    height: 100%;
+    min-height: 720px;
+}
+
+/* ==========================================
+   오른쪽 TOP10 영역
+========================================== */
+
+.tm-top10-results {
+    padding: 24px;
+    background: #fff0dc;
+}
+
+.tm-top10-kicker {
+    letter-spacing: 4px;
+    color: #a0441b;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.tm-top10-results h2 {
+    font-size: 25px;
+    margin: 8px 0;
+}
+
+.tm-top10-results > p {
+    font-size: 13px;
+}
+
+/* ==========================================
+   연령대 버튼
+========================================== */
+
+.tm-top10-ages {
+    display: flex;
+    gap: 4px;
+    background: white;
+    border-radius: 12px;
+    padding: 5px;
+    margin: 20px 0 12px;
+}
+
+.tm-top10-ages button {
+    flex: 1;
+    border: 0;
+    background: none;
+    border-radius: 9px;
+    padding: 10px 3px;
+    cursor: pointer;
+    color: #5c2e1b;
+}
+
+.tm-top10-ages button.active {
+    background: #934019;
+    color: white;
+}
+
+/* ==========================================
+   관광지 카드
+========================================== */
+
+.tm-top10-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.tm-top10-card {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    border: 0;
+    border-radius: 13px;
+    background: #fff;
+    padding: 8px;
+    text-align: left;
+    cursor: pointer;
+    min-width: 0;
+    color: #302018;
+    position: relative;
+    z-index: 1;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease;
+}
+
+.tm-top10-card img {
+    width: 90px;
+    height: 88px;
+    object-fit: cover;
+    border-radius: 9px;
+    flex-shrink: 0;
+}
+
+.tm-top10-card strong {
+    font-size: 13px;
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.tm-top10-card small {
+    display: block;
+    font-size: 11px;
+    color: #866b5d;
+    margin-top: 4px;
+}
+
+.tm-top10-card b {
+    display: block;
+    color: #a94418;
+    margin-top: 6px;
+}
+
+.tm-top10-card .tm-rank {
+    font-weight: 800;
+    color: #a94418;
+}
+
+/* 관광지 카드 마우스 확대 */
+
+.tm-top10 .tm-top10-card:hover {
+    transform: scale(1.045);
+    box-shadow: 0 8px 22px rgba(110, 60, 30, 0.22);
+    background-color: #fffaf4;
+    z-index: 5;
+}
+
+.tm-top10 .tm-top10-card:active {
+    transform: scale(0.98);
+}
+
+.tm-top10 .tm-top10-card:focus-visible {
+    outline: 2px solid #a94418;
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   카카오맵 관광지 순위 마커
+========================================== */
+
+.tm-top10-pin {
+    background: #9e451d;
+    color: white;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    box-shadow: 0 2px 5px #0004;
+    cursor: pointer;
+
+    transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        line-height 0.25s ease,
+        background-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.tm-top10-pin span {
+    display: block;
+    transform: rotate(45deg);
+    font-weight: bold;
+}
+
+/* ==========================================
+   선택한 마커만 확대
+========================================== */
+
+.tm-top10-pin.tm-pin-selected {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    background: #f07824;
+    box-shadow: 0 4px 15px rgba(240, 120, 36, 0.55);
+    z-index: 10;
+}
+
+/* ==========================================
+   선택한 마커만 3회 깜빡임
+========================================== */
+
+@keyframes tm-selected-marker-blink {
+
+    0%, 100% {
+        opacity: 1;
+        filter: brightness(1);
+    }
+
+    50% {
+        opacity: 0.15;
+        filter: brightness(1.8);
+    }
+}
+
+.tm-top10-pin.tm-pin-blinking {
+    animation: tm-selected-marker-blink 0.5s ease-in-out 3;
+}
+
+/* ==========================================
+   반응형
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .tm-top10 {
+        grid-template-columns: 170px 1fr;
+    }
+
+    .tm-top10-results {
+        grid-column: 1 / -1;
+    }
+
+    .tm-top10-mapwrap,
+    #tm-map {
+        min-height: 600px;
+    }
+}
+
+@media (max-width: 650px) {
+
+    .tm-top10 {
+        display: block;
+    }
+
+    .tm-top10-side {
+        margin-bottom: 12px;
+    }
+
+    .tm-top10-side #tm-regions {
+        display: flex;
+        overflow-x: auto;
+    }
+
+    .tm-top10-side button {
+        min-width: max-content;
+    }
+
+    .tm-top10-mapwrap {
+        margin-bottom: 12px;
+    }
+
+    .tm-top10-mapwrap,
+    #tm-map {
+        min-height: 500px;
+    }
+
+    .tm-top10-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =====================================
+   관광지 상세정보 팝업 배경
+===================================== */
+
+.tour-popup-overlay {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 99999;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   관광지 상세정보 팝업창
+===================================== */
+
+.tour-popup {
+
+    position: relative;
+
+    width: 850px;
+    max-width: 95vw;
+
+    height: 600px;
+    max-height: 90vh;
+
+    background: rgba(255, 255, 255, 0.90);
+
+    border: 1px solid rgba(128, 84, 59, 0.5);
+
+    border-radius: 12px;
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   팝업 닫기 버튼
+===================================== */
+
+.tour-popup-close {
+
+    position: absolute;
+
+    top: 15px;
+    right: 20px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 30px;
+
+    color: #80543b;
+
+    cursor: pointer;
+
+    z-index: 10;
+}
+
+.tour-popup-close:hover {
+
+    color: #442116;
+
+}
+
+
+/* =====================================
+   팝업 내부 콘텐츠 영역
+===================================== */
+
+.tour-popup-content {
+
+    width: 100%;
+    height: 100%;
+
+    padding: 55px 35px 35px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+
+/* =====================================
+   관광지 상세정보 레이아웃
+===================================== */
+
+.tour-detail-container {
+
+    width: 100%;
+    min-height: 100%;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    grid-template-rows: 250px 220px;
+
+    gap: 20px;
+
+}
+
+
+/* 관광지 사진 영역 */
+
+.tour-detail-image {
+
+    grid-column: 1;
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border: 1px dashed rgba(128, 84, 59, 0.25);
+
+}
+
+
+/* 관광지 설명 영역 */
+
+.tour-detail-info {
+
+    grid-column: 2;
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border: 1px dashed rgba(128, 84, 59, 0.25);
+
+}
+
+
+/* 유튜브 영상 영역 */
+
+.tour-detail-video {
+
+    grid-column: 1 / 3;
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border: 1px dashed rgba(128, 84, 59, 0.25);
+
+}
+
+
+/* =====================================
+   작은 화면 대응
+===================================== */
+
+@media (max-width: 700px) {
+
+    .tour-popup {
+
+        width: 95vw;
+        height: 85vh;
+
+    }
+
+    .tour-popup-content {
+
+        padding: 55px 20px 25px;
+
+    }
+
+    .tour-detail-container {
+
+        grid-template-columns: 1fr;
+
+        grid-template-rows: 220px 180px 220px;
+
+    }
+
+    .tour-detail-image,
+    .tour-detail-info,
+    .tour-detail-video {
+
+        grid-column: 1;
+
+    }
+
+}
+
+/* =========================================
+   팝업창 관광지 길찾기
+   ========================================= */
+
+.tour-route-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    width: 100%;
+    padding: 16px 20px;
+    margin: 16px 0;
+
+    background: #fffaf5;
+    border: 1px solid #d9a080;
+    border-radius: 16px;
+
+    box-sizing: border-box;
+}
+
+/* 길찾기 제목 */
+.tour-route-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #542b1d;
+    white-space: nowrap;
+
+    padding-right: 18px;
+    border-right: 1px solid #e4c7b3;
+}
+
+/* 출발지, 도착지 */
+.tour-route-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.tour-route-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #6a3928;
+    white-space: nowrap;
+}
+
+/* 현재 위치 버튼 */
+.tour-route-location {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+
+    border: 1px solid #dcc2af;
+    border-radius: 12px;
+
+    background: #ffffff;
+    color: #44291e;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* 도착지 */
+.tour-route-destination {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+
+    border: 1px solid #dcc2af;
+    border-radius: 12px;
+
+    background: #ffffff;
+    color: #44291e;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 방향 화살표 */
+.tour-route-arrow {
+    font-size: 22px;
+    font-weight: bold;
+    color: #a15a3d;
+}
+
+/* 지도 버튼 */
+.tour-route-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.tour-route-naver,
+.tour-route-kakao {
+    border: none;
+    border-radius: 10px;
+
+    padding: 13px 16px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tour-route-naver {
+    background: #03c75a;
+    color: white;
+}
+
+.tour-route-kakao {
+    background: #fee500;
+    color: #292929;
+}
+
+/* 화면이 좁아질 때 */
+@media (max-width: 1100px) {
+
+    .tour-route-bar {
+        flex-wrap: wrap;
+    }
+
+    .tour-route-title {
+        width: 100%;
+        border-right: none;
+    }
+
+    .tour-route-field {
+        min-width: 180px;
+    }
+}

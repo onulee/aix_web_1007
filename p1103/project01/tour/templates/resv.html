@@ -1,0 +1,801 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}여행 플래너 | 여행메이트{% endblock %}
+
+{% block head %}
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    body {
+        background-color: #f8f5ee !important; /* 메인 페이지의 따뜻한 베이지 톤 적용 */
+        color: #2c221e;
+    }
+    * { box-sizing: border-box; }
+    
+    .tm-card {
+        background: #ffffff;
+        border: 1px solid #f0e9df;
+        border-radius: 1.5rem; /* 24px */
+        box-shadow: 0 10px 40px -10px rgba(139, 108, 76, 0.08);
+    }
+    .tm-card-sub {
+        background: #faf8f5;
+        border: 1px solid #f0e9df;
+        border-radius: 1rem;
+    }
+    select, input[type="text"], input[type="date"] {
+        background-color: #ffffff;
+        color: #2c221e;
+        border: 1px solid #e2d8c9;
+        border-radius: 0.5rem;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.875rem;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    select:focus, input:focus {
+        border-color: #9E3D24;
+    }
+    
+    /* 히어로 섹션 스타일 */
+    .qa-hero {
+        background-color: #f4efe6;
+        border-bottom: 1px solid #e8e2d5;
+        padding: 48px 20px;
+        text-align: center;
+        margin-bottom: 32px;
+    }
+    .qa-hero-inner {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .qa-eyebrow {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: #9a6b38;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+    .qa-hero h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 12px 0;
+        line-height: 1.4;
+    }
+    .qa-hero h1 em {
+        font-style: normal;
+        color: #b45309;
+    }
+    .qa-hero p {
+        font-size: 15px;
+        color: #64748b;
+        margin: 0;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+<!-- 플래너 타이틀 영역 -->
+<section class="qa-hero">
+    <div class="qa-hero-inner">
+        <span class="qa-eyebrow">TRAVELMATE · TRAVEL PLANNER</span>
+        <h1>
+            맞춤형 여행 경로와 비용, <em>여행메이트</em> 플래너
+        </h1>
+        <p>출발지부터 도착지까지의 최적 경로, 예상 경비, 숙박 및 교통편을 한 번에 확인해 보세요.</p>
+    </div>
+</section>
+
+<!-- 대시보드 2단 레이아웃 (좌측: 설정 / 우측: 결과) -->
+<main class="max-w-[1300px] mx-auto px-4 pb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- ================= 좌측 컨트롤 패널 ================= -->
+        <div class="lg:col-span-4 space-y-5">
+            
+            <!-- 📍 지역 설정 & 🗺️ 지도 -->
+            <section class="tm-card p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-[#1e293b]">📍 출발·도착지 설정</h2>
+                    <button onclick="swapOriginDest()" class="px-2 py-1 rounded bg-[#faf8f5] border border-[#e2d8c9] text-[11px] font-bold text-[#6d5543] hover:bg-white transition shadow-sm">⇄ 맞바꾸기</button>
+                </div>
+                
+                <div class="space-y-3">
+                    <!-- 출발지 -->
+                    <div class="bg-[#faf8f5] p-3.5 rounded-xl border border-[#f0e9df]">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-[#2D5A43]">출발지</span>
+                            <button onclick="useCurrentGeolocation()" class="text-[10px] text-[#2D5A43] hover:underline font-semibold"><i class="fa-solid fa-location-crosshairs"></i> 내 위치</button>
+                        </div>
+                        <div class="flex gap-2 mb-2">
+                            <select id="originRegionSelect" onchange="onOriginRegionChange()" class="w-1/2 text-xs py-1.5 font-semibold"></select>
+                            <select id="originSpotSelect" onchange="calculatePlanner()" class="w-1/2 text-xs py-1.5 font-semibold"></select>
+                        </div>
+                        <input id="customOriginInput" type="text" placeholder="직접 주소 입력" oninput="calculatePlanner()" class="w-full text-xs py-1.5 font-medium" />
+                    </div>
+                    
+                    <!-- 도착지 -->
+                    <div class="bg-[#faf8f5] p-3.5 rounded-xl border border-[#f0e9df]">
+                        <span class="block text-xs font-bold text-[#9E3D24] mb-2">도착지</span>
+                        <div class="flex gap-2 mb-2">
+                            <select id="destRegionSelect" onchange="onDestRegionChange()" class="w-1/2 text-xs py-1.5 font-semibold"></select>
+                            <select id="destSpotSelect" onchange="calculatePlanner()" class="w-1/2 text-xs py-1.5 font-semibold"></select>
+                        </div>
+                        <input id="customDestInput" type="text" placeholder="직접 주소 입력" oninput="calculatePlanner()" class="w-full text-xs py-1.5 font-medium" />
+                    </div>
+                </div>
+
+                <!-- 🗺️ 다이렉트 길찾기 버튼 (세로형 리스트) -->
+                <div class="space-y-2 mt-4 pt-4 border-t border-[#f0e9df]">
+                    <h3 class="text-xs font-bold text-[#1e293b] mb-3">🗺️ 다이렉트 길찾기</h3>
+                    <a id="btnNaverMap" href="#" target="_blank" class="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100 hover:bg-emerald-100 transition shadow-sm">
+                        <span class="w-8 h-8 shrink-0 rounded-full bg-[#03C75A] text-white font-black flex items-center justify-center text-sm shadow-sm">N</span>
+                        <span id="naverMapBtnText" class="text-[11px] font-bold text-[#145a32] truncate">네이버지도 길찾기</span>
+                    </a>
+                    <a id="btnKakaoMap" href="#" target="_blank" class="flex items-center gap-3 p-3 bg-yellow-50 rounded-xl border border-yellow-100 hover:bg-yellow-100 transition shadow-sm">
+                        <span class="w-8 h-8 shrink-0 rounded-full bg-[#FEE500] text-[#191919] font-black flex items-center justify-center text-sm shadow-sm">K</span>
+                        <span id="kakaoMapBtnText" class="text-[11px] font-bold text-[#3e2723] truncate">카카오맵 길찾기</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= 우측 결과 패널  ================= -->
+        <div class="lg:col-span-8 space-y-5">
+            
+            <!-- 💰 이동 비용 -->
+            <section class="tm-card p-5">
+                <div class="flex flex-wrap justify-between items-start sm:items-center gap-3 mb-4">
+                    <h2 class="text-base font-bold text-[#1e293b]">💰 예상 이동 비용 계산하기</h2>
+                    
+                    <!-- 차량 옵션 (헤더 우측으로 이동) -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="vehicleClassSelect" onchange="calculatePlanner()" class="w-26 text-[10px] py-1.5 px-2 font-semibold">
+                            <option value="compact">경차(50%감면)</option>
+                            <option value="sedan" selected>일반 승용/SUV</option>
+                            <option value="van">승합/미니버스</option>
+                        </select>
+                        <select id="fuelTypeSelect" onchange="calculatePlanner()" class="w-22 text-[10px] py-1.5 px-2 font-semibold">
+                            <option value="gasoline" selected>휘발유</option>
+                            <option value="diesel">경유</option>
+                            <option value="lpg">LPG</option>
+                            <option value="ev_fast">전기차</option>
+                            <option value="hydrogen">수소차</option>
+                        </select>
+                        <label class="flex items-center gap-1.5 text-[10px] font-bold text-[#5c4637] cursor-pointer bg-[#faf8f5] px-2.5 py-1.5 rounded-lg border border-[#e2d8c9]">
+                            <input type="checkbox" id="roundTripToggle" onchange="calculatePlanner()" class="accent-[#9E3D24]" checked />
+                            <span>왕복 통행·유류비</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-white border border-[#e2d8c9] rounded-xl p-3 shadow-sm text-center flex flex-col justify-center">
+                        <div class="text-[10px] text-slate-500 font-bold mb-0.5">주행 거리 (편도)</div>
+                        <div id="calcDistance" class="text-lg font-extrabold text-slate-800">0 km</div>
+                        <div id="calcDuration" class="text-[9px] text-cyan-700 font-semibold mt-0.5">약 0시간</div>
+                    </div>
+                    <div class="bg-white border border-[#e2d8c9] rounded-xl p-3 shadow-sm text-center flex flex-col justify-center">
+                        <div class="text-[10px] text-slate-500 font-bold mb-0.5">고속도로 통행료</div>
+                        <div id="calcToll" class="text-lg font-extrabold text-[#D9822B]">0 원</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-amber-50 to-[#fdf9f1] border border-amber-200 rounded-xl p-3 shadow-sm text-center flex flex-col justify-center">
+                        <div class="text-[10px] text-[#9E3D24] font-bold mb-0.5">총 예상 비용</div>
+                        <div id="calcTotalCost" class="text-lg font-extrabold text-[#9E3D24]">0 원</div>
+                    </div>
+                </div>
+                
+                <!-- 단일 테이블 명세서 -->
+                <div class="overflow-x-auto rounded-xl border border-[#e2d8c9] bg-white">
+                    <table class="w-full text-center text-[11px] border-collapse">
+                        <thead>
+                            <tr class="bg-[#faf8f5] text-[#5c4637] border-b border-[#e2d8c9]">
+                                <th class="py-2.5 px-3 font-bold text-left">선택 유종</th>
+                                <th class="py-2.5 px-2 font-bold">단가/연비</th>
+                                <th class="py-2.5 px-2 font-bold">소모량</th>
+                                <th class="py-2.5 px-2 font-bold">주유·충전비</th>
+                                <th class="py-2.5 px-2 font-bold">톨게이트비</th>
+                                <th class="py-2.5 px-4 text-right font-bold">총 합계</th>
+                            </tr>
+                        </thead>
+                        <tbody id="costTableBody"></tbody>
+                    </table>
+                </div>
+                <!-- 📎 데이터 기준 안내 문구 -->
+                <div class="bg-[#faf8f5] text-[11px] text-slate-500 font-medium text-right px-1 mt-3">
+                    <p>📎 국토교통부와 한국도로공사의 표준 데이터를 기준으로 합니다. 실제 운행과 다를 수 있습니다.</p>
+                </div>
+            </section>
+
+            <!-- 🏨 숙박 (컴팩트 카드) -->
+            <section class="tm-card p-5">
+                <div class="flex flex-wrap justify-between items-start sm:items-center gap-3 mb-4">
+                    <h2 class="text-base font-bold text-[#1e293b]">🏨 숙박 예약 바로가기</h2>
+                    
+                    <!-- 숙박 날짜/인원 옵션 -->
+                    <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                        <span class="text-slate-500 font-bold">체크인:</span>
+                        <input type="date" id="checkInDate" onchange="updateStayLinks()" class="w-36 text-xs font-semibold py-1.5 px-2" />
+                        <span class="text-slate-500 font-bold ml-1">체크아웃:</span>
+                        <input type="date" id="checkOutDate" onchange="updateStayLinks()" class="w-36 text-xs font-semibold py-1.5 px-2" />
+                        <span class="text-slate-500 font-bold ml-1">인원:</span>
+                        <select id="stayGuestsSelect" onchange="updateStayLinks()" class="w-16 text-xs py-1.5 px-2 font-semibold">
+                            <option value="1">1명</option>
+                            <option value="2" selected>2명</option>
+                            <option value="3">3명</option>
+                            <option value="4">4명</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="stayPlatformGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <!-- JS 렌더링 -->
+                </div>
+            </section>
+
+            <!-- 🚆 교통편 (4단 컴팩트) -->
+            <section class="tm-card p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base font-bold text-[#1e293b]">🚆 교통편 예약 바로가기</h2>
+                    <span id="transHubSummary" class="text-[10px] font-bold text-[#2D5A43] bg-[#eef7ee] px-2 py-1 rounded border border-[#c4e3cb]"></span>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <!-- 기차 -->
+                    <div class="bg-white border border-[#e2d8c9] rounded-xl p-3.5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center gap-1.5 text-[#9E3D24] font-bold text-xs mb-2">
+                                <i class="fa-solid fa-train"></i> 고속철도·기차
+                            </div>
+                            <div class="text-[10px] font-bold text-[#2c221e] mb-3 p-1.5 bg-[#faf8f5] rounded border border-[#e2d8c9] truncate">
+                                추천 기차역: <span id="transStationName" class="text-[#9E3D24]">-</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <a href="https://www.korail.com/ticket/search/general" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#9E3D24]">
+                                <span>코레일 KTX</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                            <a href="https://www.korail.com/tour/main" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#9E3D24]">
+                                <span>코레일 기차여행</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 버스 -->
+                    <div class="bg-white border border-[#e2d8c9] rounded-xl p-3.5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center gap-1.5 text-[#D9822B] font-bold text-xs mb-2">
+                                <i class="fa-solid fa-bus"></i> 고속·시외버스
+                            </div>
+                            <div class="text-[10px] font-bold text-[#2c221e] mb-3 p-1.5 bg-[#faf8f5] rounded border border-[#e2d8c9] truncate">
+                                추천 터미널: <span id="transTerminalName" class="text-[#D9822B]">-</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <a href="https://www.kobus.co.kr/" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#D9822B]">
+                                <span>코버스(KOBUS) 고속버스</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                            <a href="https://txbus.t-money.co.kr/" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#D9822B]">
+                                <span>티머니(TxBus) 시외버스</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 렌터카 -->
+                    <div class="bg-white border border-[#e2d8c9] rounded-xl p-3.5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center gap-1.5 text-[#2D5A43] font-bold text-xs mb-2">
+                                <i class="fa-solid fa-car-side"></i> 렌터카
+                            </div>
+                            <div class="text-[10px] font-bold text-[#2c221e] mb-3 p-1.5 bg-[#faf8f5] rounded border border-[#e2d8c9] truncate">
+                                추천 픽업지: <span id="transRentalZoneName" class="text-[#2D5A43]">-</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <a href="https://www.lotterentacar.net/" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#2D5A43]">
+                                <span>롯데렌터카</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                            <a href="https://www.socar.kr/" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#2D5A43]">
+                                <span>쏘카(SOCAR)</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 항공 -->
+                    <div class="bg-white border border-[#e2d8c9] rounded-xl p-3.5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center gap-1.5 text-[#653f86] font-bold text-xs mb-2">
+                                <i class="fa-solid fa-plane-departure"></i> 국내선 항공
+                            </div>
+                            <div class="text-[10px] font-bold text-[#2c221e] mb-3 p-1.5 bg-[#faf8f5] rounded border border-[#e2d8c9] truncate">
+                                추천 공항: <span id="transAirportName" class="text-[#653f86]">-</span>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <a href="https://flight.naver.com/" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#653f86]">
+                                <span>네이버 항공권</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                            <a href="https://kr.trip.com/flights/" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-white border border-[#e2d8c9] text-[10px] font-bold flex justify-between items-center hover:border-[#653f86]">
+                                <span>트립닷컴 항공권</span> <i class="fa-solid fa-arrow-up-right-from-square text-slate-300"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block script %}
+  <script>
+
+    // -------------------------------------------------------------------------
+    // 1. 전국 17개 시도 메타데이터 (aliases를 통해 모든 형태의 DB 지역코드 자동 매칭)
+    // -------------------------------------------------------------------------
+    const REGIONS_DATA = [
+      {
+        id: "seoul", aliases: ["seoul", "su", "서울", "서울특별시"],
+        name: "서울", fullName: "서울특별시",
+        hubLat: 37.5547, hubLng: 126.9707,
+        station: "서울역", terminal: "서울고속버스터미널", airport: "김포국제공항(GMP)",
+        spots: []
+      },
+      {
+        id: "busan", aliases: ["busan", "bs", "부산", "부산광역시"],
+        name: "부산", fullName: "부산광역시",
+        hubLat: 35.1152, hubLng: 129.0422,
+        station: "부산역(KTX)", terminal: "부산종합버스터미널", airport: "김해국제공항(PUS)",
+        spots: []
+      },
+      {
+        id: "daegu", aliases: ["daegu", "dg", "대구", "대구광역시"],
+        name: "대구", fullName: "대구광역시",
+        hubLat: 35.8797, hubLng: 128.6286,
+        station: "동대구역(KTX)", terminal: "동대구복합환승센터", airport: "대구국제공항(TAE)",
+        spots: []
+      },
+      {
+        id: "incheon", aliases: ["incheon", "ic", "inchon", "인천", "인천광역시"],
+        name: "인천", fullName: "인천광역시",
+        hubLat: 37.4563, hubLng: 126.7052,
+        station: "인천공항역", terminal: "인천종합버스터미널", airport: "인천국제공항(ICN)",
+        spots: []
+      },
+      {
+        id: "gwangju", aliases: ["gwangju", "gj", "광주", "광주광역시"],
+        name: "광주", fullName: "광주광역시",
+        hubLat: 35.1395, hubLng: 126.7931,
+        station: "광주송정역(KTX)", terminal: "유스퀘어", airport: "광주공항(KWJ)",
+        spots: []
+      },
+      {
+        id: "daejeon", aliases: ["daejeon", "dj", "대전", "대전광역시"],
+        name: "대전", fullName: "대전광역시",
+        hubLat: 36.3323, hubLng: 127.4342,
+        station: "대전역(KTX)", terminal: "대전복합터미널", airport: "청주국제공항(CJJ)",
+        spots: []
+      },
+      {
+        id: "ulsan", aliases: ["ulsan", "us", "울산", "울산광역시"],
+        name: "울산", fullName: "울산광역시",
+        hubLat: 35.5514, hubLng: 129.1386,
+        station: "울산역", terminal: "울산고속버스터미널", airport: "울산공항(USN)",
+        spots: []
+      },
+      {
+        id: "sejong", aliases: ["sejong", "sj", "세종", "세종특별자치시"],
+        name: "세종", fullName: "세종특별자치시",
+        hubLat: 36.4800, hubLng: 127.2890,
+        station: "오송역(KTX)", terminal: "세종시외버스터미널", airport: "청주국제공항(CJJ)",
+        spots: []
+      },
+      {
+        id: "gg", aliases: ["gyeonggi", "gg", "경기", "경기도"],
+        name: "경기", fullName: "경기도",
+        hubLat: 37.2660, hubLng: 127.0018,
+        station: "수원역(KTX)", terminal: "수원종합버스터미널", airport: "김포공항",
+        spots: []
+      },
+      {
+        id: "gw", aliases: ["gangwon", "gw", "강원", "강원특별자치도", "강원도"],
+        name: "강원", fullName: "강원특별자치도",
+        hubLat: 37.7638, hubLng: 128.8991,
+        station: "강릉역(KTX)", terminal: "강릉버스터미널", airport: "양양국제공항(YNY)",
+        spots: []
+      },
+      {
+        id: "cb", aliases: ["chungbuk", "cb", "충북", "충청북도"],
+        name: "충북", fullName: "충청북도",
+        hubLat: 36.6256, hubLng: 127.3302,
+        station: "오송역(KTX)", terminal: "청주고속버스터미널", airport: "청주국제공항(CJJ)",
+        spots: []
+      },
+      {
+        id: "cn", aliases: ["chungnam", "cn", "충남", "충청남도"],
+        name: "충남", fullName: "충청남도",
+        hubLat: 36.7946, hubLng: 127.1046,
+        station: "천안아산역(KTX)", terminal: "천안종합터미널", airport: "청주국제공항(CJJ)",
+        spots: []
+      },
+      {
+        id: "jb", aliases: ["jeonbuk", "jb", "전북", "전북특별자치도", "전라북도"],
+        name: "전북", fullName: "전북특별자치도",
+        hubLat: 35.8497, hubLng: 127.1618,
+        station: "전주역(KTX)", terminal: "전주고속버스터미널", airport: "군산공항(KUV)",
+        spots: []
+      },
+      {
+        id: "jn", aliases: ["jeonnam", "jn", "전남", "전라남도"],
+        name: "전남", fullName: "전라남도",
+        hubLat: 34.7915, hubLng: 127.4875,
+        station: "여수엑스포역(KTX)", terminal: "여수종합버스터미널", airport: "여수공항(RSU)",
+        spots: []
+      },
+      {
+        id: "gb", aliases: ["gyeongbuk", "gb", "경북", "경상북도"],
+        name: "경북", fullName: "경상북도",
+        hubLat: 35.8394, hubLng: 129.1802,
+        station: "경주역(KTX)", terminal: "경주시외버스터미널", airport: "포항경주공항(KPO)",
+        spots: []
+      },
+      {
+        id: "gn", aliases: ["gyeongnam", "gn", "경남", "경상남도"],
+        name: "경남", fullName: "경상남도",
+        hubLat: 35.2382, hubLng: 128.6822,
+        station: "진주역(KTX)", terminal: "창원종합터미널", airport: "김해공항(PUS)",
+        spots: []
+      },
+      {
+        id: "jeju", aliases: ["jeju", "jj", "제주", "제주특별자치도", "제주도"],
+        name: "제주", fullName: "제주특별자치도",
+        hubLat: 33.5066, hubLng: 126.4930,
+        station: "제주항 연안여객터미널", terminal: "제주버스터미널", airport: "제주국제공항(CJU)",
+        spots: []
+      }
+    ];
+
+    // -------------------------------------------------------------------------
+    // 2. Django DB에서 넘어온 관광지 데이터를 REGIONS_DATA의 spots에 자동 주입
+    // (에디터 빨간 밑줄 방지: 문자열로 감싼 뒤 JSON.parse로 파싱)
+    // -------------------------------------------------------------------------
+    const DB_SPOTS = JSON.parse('{{ db_spots_json|default:"[]"|escapejs }}');
+
+    DB_SPOTS.forEach(spot => {
+      const code = String(spot.region).trim().toLowerCase();
+      // aliases 배열에 해당 지역 코드가 포함되어 있는지 확인하여 자동 매칭
+      const targetRegion = REGIONS_DATA.find(r => r.id === code || (r.aliases && r.aliases.includes(code)));
+      if (targetRegion) {
+        targetRegion.spots.push({
+          name: spot.name,
+          lat: parseFloat(spot.lat),
+          lng: parseFloat(spot.lng)
+        });
+      }
+    });
+
+    // -------------------------------------------------------------------------
+    // 계산 시작
+    // -------------------------------------------------------------------------
+
+    let originRegionIdx = 0;   
+    let originSpotIdx = 0;
+    let destRegionIdx = 9;
+    let destSpotIdx = 0;       
+    let customGPSOrigin = null;
+
+    // 전역 유류 단가 객체 (초기값 설정)
+    let currentFuelPrices = {
+      gasoline: 1645,
+      diesel: 1495,
+      lpg: 1020,
+      ev_fast: 347.2,
+      hydrogen: 10377
+    };
+
+    // -------------------------------------------------------------------------
+    // 3. 초기화 (정적 폴더에서 최신 단가 JSON 로드 추가)
+    // -------------------------------------------------------------------------
+    window.addEventListener("DOMContentLoaded", async () => {
+      await loadFuelPrices(); // 외부 단가 데이터 불러오기
+      initDateInputs();
+      populateRegionSelects();
+      calculatePlanner();
+    });
+
+    // 외부 JSON 파일에서 단가 불러오는 함수
+    async function loadFuelPrices() {
+      try {
+        const response = await fetch('/static/json/prices.json'); // JSON 파일 경로
+        if (response.ok) {
+          const data = await response.json();
+          currentFuelPrices = { ...currentFuelPrices, ...data }; // 불러온 데이터로 갱신
+        }
+      } catch (error) {
+        console.log("외부 단가 파일을 불러오지 못해 기본 단가를 사용합니다.", error);
+      }
+    }
+
+    function initDateInputs() {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      
+      const format = (d) => d.toISOString().split("T")[0];
+      document.getElementById("checkInDate").value = format(today);
+      document.getElementById("checkOutDate").value = format(tomorrow);
+    }
+
+    function populateRegionSelects() {
+      const origRegionEl = document.getElementById("originRegionSelect");
+      const destRegionEl = document.getElementById("destRegionSelect");
+
+      const options = REGIONS_DATA.map((r, i) => `<option value="${i}">${r.fullName}</option>`).join("");
+      origRegionEl.innerHTML = options;
+      destRegionEl.innerHTML = options;
+
+      origRegionEl.value = originRegionIdx;
+      destRegionEl.value = destRegionIdx;
+
+      populateSpotSelect("originSpotSelect", originRegionIdx, originSpotIdx);
+      populateSpotSelect("destSpotSelect", destRegionIdx, destSpotIdx);
+    }
+
+    function populateSpotSelect(elementId, regionIdx, selectedIdx = 0) {
+      const sel = document.getElementById(elementId);
+      const reg = REGIONS_DATA[regionIdx];
+      let html = `<option value="-1">[권역 거점] ${reg.name}</option>`;
+      html += reg.spots.map((s, i) => `<option value="${i}">${s.name}</option>`).join("");
+      sel.innerHTML = html;
+      sel.value = selectedIdx;
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. 출발지 도착지 노드 변경 핸들러
+    // -------------------------------------------------------------------------
+    function onOriginRegionChange() {
+      customGPSOrigin = null;
+      originRegionIdx = parseInt(document.getElementById("originRegionSelect").value, 10);
+      originSpotIdx = 0;
+      populateSpotSelect("originSpotSelect", originRegionIdx, originSpotIdx);
+      calculatePlanner();
+    }
+
+    function onDestRegionChange() {
+      destRegionIdx = parseInt(document.getElementById("destRegionSelect").value, 10);
+      destSpotIdx = 0;
+      populateSpotSelect("destSpotSelect", destRegionIdx, destSpotIdx);
+      calculatePlanner();
+    }
+
+    function swapOriginDest() {
+      const tempR = originRegionIdx;
+      const tempS = originSpotIdx;
+      originRegionIdx = destRegionIdx;
+      originSpotIdx = destSpotIdx;
+      destRegionIdx = tempR;
+      destSpotIdx = tempS;
+
+      document.getElementById("originRegionSelect").value = originRegionIdx;
+      document.getElementById("destRegionSelect").value = destRegionIdx;
+      populateSpotSelect("originSpotSelect", originRegionIdx, originSpotIdx);
+      populateSpotSelect("destSpotSelect", destRegionIdx, destSpotIdx);
+
+      calculatePlanner();
+    }
+
+    function useCurrentGeolocation() {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition((pos) => {
+          customGPSOrigin = { name: "내 현재 위치", lat: pos.coords.latitude, lng: pos.coords.longitude };
+          document.getElementById("customOriginInput").value = "현재 내 위치 (GPS 적용)";
+          calculatePlanner();
+      });
+    }
+
+    function getOriginNode() {
+      const customTxt = document.getElementById("customOriginInput").value.trim();
+      if (customGPSOrigin && customTxt.includes("GPS")) return customGPSOrigin;
+      const reg = REGIONS_DATA[originRegionIdx];
+      const spotIdx = parseInt(document.getElementById("originSpotSelect").value, 10);
+      if (spotIdx >= 0 && reg.spots[spotIdx]) {
+        return { name: customTxt || `${reg.name} ${reg.spots[spotIdx].name}`, lat: reg.spots[spotIdx].lat, lng: reg.spots[spotIdx].lng };
+      }
+      return { name: customTxt || `${reg.fullName} 거점`, lat: reg.hubLat, lng: reg.hubLng };
+    }
+
+    function getDestNode() {
+      const customTxt = document.getElementById("customDestInput").value.trim();
+      const reg = REGIONS_DATA[destRegionIdx];
+      const spotIdx = parseInt(document.getElementById("destSpotSelect").value, 10);
+      if (spotIdx >= 0 && reg.spots[spotIdx]) {
+        return {
+          regionName: reg.name,
+          fullName: reg.fullName,
+          spotName: reg.spots[spotIdx].name,
+          name: customTxt || `${reg.name} ${reg.spots[spotIdx].name}`,
+          lat: reg.spots[spotIdx].lat,
+          lng: reg.spots[spotIdx].lng,
+          station: reg.station,
+          terminal: reg.terminal,
+          airport: reg.airport
+        };
+      }
+      return {
+        regionName: reg.name,
+        fullName: reg.fullName,
+        spotName: reg.name,
+        name: customTxt || `${reg.fullName} 중심`,
+        lat: reg.hubLat,
+        lng: reg.hubLng,
+        station: reg.station,
+        terminal: reg.terminal,
+        airport: reg.airport
+      };
+    }
+    // -------------------------------------------------------------------------
+    // 4-1. 출발지 도착지 거리 계산
+    // -------------------------------------------------------------------------
+    function calcRoadDistanceKm(lat1, lng1, lat2, lng2) {
+      const R = 6371;                                   /*지구 반지름 약 6,371 km*/
+      const dLat = (lat2 - lat1) * Math.PI / 180;       /*위도 경도 값 변환*/
+      const dLng = (lng2 - lng1) * Math.PI / 180;       /*위도 경도 값 변환*/
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+      const straightKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));         /*구(Globe) 표면 위에 있는 두 점 사이의 최단 거리(새가 하늘로 날아가는 직선 거리, 대권 거리)를 구하는 가장 유명한 공식인 Haversine Formula*/
+      if (straightKm < 1.5) return 3.8;                 /*단거리 예외 처리, 최소 기본 주행 거리(3.8km)를 강제로 보장해 주는 안전장치*/
+      return Math.round(straightKm * 1.28 * 10) / 10;   /*도로 우회 계수 보정, 국토교통부 및 내비게이션 알고리즘 통계에 따르면, 직선 거리에 약 1.28배(약 28% 우회)를 곱해주어야 실제와 가장 유사*/
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. 핵심 계산 로직
+    // -------------------------------------------------------------------------
+    function calculatePlanner() {
+      const origin = getOriginNode();
+      const dest = getDestNode();
+
+      const oneWayKm = calcRoadDistanceKm(origin.lat, origin.lng, dest.lat, dest.lng);      /*출발지 도착지 값 얻기*/
+
+      const isRoundTrip = document.getElementById("roundTripToggle").checked;               /*편도냐 왕복이냐 계산*/
+      const tripMultiplier = isRoundTrip ? 2 : 1;
+      const totalKm = Math.round(oneWayKm * tripMultiplier * 10) / 10;
+        
+      const mins = Math.max(10, Math.round((oneWayKm / 68) * 60 + 8));                                        /*대한민국 고속도로 및 국도의 평균 주행 속도를 시속 68km로 가정, 거리를 속도로 나누어 기본 운전 시간을 구한 뒤(+8분은 진출입 시내 주행 보정 시간)*/ 
+      const timeStr = `${Math.floor(mins / 60) > 0 ? Math.floor(mins / 60) + '시간 ' : ''}${mins % 60}분`;      /*보기 좋게 X시간 Y분 형태의 문자열로 변환*/
+
+      const sNameEnc = encodeURIComponent(origin.name);
+      const eNameEnc = encodeURIComponent(dest.name);
+      
+      // 네이버지도 길찾기
+      document.getElementById("btnNaverMap").href = `https://map.naver.com/index.nhn?slng=${origin.lng}&slat=${origin.lat}&stext=${sNameEnc}&elng=${dest.lng}&elat=${dest.lat}&etext=${eNameEnc}&menu=route&pathType=1`;
+      
+      // 카카오맵 길찾기 (명칭과 위경도 좌표를 모두 전달하여 정확한 핀 고정)
+      document.getElementById("btnKakaoMap").href = `https://map.kakao.com/link/from/${sNameEnc},${origin.lat},${origin.lng}/to/${eNameEnc},${dest.lat},${dest.lng}`;
+      
+      // 버튼 텍스트에 출발지/도착지 명칭 반영
+      document.getElementById("naverMapBtnText").textContent = `${origin.name} ➔ ${dest.name} 네이버 길찾기`;
+      document.getElementById("kakaoMapBtnText").textContent = `${origin.name} ➔ ${dest.name} 카카오맵 길찾기`;
+
+      const vehicleClass = document.getElementById("vehicleClassSelect").value;
+      const selectedFuel = document.getElementById("fuelTypeSelect").value;
+      const classTollFactor = vehicleClass === "van" ? 1.22 : 1.0;
+      
+      let baseTollTotal = 0;
+      if (totalKm > 25) {
+        baseTollTotal = Math.round(((900 * tripMultiplier) + totalKm * 0.74 * 44.3 * classTollFactor) / 100) * 100;         
+        /*전체 거리 중 약 74%(totalKm * 0.74)를 고속도로 주행 구간으로 가정, 한국도로공사 표준 고속도로 요금 체계인 기본 요금(900원) + ㎞당 약 44.3원 공식을 적용*/
+      }
+
+      const fuelSpecs = {
+        gasoline: { name: "휘발유", price: currentFuelPrices.gasoline, unit: "L", eff: 12.5, tDisc: vehicleClass === "compact" ? 0.5 : 0 },
+        diesel: { name: "경유", price: currentFuelPrices.diesel, unit: "L", eff: 14.8, tDisc: vehicleClass === "compact" ? 0.5 : 0 },
+        lpg: { name: "LPG", price: currentFuelPrices.lpg, unit: "L", eff: 9.6, tDisc: vehicleClass === "compact" ? 0.5 : 0 },
+        ev_fast: { name: "전기차", price: currentFuelPrices.ev_fast, unit: "kWh", eff: 5.4, tDisc: vehicleClass === "compact" ? 0.5 : 0.3 },
+        hydrogen: { name: "수소차", price: currentFuelPrices.hydrogen, unit: "kg", eff: 96.2, tDisc: 0.3 }
+      };
+
+      const spec = fuelSpecs[selectedFuel];
+      const classEffMult = vehicleClass === "compact" ? 1.18 : (vehicleClass === "van" ? 0.68 : 1.0);       
+      /*차종 보정 (classEffMult): 경차는 연비가 좋아서 효율을 높여주고(+18%), 승합차는 무거워서 연비가 떨어지도록(-32%) 실질 연비를 보정(adjEff)*/
+      const adjEff = Math.round(spec.eff * classEffMult * 10) / 10;
+      const consumed = totalKm / adjEff;
+      const energyCost = Math.round(consumed * spec.price);
+      const finalToll = Math.round((baseTollTotal * (1 - spec.tDisc)) / 100) * 100;
+      const total = energyCost + finalToll;
+
+      document.getElementById("calcDistance").textContent = `${totalKm.toLocaleString()} km`;
+      document.getElementById("calcDuration").textContent = `약 ${timeStr}`;
+      document.getElementById("calcToll").textContent = `${finalToll.toLocaleString()} 원`;
+      document.getElementById("calcTotalCost").textContent = `${total.toLocaleString()} 원`;
+
+      document.getElementById("costTableBody").innerHTML = `
+        <tr class="bg-white">
+          <td class="py-2.5 px-3 font-bold text-[#9E3D24] text-left"><i class="fa-solid fa-check mr-1.5"></i>${spec.name}</td>
+          <td class="py-2.5 px-2 text-[#746255]">${spec.price.toLocaleString()}원 / ${adjEff}km</td>
+          <td class="py-2.5 px-2 text-slate-600">${consumed.toFixed(1)} ${spec.unit}</td>
+          <td class="py-2.5 px-2 font-semibold text-[#2D5A43]">${energyCost.toLocaleString()} 원</td>
+          <td class="py-2.5 px-2 font-semibold text-[#D9822B]">${finalToll.toLocaleString()} 원</td>
+          <td class="py-2.5 px-4 text-right font-extrabold text-[#9E3D24] text-sm">${total.toLocaleString()} 원</td>
+        </tr>
+      `;
+
+      updateStayLinks(dest);
+      updateTransportHub(dest);
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. 숙박 플랫폼 정보 업데이트
+    // -------------------------------------------------------------------------
+    function updateStayLinks(dest = getDestNode()) {
+      const checkIn = document.getElementById("checkInDate").value;
+      const checkOut = document.getElementById("checkOutDate").value;
+      const guests = document.getElementById("stayGuestsSelect").value;
+
+      const destText = `${dest.regionName} ${dest.spotName}`;
+      const encKeyword = encodeURIComponent(destText);
+      const encRegion = encodeURIComponent(dest.regionName); // 트립닷컴용 지역명 추가
+
+      const stayPlatforms = [
+        {
+          name: "여기어때",
+          badge: "국내숙소특가",
+          bgBadge: "bg-[#F7323F]",
+          bgButton: "bg-[#F7323F]",
+          desc: `${destText} 숙소 조회하기`,
+          url: `https://www.yeogi.com/domestic-accommodations?keyword=${encKeyword}&checkIn=${checkIn}&checkOut=${checkOut}&personal=${guests}`
+        },
+        {
+          name: "야놀자",
+          badge: "NOL단독특가",
+          bgBadge: "bg-[#5392F9]",
+          bgButton: "bg-[#2B6CB0]",
+          desc: `${destText} 숙소 조회하기`,
+          url: `https://nol.yanolja.com/results?keyword=${encKeyword}&checkinDate=${checkIn}&checkoutDate=${checkOut}&adultPax=${guests}`
+        },
+        {
+          name: "트립닷컴",
+          badge: "호텔할인",
+          bgBadge: "bg-[#287DFA]",
+          bgButton: "bg-[#1056B8]",
+          desc: `${destText} 숙소 조회하기`,
+          /* 트립닷컴: 고유 ID 누락 시 튕기는 현상 방지를 위해 cityName, searchWord, keyword 동시 적용 및 객실(crn=1) 파라미터 추가 */
+          url: `https://kr.trip.com/hotels/list?cityName=${encRegion}&keyword=${encKeyword}&searchWord=${encKeyword}&checkin=${checkIn}&checkout=${checkOut}&crn=1&adult=${guests}`
+        }
+      ];
+
+      document.getElementById("stayPlatformGrid").innerHTML = stayPlatforms.map(p => `
+        <div class="p-3.5 rounded-xl bg-white border border-[#e2d8c9] shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-[9px] font-bold text-white px-2 py-0.5 rounded-md ${p.bgBadge}">
+                ${p.badge}
+              </span>
+            </div>
+            <h3 class="text-sm font-bold text-[#1e293b] mb-1">${p.name}</h3>
+            <p class="text-[10px] text-slate-500 mb-3">${p.desc}</p>
+          </div>
+          <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-3 rounded-lg ${p.bgButton} text-white text-[11px] font-bold flex items-center justify-center hover:opacity-90 transition">
+            예약 조회
+          </a>
+        </div>
+      `).join("");
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. 교통편 정보 업데이트
+    // -------------------------------------------------------------------------
+    function updateTransportHub(dest = getDestNode()) {
+      document.getElementById("transHubSummary").innerHTML = `도착: ${dest.fullName}`;
+      document.getElementById("transStationName").textContent = dest.station || "거점역";
+      document.getElementById("transTerminalName").textContent = dest.terminal || "종합버스터미널";
+      document.getElementById("transRentalZoneName").textContent = `${dest.station.split("·")[0].trim()}역 근처`;
+      document.getElementById("transAirportName").textContent = dest.airport || "인근 공항";
+    }
+
+  </script>
+{% endblock script %}

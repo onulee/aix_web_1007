@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Q&A 게시판 | 여행메이트{% endblock %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/tm-qna.css' %}?v=3">
+{% endblock %}
+
+{% block content %}
+
+<!-- Q&A 상단 소개 (resv.html과 100% 동일한 구조) -->
+<section class="qa-hero">
+    <div class="qa-hero-inner">
+        <span class="qa-eyebrow">TRAVELMATE · HELP CENTER</span>
+        <h1>
+            더 많은 여행 이야기, <em>여행메이트</em> Q&A 게시판
+        </h1>
+        <p>자주 묻는 질문을 찾아보고 새로운 질문을 남겨보세요.</p>
+    </div>
+</section>                      
+
+
+<!-- Q&A 게시판 전체 -->
+<section class="qa-wrap">
+
+    <!--<div class="qa-heading">
+        <div>
+            <span class="qa-kicker">HELP & SUPPORT</span>
+            <h2>Q&A 게시판</h2>
+            <p>자주 묻는 질문을 찾아보거나 새로운 질문을 남겨보세요.</p>
+        </div>
+    </div>-->
+
+
+    <!-- FAQ / 1:1 질문 탭 -->
+    <div class="qa-tabs">
+
+        <button type="button"
+                class="qa-tab active"
+                data-panel="faq-panel">
+            자주 묻는 질문
+            <small>FAQ</small>
+        </button>
+
+        <button type="button"
+                class="qa-tab"
+                data-panel="question-panel">
+            1:1 질문 게시판
+            <small>Q&A</small>
+        </button>
+
+    </div>
+
+
+    <!-- FAQ 영역 -->
+    <div id="faq-panel" class="qa-panel active">
+
+        <div class="qa-toolbar">
+
+            <!-- 카테고리 -->
+            <div class="qa-filters">
+
+                <button type="button"
+                        class="qa-filter active"
+                        data-category="전체">
+                    전체
+                </button>
+
+                <button type="button"
+                        class="qa-filter"
+                        data-category="데이터 기준">
+                    데이터 기준
+                </button>
+
+                <button type="button"
+                        class="qa-filter"
+                        data-category="대시보드 기능">
+                    대시보드 기능
+                </button>
+
+                <button type="button"
+                        class="qa-filter"
+                        data-category="지역·연령 분석">
+                    지역·연령 분석
+                </button>
+
+            </div>
+
+            <!-- 검색창 -->
+            <input
+                id="qa-search"
+                type="search"
+                placeholder="궁금한 내용을 검색해 보세요"
+                aria-label="FAQ 검색"
+            >
+
+        </div>
+
+
+        <!-- FAQ 질문 목록 -->
+        <div class="qa-faq-list">
+
+            {% for category, question, answer in faq %}
+
+            <details class="qa-faq-item"
+                     data-category="{{ category }}">
+
+                <summary>
+
+                    <span class="qa-q">Q</span>
+
+                    <span class="qa-question">
+                        <small>{{ category }}</small>
+                        {{ question }}
+                    </span>
+
+                    <span class="qa-arrow">⌄</span>
+
+                </summary>
+
+                <div class="qa-answer">
+
+                    <b>A</b>
+
+                    <p>{{ answer }}</p>
+
+                </div>
+
+            </details>
+
+            {% endfor %}
+
+            <p class="qa-empty" hidden>
+                검색 결과가 없습니다.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- 1:1 질문 게시판 -->
+    <div id="question-panel" class="qa-panel">
+
+        <div class="qa-board-top">
+
+            <p>
+                궁금한 내용을 남겨주시면
+                게시판에서 확인할 수 있어요.
+            </p>
+
+            <button type="button"
+                    id="qa-write-toggle"
+                    class="qa-primary">
+                + 질문 작성
+            </button>
+
+        </div>
+
+
+        <!-- 질문 작성 폼 -->
+        <form id="qa-write-form"
+              method="post"
+              action="{% url 'qna:ask' %}"
+              hidden>
+
+            {% csrf_token %}
+
+            <label>
+                제목
+
+                <input
+                    type="text"
+                    name="title"
+                    maxlength="200"
+                    required
+                >
+            </label>
+
+            <label>
+                작성자
+
+                <input
+                    type="text"
+                    name="author"
+                    maxlength="50"
+                    required
+                >
+            </label>
+
+            <label>
+                질문 내용
+
+                <textarea
+                    name="content"
+                    rows="5"
+                    required
+                ></textarea>
+            </label>
+
+            <button type="submit" class="qa-primary">
+                질문 등록
+            </button>
+
+        </form>
+
+
+        <!-- 1:1 질문 목록 -->
+
+        <div class="qa-board-list">
+
+            <div class="qa-board-head">
+                <span>제목</span>
+                <span>작성자</span>
+                <span>작성일</span>
+            </div>
+
+            {% for question in questions %}
+
+            <div class="qa-board-row">
+
+                <a href="{% url 'qna:qview' question.id %}"
+                class="qa-board-link">
+
+                    <span>{{ question.title }}</span>
+
+                    <span>{{ question.author }}</span>
+
+                    <span>
+                        {{ question.created_at|date:'Y.m.d' }}
+                    </span>
+
+                </a>
+
+                <div class="qa-status">
+                    {% if question.answer %}
+                        <span class="status-complete">답변 완료</span>
+                    {% else %}
+                        <span class="status-waiting">답변 대기</span>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p class="qa-no-posts">
+                아직 등록된 질문이 없습니다.
+            </p>
+
+            {% endfor %}
+
+        </div>
+        
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block script %}
+
+<script src="{% static 'js/tm-qna.js' %}"></script>
+
+{% endblock %}

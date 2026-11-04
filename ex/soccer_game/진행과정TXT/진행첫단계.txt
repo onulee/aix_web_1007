@@ -1,0 +1,27 @@
+📂 프로젝트 파일 구조 (Django home 및 static 구조)
+
+     Django의 표준 static 파일 관리 방식에 맞추어 파일 위치를 다음과 같이 구성
+
+
+soccer_game/
+├── home/
+│   └── templates/
+│       └── index.html               <-- HTML 구조 (메인 템플릿)
+└── static/
+    ├── css/
+    │   └── style.css                <-- 레이아웃 및 스타일 정의
+    ├── js/
+    │   └── game.js                  <-- Canvas 드로잉 및 경기 시뮬레이션 로직
+    └── images/
+        └── pitch_bg.png             <-- 운동장 배경 이미지[cite: 3]
+
+
+📄 구체적으로 어떤 부분부터 진행 할 것인가?
+
+1. HTML5 Canvas 기반 축구장 및 선수 애니메이션 기본 코드 작성
+
+
+2. K리그 JSON 데이터 파싱 및 Django 모델/API 구축
+
+
+3. 선수 능력치 기반 경기 시뮬레이션 엔진 로직 설계
