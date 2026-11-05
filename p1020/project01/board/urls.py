@@ -5,6 +5,7 @@ app_name='board'
 urlpatterns = [
     # 차트그래프
     path('chart/', views.chart, name='chart'),
+    path('chart_data/', views.chart_data, name='chart_data'),
 
     path('bwrite/', views.bwrite, name='bwrite'),
     path('blist/', views.blist, name='blist'),

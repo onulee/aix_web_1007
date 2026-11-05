@@ -6,6 +6,31 @@ from django.conf.urls.static import static
 import os
 from member.models import Member
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+
+def chart(request):
+    return render(request, 'chart.html')
+
+# ajax통신
+def chart_data(request):
+    # qs = Board.objects.get(bno=3).values()      # set타입
+    # qs = Board.objects.all().values()         # [] 리스트형태
+    # 제목에 사진글자가 포함되어 있거나 또는 조회수가 70이상인것을 검색하시오.
+    word = request.POST.get('word','')
+    search = request.POST.get('search',0)
+    print('search : ',search)
+    qs = Board.objects.filter(Q(btitle__contains=word) |\
+                            Q(bhit__gte=search) ).values()[:6] # [] 리스트형태
+    print("데이터 확인 : ",qs)
+    print("데이터 개수 : ",qs.count())
+    # 객체를 리스트타입으로 변경해서 보내야 함.
+    r_qs = list(qs)
+    context = {'list':r_qs,'data1':[1,2,3,4],'data2':'홍길동'}
+    return JsonResponse(context)
+
+
 
 # 답변달기
 # GET - 페이지열기, POST - 게시글저장
